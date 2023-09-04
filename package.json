@@ -1,0 +1,33 @@
+{
+  "name": "@superrb/react-addons",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/superrbstudio/react-addons",
+  "author": "@molovo",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "install-peers-cli": "^2.2.0",
+    "react-use-draggable-scroll": "^0.4.7"
+  },
+  "peerDependencies": {
+    "@prismicio/client": "^7.2.0",
+    "@prismicio/next": "^1.3.4",
+    "@superrb/react-addons": "^1.0.0",
+    "@types/node": "^20.5.7",
+    "@types/react": "^18.2.21",
+    "next": "^13.4.19",
+    "react": "^18.2.0",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "yarn build",
+    "prepare": "install-peers",
+    "dev": "watch 'yarn build' ./src"
+  },
+  "devDependencies": {
+    "watch": "^1.0.2"
+  }
+}
