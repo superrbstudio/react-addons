@@ -73,6 +73,8 @@ yarn-error.log
 *.js
 *.d.ts
 *.d.ts.map
+components/**/*
 hooks/**/*
 index/**/*
 utils/**/*
+tsconfig.tsbuildinfo
