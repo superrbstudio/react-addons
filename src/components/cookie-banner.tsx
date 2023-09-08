@@ -5,6 +5,7 @@ import { CookiesContext } from "../context"
 import { Button, Form } from "../components"
 import * as Yup from "yup"
 import SubmitButton from "./form/submit-button"
+import { session } from "../storage"
 
 const content = {
   title: "Cookie Notice",
@@ -12,6 +13,10 @@ const content = {
   form_text: "Select the type of cookies you wish to allow.",
   policyLink: "/legal/cookies-policy",
   policyLabel: "Cookie Policy",
+  customiseLabel: "Customise",
+  rejectLabel: "Reject",
+  acceptLabel: "Accept",
+  acceptAllLabel: "Accept All",
   tracking: {
     title: "Optional Cookies",
     description:
@@ -26,6 +31,7 @@ const content = {
 
 const CookieBanner = ({
   allowCustomisation = true,
+  allowReject = false,
   title = content.title,
   text = content.text,
   formText = content.form_text,
@@ -33,6 +39,7 @@ const CookieBanner = ({
   policyLabel = content.policyLabel,
 }: {
   allowCustomisation?: boolean
+  allowReject?: boolean
   title?: string
   text?: string
   formText?: string
@@ -42,11 +49,18 @@ const CookieBanner = ({
   const { cookiesAccepted, setCookiesAccepted, setTrackingCookiesAccepted } =
     useContext(CookiesContext)
   const [animate, setAnimate] = useState<boolean>(false)
-
   const [formOpen, setFormOpen] = useState<boolean>(false)
+  const [rejected, setRejected] = useState<boolean>(
+    !!session.getItem("cookies-rejected")
+  )
 
   const openForm = () => {
     setFormOpen(true)
+  }
+
+  const reject = () => {
+    setRejected(true)
+    session.setItem("cookies-rejected", "true")
   }
 
   const accept = (necessary: boolean, tracking: boolean) => {
@@ -65,8 +79,10 @@ const CookieBanner = ({
     accept(true, !!data.tracking)
   }
 
-  const customiseLabel = "Customise"
-  const acceptLabel = !allowCustomisation || formOpen ? "Accept" : "Accept All"
+  const acceptLabel =
+    !allowCustomisation || formOpen
+      ? content.acceptLabel
+      : content.acceptAllLabel
 
   const schema = Yup.object().shape({
     tracking: Yup.boolean().required().default(true).label(`
@@ -87,7 +103,7 @@ const CookieBanner = ({
 
   return (
     <>
-      {!cookiesAccepted ? (
+      {!rejected && !cookiesAccepted ? (
         <div
           className={`cookie-banner ${animate ? " cookie-banner--hide" : ""} `}
         >
@@ -117,11 +133,18 @@ const CookieBanner = ({
                   )}
                 </div>
                 <div className="cookie-banner__buttons">
+                  {allowReject && !allowCustomisation && !formOpen && (
+                    <Button
+                      onClick={reject}
+                      className="cookie-banner__reject button button__rounded button__rounded--black-fill"
+                      label={content.rejectLabel}
+                    />
+                  )}
                   {allowCustomisation && !formOpen && (
                     <Button
                       onClick={openForm}
                       className="cookie-banner__reject button button__rounded button__rounded--black-fill"
-                      label={customiseLabel}
+                      label={content.customiseLabel}
                     />
                   )}
                   {!formOpen && (
