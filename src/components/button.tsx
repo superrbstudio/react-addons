@@ -9,9 +9,7 @@ import {
   forwardRef,
   memo,
 } from "react"
-import Link from "next/link"
 import { extendClass } from "../utils"
-import { PrismicNextLink, PrismicNextLinkProps } from "@prismicio/next"
 
 type Props = (
   | PropsWithChildren<HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>>
@@ -23,7 +21,6 @@ type Props = (
   onClick?: MouseEventHandler
   className?: string
   href?: string
-  field?: PrismicNextLinkProps["field"]
 }
 
 const Button = forwardRef(
@@ -35,7 +32,6 @@ const Button = forwardRef(
       onClick,
       className = "",
       href,
-      field,
       ...props
     }: Props,
     ref: ForwardedRef<HTMLAnchorElement | HTMLButtonElement>
@@ -74,21 +70,9 @@ const Button = forwardRef(
       }
 
       return (
-        <Link {...{ ...(linkProps as AnchorProps), href }}>
+        <a {...{ ...(linkProps as AnchorProps), href }}>
           {renderedChildren}
-        </Link>
-      )
-    }
-
-    if (field) {
-      type LinkProps = Omit<Omit<PrismicNextLinkProps, "href">, "document"> & {
-        ref: MutableRefObject<HTMLAnchorElement>
-      }
-
-      return (
-        <PrismicNextLink {...{ ...(linkProps as LinkProps), field }}>
-          {renderedChildren}
-        </PrismicNextLink>
+        </a>
       )
     }
 
