@@ -80,6 +80,13 @@ const Form = forwardRef(
     type DataStructure = InferType<typeof schema>
     const [data, setData] = useState<DataStructure>({})
 
+    for (const name of Object.keys(schema.fields)) {
+      const field: AnySchema = schema.fields[name] as AnySchema
+      if (field.spec?.meta?.options?.length > 1) {
+        field.oneOf(field?.spec?.meta?.options)
+      }
+    }
+
     const {
       register,
       handleSubmit,

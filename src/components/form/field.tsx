@@ -32,27 +32,22 @@ const FormField = ({ register, schema, id }: Props) => {
     setRendered(true)
   }, [])
 
-  console.log(schema)
-
-  /**
-   * TODO: Find a way to make select boxes work without accessing protected `_whitelist` property
-   */
-  // if (schema?._whitelist?.list?.size > 0) {
-  //   return (
-  //     <select className="form__control form__control--select" {...fieldProps}>
-  //       {schema?.spec?.meta?.placeholder ? (
-  //         <option value="" key={"placeholder"}>
-  //           {schema?.spec?.meta?.placeholder}
-  //         </option>
-  //       ) : null}
-  //       {[...schema?._whitelist?.list?.entries()].map(([value, label], key) => (
-  //         <option value={value as string} key={key}>
-  //           {label as string}
-  //         </option>
-  //       ))}
-  //     </select>
-  //   )
-  // }
+  if (schema?.spec?.meta?.options?.length > 0) {
+    return (
+      <select className="form__control form__control--select" {...fieldProps}>
+        {schema?.spec?.meta?.placeholder ? (
+          <option value="" key={"placeholder"}>
+            {schema?.spec?.meta?.placeholder}
+          </option>
+        ) : null}
+        {schema?.spec?.meta?.options?.map((value: string, index: number) => (
+          <option value={value} key={value}>
+            {value}
+          </option>
+        ))}
+      </select>
+    )
+  }
 
   return (
     <>
