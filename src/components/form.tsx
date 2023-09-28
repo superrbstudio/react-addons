@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   useCallback,
@@ -8,53 +8,54 @@ import {
   Fragment,
   forwardRef,
   MutableRefObject,
-} from "react"
-import { ObjectSchema, InferType, AnySchema } from "yup"
-import { paramCase, sentenceCase } from "change-case"
-import { FieldError, useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
-import useAsync, { Status } from "../hooks/use-async"
-import { FieldRenderer } from "./form/types"
-import SuccessMessage from "./form/success-message"
-import ErrorMessage from "./form/error-message"
-import FormField from "./form/field"
-import SubmitButton from "./form/submit-button"
-import messages from "./form/messages.json"
+  useRef,
+} from "react";
+import { ObjectSchema, InferType, AnySchema } from "yup";
+import { paramCase, sentenceCase } from "change-case";
+import { FieldError, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import useAsync, { Status } from "../hooks/use-async";
+import { FieldRenderer } from "./form/types";
+import SuccessMessage from "./form/success-message";
+import ErrorMessage from "./form/error-message";
+import FormField from "./form/field";
+import SubmitButton from "./form/submit-button";
+import messages from "./form/messages.json";
 
 interface FormProps<T extends ObjectSchema<any>> {
-  schema: T
-  name?: string
-  action?: string
-  className?: string
-  method?: string
-  onSubmit?: (data: { [P in T as string]: any }) => void
-  onStatusChange?: (status: Status) => void
+  schema: T;
+  name?: string;
+  action?: string;
+  className?: string;
+  method?: string;
+  onSubmit?: (data: { [P in T as string]: any }) => void;
+  onStatusChange?: (status: Status) => void;
   renderSuccessMessage?:
     | ((data: { [P in T as string]: any }) => ReactNode)
-    | false
+    | false;
   renderErrorMessage?: (
     error?: FieldError,
     fieldSchema?: AnySchema
-  ) => ReactNode
-  renderSubmit?: () => ReactNode
-  renderers?: { [P in T as string]: FieldRenderer }
-  executeRecaptcha?: () => Promise<string>
+  ) => ReactNode;
+  renderSubmit?: () => ReactNode;
+  renderers?: { [P in T as string]: FieldRenderer };
+  executeRecaptcha?: () => Promise<string>;
 }
 
 const toBase64 = (file: File) =>
   new Promise((resolve, reject) => {
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onloadend = () => {
       // Use a regex to remove data url part
       const base64String = reader.result
         ?.toString()
         .replace("data:", "")
-        .replace(/^.+,/, "")
-      resolve(base64String)
-    }
-    reader.readAsDataURL(file)
-    reader.onerror = reject
-  })
+        .replace(/^.+,/, "");
+      resolve(base64String);
+    };
+    reader.readAsDataURL(file);
+    reader.onerror = reject;
+  });
 
 const Form = forwardRef(
   (
@@ -66,7 +67,7 @@ const Form = forwardRef(
       method = "post",
       onSubmit = () => {},
       onStatusChange = () => {},
-      renderSuccessMessage = data => <SuccessMessage />,
+      renderSuccessMessage = (data) => <SuccessMessage />,
       renderErrorMessage = (error?: FieldError, fieldSchema?: AnySchema) => (
         <ErrorMessage error={error} fieldSchema={fieldSchema} />
       ),
@@ -77,13 +78,16 @@ const Form = forwardRef(
     }: FormProps<ObjectSchema<any>>,
     ref
   ) => {
-    type DataStructure = InferType<typeof schema>
-    const [data, setData] = useState<DataStructure>({})
+    type DataStructure = InferType<typeof schema>;
+    const [data, setData] = useState<DataStructure>({});
+    const fieldRefs = useRef<{ [P in DataStructure as string]?: HTMLElement }>(
+      {}
+    ) as MutableRefObject<{ [P in DataStructure as string]?: HTMLElement }>;
 
     for (const name of Object.keys(schema.fields)) {
-      const field: AnySchema = schema.fields[name] as AnySchema
+      const field: AnySchema = schema.fields[name] as AnySchema;
       if (field.spec?.meta?.options?.length > 1) {
-        field.oneOf(field?.spec?.meta?.options)
+        field.oneOf(field?.spec?.meta?.options);
       }
     }
 
@@ -93,17 +97,17 @@ const Form = forwardRef(
       formState: { errors },
     } = useForm<DataStructure>({
       resolver: yupResolver(schema),
-    })
+    });
 
     const onSubmitHandler = useCallback(
       async (data: DataStructure) => {
         if (onSubmit) {
-          return onSubmit(data)
+          return onSubmit(data);
         }
 
         for (const [key, value] of Object.entries(data)) {
           if (value instanceof FileList) {
-            data[`file_${key}`] = []
+            data[`file_${key}`] = [];
             for (const [fileKey, fileValue] of Object.entries(value)) {
               if (fileValue instanceof File && fileValue.size > 0) {
                 const insertFile = {
@@ -111,8 +115,8 @@ const Form = forwardRef(
                   name: fileValue.name,
                   type: fileValue.type,
                   size: fileValue.size,
-                }
-                data[`file_${key}`][fileKey] = insertFile
+                };
+                data[`file_${key}`][fileKey] = insertFile;
               }
             }
           }
@@ -120,8 +124,8 @@ const Form = forwardRef(
 
         // if recaptcha is enabled generate a token and add to the data
         if (executeRecaptcha) {
-          const token = await executeRecaptcha()
-          data["recaptchaToken"] = token
+          const token = await executeRecaptcha();
+          data["recaptchaToken"] = token;
         }
 
         const response = await fetch(action as string, {
@@ -130,41 +134,41 @@ const Form = forwardRef(
             contentType: "application/json",
           },
           body: JSON.stringify(data),
-        })
+        });
 
-        const responseData = await response.json()
+        const responseData = await response.json();
 
         if (!response.ok) {
           if (responseData.error) {
-            throw new Error(responseData.error)
+            throw new Error(responseData.error);
           }
 
-          throw new Error(messages.form.error.endpoint_failure)
+          throw new Error(messages.form.error.endpoint_failure);
         }
 
-        setData(responseData)
+        setData(responseData);
 
-        return responseData
+        return responseData;
       },
       [action, onSubmit]
-    )
+    );
 
     const { execute, status, error } = useAsync(onSubmitHandler, false, [
       onSubmitHandler,
-    ])
+    ]);
 
     useEffect(() => {
       if (onStatusChange) {
-        onStatusChange(status)
+        onStatusChange(status);
       }
-    }, [status])
+    }, [status]);
 
-    Object.keys(schema.fields).map(fieldName => {
-      const field: AnySchema = schema.fields[fieldName] as AnySchema
+    Object.keys(schema.fields).map((fieldName) => {
+      const field: AnySchema = schema.fields[fieldName] as AnySchema;
       if (!field?.spec?.label) {
-        field.spec.label = sentenceCase(fieldName)
+        field.spec.label = sentenceCase(fieldName);
       }
-    })
+    });
 
     return (
       <>
@@ -183,7 +187,7 @@ const Form = forwardRef(
             {error && renderErrorMessage({ message: error } as FieldError)}
 
             {Object.keys(schema.fields).map((fieldName, key) => {
-              const field: AnySchema = schema.fields[fieldName] as AnySchema
+              const field: AnySchema = schema.fields[fieldName] as AnySchema;
 
               return (
                 <Fragment key={key}>
@@ -196,6 +200,9 @@ const Form = forwardRef(
                       )} ${fieldName in errors ? "form__group--error" : ""} ${
                         field?.type === "boolean" ? "form__group--checkbox" : ""
                       }`}
+                      ref={(ref) => {
+                        fieldRefs.current[fieldName] = ref as HTMLElement;
+                      }}
                     >
                       <label
                         className="form__label"
@@ -222,6 +229,12 @@ const Form = forwardRef(
                               register={register(fieldName)}
                               id={`${name}__${paramCase(fieldName)}`}
                               schema={field}
+                              onInput={(event) => {
+                                console.log(event);
+                                fieldRefs.current[fieldName]?.classList.add(
+                                  "form__group--filled"
+                                );
+                              }}
                             />
                             {fieldName in errors &&
                               renderErrorMessage(
@@ -234,15 +247,15 @@ const Form = forwardRef(
                     </div>
                   )}
                 </Fragment>
-              )
+              );
             })}
 
             {renderSubmit()}
           </form>
         )}
       </>
-    )
+    );
   }
-)
+);
 
-export default Form
+export default Form;

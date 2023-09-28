@@ -1,18 +1,19 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { AnySchema } from "yup"
-import { UseFormRegisterReturn } from "react-hook-form"
+import { FormEvent, FormEventHandler, useEffect, useState } from "react";
+import { AnySchema } from "yup";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 interface Props {
-  register: UseFormRegisterReturn<string>
-  schema: AnySchema<any>
-  id?: string
+  register: UseFormRegisterReturn<string>;
+  schema: AnySchema<any>;
+  id?: string;
+  onInput?: FormEventHandler<HTMLElement>;
 }
 
-const FormField = ({ register, schema, id }: Props) => {
-  const [touched, setTouched] = useState<boolean>(false)
-  const [rendered, setRendered] = useState<boolean>(false)
+const FormField = ({ register, schema, id, onInput }: Props) => {
+  const [touched, setTouched] = useState<boolean>(false);
+  const [rendered, setRendered] = useState<boolean>(false);
   const fieldProps = {
     ...register,
     ...(!touched && schema?.spec?.default
@@ -23,14 +24,18 @@ const FormField = ({ register, schema, id }: Props) => {
     ...(schema?.spec?.meta?.placeholder
       ? { placeholder: schema?.spec?.meta?.placeholder }
       : {}),
-    onInput: () => {
-      setTouched(true)
+    onInput: (event: FormEvent<HTMLElement>) => {
+      setTouched(true);
+
+      if (onInput) {
+        onInput(event);
+      }
     },
-  }
+  };
 
   useEffect(() => {
-    setRendered(true)
-  }, [])
+    setRendered(true);
+  }, []);
 
   if (schema?.spec?.meta?.options?.length > 0) {
     return (
@@ -46,7 +51,7 @@ const FormField = ({ register, schema, id }: Props) => {
           </option>
         ))}
       </select>
-    )
+    );
   }
 
   return (
@@ -76,7 +81,7 @@ const FormField = ({ register, schema, id }: Props) => {
         <input className="form__control" {...fieldProps} />
       )}
     </>
-  )
-}
+  );
+};
 
-export default FormField
+export default FormField;
