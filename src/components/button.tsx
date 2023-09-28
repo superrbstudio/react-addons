@@ -42,10 +42,7 @@ const Button = forwardRef(
         {label_a11y && <span className="screenreader-text">{label_a11y}</span>}
         {label && (
           <span
-            className={`${extendClass("button", "label")} ${extendClass(
-              className,
-              "label"
-            )}`}
+            className={`${extendClass(className, "label")}`}
             aria-hidden={label_a11y !== undefined}
             data-text={label}
           >
