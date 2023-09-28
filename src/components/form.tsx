@@ -22,7 +22,7 @@ import FormField from "./form/field";
 import SubmitButton from "./form/submit-button";
 import messages from "./form/messages.json";
 
-interface FormProps<T extends ObjectSchema<any>> {
+export interface FormProps<T extends ObjectSchema<any>> {
   schema: T;
   name?: string;
   action?: string;
@@ -230,7 +230,6 @@ const Form = forwardRef(
                               id={`${name}__${paramCase(fieldName)}`}
                               schema={field}
                               onInput={(event) => {
-                                console.log(event);
                                 fieldRefs.current[fieldName]?.classList.add(
                                   "form__group--filled"
                                 );
