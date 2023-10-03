@@ -2,7 +2,7 @@
 
 ## [Cookies](./cookies-context-provider.tsx)
 
-A global context for management of user preferences for cookies. Used in conjunction with the `[CookieBanner](../components/README.md#cookie-banner)` component.
+A global context for management of user preferences for cookies. Used in conjunction with the [`CookieBanner`](../components/README.md#CookieBanner) component.
 
 ### Usage
 
@@ -27,7 +27,7 @@ const Scripts = () => {
 
 ## [Modal](./modal-context-provider.tsx)
 
-A context for managing state for modals. In normal use, use the `[useModal](../hooks/README.md#useModal)` hook instead of accessing the context directly.
+A context for managing state for modals. In normal use, use the [`useModal`](../hooks/README.md#useModal) hook instead of accessing the context directly.
 
 ### Usage
 
