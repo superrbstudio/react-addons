@@ -1,4 +1,4 @@
-# Gatsby Addons Components
+# React Addons Components
 
 ## [BackToTop](./back-to-top.tsx)
 
