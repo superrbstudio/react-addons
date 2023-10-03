@@ -1,4 +1,4 @@
-# Gatsby Addons Hooks
+# React Addons Hooks
 
 ## [useAsync](./use-async.ts)
 
@@ -245,7 +245,7 @@ const MyComponent = () => {
 
 ## [useModal](./use-modal.ts)
 
-When used in conjunction with the `[Modal](../components/README.md#modal)` component, provides methods for opening/closing the modal from another component.
+When used in conjunction with the [`Modal`](../components/README.md#modal) component, provides methods for opening/closing the modal from another component.
 
 ### Usage
 
@@ -253,7 +253,7 @@ When used in conjunction with the `[Modal](../components/README.md#modal)` compo
 const { isOpen, openModal, closeModal } = useModal('newsletter')
 
 if (isOpen) {
-    closeModal()
+  closeModal()
 }
 ```
 
@@ -292,54 +292,6 @@ const MyComponent = () => {
     <div ref={ref}>
       <div style={{ transform: `translateY(${pos / 5}%)` }} />
     </div>
-  )
-}
-```
-
-## [usePreload](./use-preload.ts)
-
-Adds preload tag to `<head>` for a given URL (if `<PreloadLinks>` component is present - included in `<Page>` component by default).
-
-### Usage
-
-By default, adds a preload tag for an image URL
-
-```tsx
-import React from 'react'
-
-const MyComponent = () => {
-  usePreload('https://example.com/image.png')
-
-  return (
-    // Component body
-  )
-}
-```
-
-The second argument accepts an image srcset, and will preload the correct image based on current screen size
-
-```tsx
-import React from 'react'
-
-const MyComponent = () => {
-  usePreload('https://example.com/image.png', 'https://example.com/image.png 250w, https://example.com/image-large.png 1024w')
-
-  return (
-    // Component body
-  )
-}
-```
-
-For other content types, pass you can pass `as` and `crossorigin` attributes as the 3rd and 4th arguments. The 5th argument is an object which will be passed to the `<link>` element as props.
-
-```tsx
-import React from 'react'
-
-const MyComponent = () => {
-  usePreload('https://example.com/style.css', undefined, 'style', 'anonymous', { onLoad: 'this.rel = "stylesheet"' })
-
-  return (
-    // Component body
   )
 }
 ```
