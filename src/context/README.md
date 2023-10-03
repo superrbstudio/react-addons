@@ -1,4 +1,4 @@
-# Gatsby Addons Contexts
+# React Addons Contexts
 
 ## [Cookies](./cookies-context-provider.tsx)
 
