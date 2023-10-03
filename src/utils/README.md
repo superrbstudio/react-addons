@@ -1,4 +1,4 @@
-# Gatsby Addons Utilities
+# React Addons Utilities
 
 ## [animate](./animate.ts)
 
