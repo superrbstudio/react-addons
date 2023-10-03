@@ -7,6 +7,7 @@ import useEventListener from './hooks/use-event-listener'
 import useHideOnScroll from './hooks/use-hide-on-scroll'
 import useId from './hooks/use-id'
 import useIsInViewport from './hooks/use-is-in-viewport'
+import useIsOverflowing from './hooks/use-is-overflowing'
 import useIsMobile from './hooks/use-is-mobile'
 import useLockBodyScroll from './hooks/use-lock-body-scroll'
 import useModal from './hooks/use-modal'
@@ -19,6 +20,7 @@ export {
   useEventListener,
   useHideOnScroll,
   useId,
+  useIsOverflowing,
   useIsInViewport,
   useIsMobile,
   useLockBodyScroll,
