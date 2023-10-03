@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, MutableRefObject } from 'react'
 const useIsInViewport = (
   initial = false,
   rootMargin = '0px 0px',
-  threshold = [0, 0.25, 0.5, 0.75, 1]
+  threshold = [0, 0.25, 0.5, 0.75, 1],
 ) => {
   const [isInViewport, setIsInViewport] = useState(initial)
   const element =
@@ -14,15 +14,15 @@ const useIsInViewport = (
   useEffect(() => {
     if (!observer.current) {
       observer.current = new IntersectionObserver(
-        entries => {
-          entries.forEach(entry => {
+        (entries) => {
+          entries.forEach((entry) => {
             setIsInViewport(entry.isIntersecting && entry.intersectionRatio > 0)
           })
         },
         {
           rootMargin,
           threshold,
-        }
+        },
       )
     }
 

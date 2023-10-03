@@ -1,5 +1,5 @@
-import { useEventListener } from "../hooks"
-import { useCallback, useEffect, useState } from "react"
+import { useEventListener } from '../hooks'
+import { useCallback, useEffect, useState } from 'react'
 
 const useHideOnScroll = (hiddenOnLoad: boolean = false): boolean => {
   const [hidden, setHidden] = useState<boolean>(hiddenOnLoad)
@@ -36,31 +36,31 @@ const useHideOnScroll = (hiddenOnLoad: boolean = false): boolean => {
   }, [])
 
   useEventListener(
-    "scroll",
+    'scroll',
     handleScroll,
     { passive: true },
-    typeof window !== "undefined" ? window : undefined
+    typeof window !== 'undefined' ? window : undefined,
   )
 
   useEventListener(
-    "resize",
+    'resize',
     handleLoad,
     { passive: true },
-    typeof window !== "undefined" ? window : undefined
+    typeof window !== 'undefined' ? window : undefined,
   )
 
   useEventListener(
-    "popstate",
+    'popstate',
     handleLoad,
     { passive: true },
-    typeof window !== "undefined" ? window : undefined
+    typeof window !== 'undefined' ? window : undefined,
   )
 
   useEventListener(
-    "pageshow",
+    'pageshow',
     handleLoad,
     { passive: true },
-    typeof window !== "undefined" ? window : undefined
+    typeof window !== 'undefined' ? window : undefined,
   )
 
   return hidden

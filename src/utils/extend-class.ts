@@ -2,7 +2,7 @@ const extendClass = (className: string, extension: string) =>
   className
     ? className
         .split(' ')
-        .map(name => `${name}__${extension}`)
+        .map((name) => `${name}__${extension}`)
         .join(' ')
     : ''
 

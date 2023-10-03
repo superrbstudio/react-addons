@@ -15,14 +15,18 @@ const MyComponent = () => {
   const [value, setValue] = useState<number>(0)
 
   const handleClick = useCallback(() => {
-    animate(0, 100, v => {
-      setValue(v)
-    }, 1000, easeInOutCubic)
+    animate(
+      0,
+      100,
+      (v) => {
+        setValue(v)
+      },
+      1000,
+      easeInOutCubic,
+    )
   }, [setValue])
 
-  return (
-    <button onClick={handleClick}>{value}</button>
-  )
+  return <button onClick={handleClick}>{value}</button>
 }
 ```
 
@@ -35,9 +39,7 @@ import React from 'react'
 import { animator } from '@superrb/gatsby-addons/utils'
 
 // Component will recieve a class of `animated` when in the viewport
-const MyComponent = (
-  <div ref={animator}></div>
-)
+const MyComponent = <div ref={animator}></div>
 ```
 
 ## [isExternalLink](./is-external-link.ts)
@@ -50,7 +52,7 @@ Used to determine whether a given URL is internal or external
 import { isExternalLink } from '@superrb/gatsby-addons/utils'
 
 isExternalLink('https://superrb.com') // true
-isExternalLink('/home')               // false
+isExternalLink('/home') // false
 ```
 
 ## [extendClass](./extend-class.ts)
@@ -86,8 +88,8 @@ Compares a given URL with the current hostname to check if link is to an externa
 ```tsx
 import { isExternalLink } from '@superrb/gatsby-addons/utils'
 
-isExternalLink('https://google.com')  // true
-isExternalLink('/test')               // false
+isExternalLink('https://google.com') // true
+isExternalLink('/test') // false
 ```
 
 ## [storageFactory](./storage-factory.ts)

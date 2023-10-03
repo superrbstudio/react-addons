@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 const useId = (prefix: string) => {
   const [id, setId] = useState(
-    `${prefix}-${Math.random().toString(36).substring(2, 9)}`
+    `${prefix}-${Math.random().toString(36).substring(2, 9)}`,
   )
 
   useEffect(() => {

@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from 'react'
 
-export type Status = "idle" | "pending" | "success" | "error"
+export type Status = 'idle' | 'pending' | 'success' | 'error'
 
 interface ReturnType<T, E = string> {
   execute: (...args: any) => Promise<void> // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -13,14 +13,14 @@ interface ReturnType<T, E = string> {
 const useAsync = <T, E = string>(
   asyncFunction: (...args: any[]) => Promise<T>, // eslint-disable-line @typescript-eslint/no-explicit-any
   immediate = false,
-  dependencies: any[] = [] // eslint-disable-line @typescript-eslint/no-explicit-any
+  dependencies: any[] = [], // eslint-disable-line @typescript-eslint/no-explicit-any
 ): ReturnType<T, E> => {
-  const [status, setStatus] = useState<Status>("idle")
+  const [status, setStatus] = useState<Status>('idle')
   const [value, setValue] = useState<T | null>(null)
   const [error, setError] = useState<E | null>(null)
 
   useEffect(() => {
-    setStatus("idle")
+    setStatus('idle')
     setValue(null)
     setError(null)
   }, dependencies)
@@ -31,20 +31,20 @@ const useAsync = <T, E = string>(
   // on every render, but only if asyncFunction changes.
   const execute = useCallback(
     async (...args: any[]) => {
-      setStatus("pending")
+      setStatus('pending')
       setValue(null)
       setError(null)
 
       try {
         const response = await asyncFunction(...args)
         setValue(response)
-        setStatus("success")
+        setStatus('success')
       } catch (err: any) {
         setError(err.message)
-        setStatus("error")
+        setStatus('error')
       }
     },
-    [asyncFunction]
+    [asyncFunction],
   )
 
   // Call execute if we want to fire it right away.

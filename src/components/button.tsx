@@ -8,8 +8,8 @@ import {
   PropsWithChildren,
   forwardRef,
   memo,
-} from "react"
-import { extendClass } from "../utils"
+} from 'react'
+import { extendClass } from '../utils'
 
 type Props = (
   | PropsWithChildren<HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>>
@@ -30,11 +30,11 @@ const Button = forwardRef(
       label,
       label_a11y,
       onClick,
-      className = "",
+      className = '',
       href,
       ...props
     }: Props,
-    ref: ForwardedRef<HTMLAnchorElement | HTMLButtonElement>
+    ref: ForwardedRef<HTMLAnchorElement | HTMLButtonElement>,
   ) => {
     className = `button ${className}`
     const renderedChildren = (
@@ -42,7 +42,7 @@ const Button = forwardRef(
         {label_a11y && <span className="screenreader-text">{label_a11y}</span>}
         {label && (
           <span
-            className={`${extendClass(className, "label")}`}
+            className={`${extendClass(className, 'label')}`}
             aria-hidden={label_a11y !== undefined}
             data-text={label}
           >
@@ -57,7 +57,7 @@ const Button = forwardRef(
       ...props,
       onClick,
       className,
-      "aria-label": label_a11y || label,
+      'aria-label': label_a11y || label,
       ref,
     }
 
@@ -67,9 +67,7 @@ const Button = forwardRef(
       }
 
       return (
-        <a {...{ ...(linkProps as AnchorProps), href }}>
-          {renderedChildren}
-        </a>
+        <a {...{ ...(linkProps as AnchorProps), href }}>{renderedChildren}</a>
       )
     }
 
@@ -77,14 +75,14 @@ const Button = forwardRef(
       ...props,
       onClick,
       className,
-      "aria-label": label_a11y || label,
+      'aria-label': label_a11y || label,
       ref,
     } as ButtonHTMLAttributes<HTMLButtonElement> & {
       ref: MutableRefObject<HTMLButtonElement>
     }
 
     return <button {...buttonProps}>{renderedChildren}</button>
-  }
+  },
 )
 
 export default memo(Button)

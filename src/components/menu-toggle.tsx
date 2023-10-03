@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import {
   ButtonHTMLAttributes,
@@ -8,14 +8,14 @@ import {
   useContext,
   useEffect,
   useState,
-} from "react"
-import { NavContext } from "../context"
-import { Button } from "../components"
-import { extendClass } from "../utils"
+} from 'react'
+import { NavContext } from '../context'
+import { Button } from '../components'
+import { extendClass } from '../utils'
 
 interface Props
   extends PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>> {
-  "aria-controls": string
+  'aria-controls': string
   className?: string
   label?: string
   closeLabel?: string
@@ -23,15 +23,15 @@ interface Props
 }
 
 const MenuToggle = ({
-  "aria-controls": ariaControls,
-  className = "",
-  label = "Open Nav",
-  closeLabel = "Close Nav",
+  'aria-controls': ariaControls,
+  className = '',
+  label = 'Open Nav',
+  closeLabel = 'Close Nav',
   renderIcon = undefined,
   ...props
 }: Props) => {
   const { navOpen, toggleNav } = useContext(NavContext)
-  const [icon, setIcon] = useState<ReactElement | string>(navOpen ? "×" : "꠵")
+  const [icon, setIcon] = useState<ReactElement | string>(navOpen ? '×' : '꠵')
 
   useEffect(() => {
     if (renderIcon) {
@@ -40,14 +40,14 @@ const MenuToggle = ({
       return
     }
 
-    setIcon(navOpen ? "×" : "꠵")
+    setIcon(navOpen ? '×' : '꠵')
   }, [navOpen])
 
   const handleClick = useCallback(() => {
     if (
       document &&
       document?.activeElement instanceof Element &&
-      "blur" in document?.activeElement
+      'blur' in document?.activeElement
     ) {
       ;(document.activeElement as HTMLElement)?.blur()
     }
@@ -64,7 +64,7 @@ const MenuToggle = ({
       label_a11y={navOpen ? closeLabel : label}
       {...props}
     >
-      <span className={`menu-toggle__icon ${extendClass(className, "icon")}`}>
+      <span className={`menu-toggle__icon ${extendClass(className, 'icon')}`}>
         {icon}
       </span>
     </Button>

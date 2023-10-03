@@ -3,7 +3,7 @@ export let observer: IntersectionObserver
 
 if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
   const onIntersect = (entries: IntersectionObserverEntry[]) => {
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting && entry.intersectionRatio > 0) {
         entry.target.classList.add('animated')
 
@@ -19,7 +19,7 @@ if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
     threshold: [0, 0.25, 0.5, 0.75, 1],
   })
 
-  animator = element => {
+  animator = (element) => {
     if (!element || typeof element !== 'object') {
       return
     }

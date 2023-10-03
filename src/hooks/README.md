@@ -45,9 +45,10 @@ const MyComponent = () => {
 Enables click and drag to scroll an element with overflow.
 
 The `className` passed to the object should match the container. The component then adds and removes the following classes as you interact with it (based on a class of `list`):
-* `list--draggable` - automatically added when the `scrollWidth` of the container is larger than the containers width
-* `list--scrolling` - added when a `scroll` event is fired on the container
-* `list--dragging` - added when the user begins dragging the container
+
+- `list--draggable` - automatically added when the `scrollWidth` of the container is larger than the containers width
+- `list--scrolling` - added when a `scroll` event is fired on the container
+- `list--dragging` - added when the user begins dragging the container
 
 ### Usage
 
@@ -56,12 +57,15 @@ import React, { useRef, MutableRefObject } from 'react'
 import { useDraggableScroll } from '@superrb/gatsby-addons/hooks'
 
 const MyComponent = () => {
-  const scrollContainer = useRef<HTMLUListElement>() as MutableRefObject<HTMLUListElement>
+  const scrollContainer =
+    useRef<HTMLUListElement>() as MutableRefObject<HTMLUListElement>
   const { events } = useDraggableScroll(scrollContainer, { className: 'list' })
 
   return (
     <ul class="list" ref={scrollContainer} {...events}>
-      {items.map(item => <Item item={item} />)}
+      {items.map((item) => (
+        <Item item={item} />
+      ))}
     </ul>
   )
 }
@@ -83,12 +87,15 @@ const MyComponent = () => {
     setYPos(window.scrollY)
   }, [])
 
-  useEventListener('scroll', handleScroll, { passive: true }, typeof window !== 'undefined' ? window : null)
+  useEventListener(
+    'scroll',
+    handleScroll,
+    { passive: true },
+    typeof window !== 'undefined' ? window : null,
+  )
 
   return () => {
-    <>
-      {yPos}
-    </>
+    ;<>{yPos}</>
   }
 }
 ```
@@ -108,12 +115,16 @@ const MyComponent = () => {
     setYPos(window.scrollY)
   }, [])
 
-  useEventListener('scroll', handleScroll, { passive: true }, typeof window !== 'undefined' ? window : null, isInViewport)
+  useEventListener(
+    'scroll',
+    handleScroll,
+    { passive: true },
+    typeof window !== 'undefined' ? window : null,
+    isInViewport,
+  )
 
   return () => {
-    <div ref={setRef}>
-      {yPos}
-    </div>
+    ;<div ref={setRef}>{yPos}</div>
   }
 }
 ```
@@ -164,9 +175,7 @@ const MyComponent = () => {
   const { isInViewport, setRef } = useIsInViewport(false)
 
   return (
-    <div ref={setRef}>
-      {isInViewport ? 'Now you see me' : 'Now you don\'t'}
-    </div>
+    <div ref={setRef}>{isInViewport ? 'Now you see me' : "Now you don't"}</div>
   )
 }
 ```
@@ -174,7 +183,11 @@ const MyComponent = () => {
 Root margin and threshold for the internal IntersectionObserver can be overridden by passing them to the hook
 
 ```tsx
-const { isInViewport, setRef } = useIsInViewport(false, '100px 100px', [0, .25, .5, .75, 1])
+const { isInViewport, setRef } = useIsInViewport(
+  false,
+  '100px 100px',
+  [0, 0.25, 0.5, 0.75, 1],
+)
 ```
 
 ## [useIsMobile](./use-is-mobile.ts)
@@ -228,11 +241,7 @@ import { useMotionAllowed } from '@superrb/gatsby-addons/hooks'
 const MyComponent = () => {
   const isMotionAllowed = useMotionAllowed(false)
 
-  return (
-    <>
-      {motionAllowed ? <Animation /> : 'No animation'}
-    </>
-  )
+  return <>{motionAllowed ? <Animation /> : 'No animation'}</>
 }
 ```
 
@@ -304,3 +313,4 @@ const MyComponent = () => {
     // Component body
   )
 }
+```

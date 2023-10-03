@@ -1,8 +1,8 @@
-import { Button } from "../../components"
+import { Button } from '../../components'
 
 const SubmitButton = ({ label }: { label?: string }) => {
   return (
-    <Button label={label || "Submit"} className="form__submit" type="submit" />
+    <Button label={label || 'Submit'} className="form__submit" type="submit" />
   )
 }
 

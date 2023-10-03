@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import { useLockBodyScroll } from "../hooks"
-import { createContext, PropsWithChildren, useCallback, useState } from "react"
+import { useLockBodyScroll } from '../hooks'
+import { createContext, PropsWithChildren, useCallback, useState } from 'react'
 
 export const NavContext = createContext({
   navOpen: false,
@@ -15,7 +15,7 @@ export const NavContextProvider = ({ children }: PropsWithChildren) => {
   useLockBodyScroll(navOpen)
 
   const toggleNav = useCallback(() => {
-    setNavOpen(navOpen => !navOpen)
+    setNavOpen((navOpen) => !navOpen)
   }, [setNavOpen])
 
   const openNav = useCallback(() => {

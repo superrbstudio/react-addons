@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef } from "react"
+import { MutableRefObject, useEffect, useRef } from 'react'
 
 type Target = Document | Window | Element
 
@@ -11,7 +11,7 @@ type EventMap<T extends Target> = T extends Window
 type EventName<T extends Target> = keyof EventMap<T>
 
 type EventListener<T extends Target, E extends EventName<T>> = (
-  event: EventMap<T>[E]
+  event: EventMap<T>[E],
 ) => void | boolean
 
 // Hook
@@ -20,7 +20,7 @@ const useEventListener = <T extends Target, E extends EventName<T>>(
   handler: EventListener<T, E>,
   options: boolean | AddEventListenerOptions = {},
   element?: T,
-  flag: boolean = true
+  flag: boolean = true,
 ) => {
   // Create a ref that stores handler
   const savedHandler = useRef<EventListener<T, E>>() as MutableRefObject<
@@ -49,7 +49,7 @@ const useEventListener = <T extends Target, E extends EventName<T>>(
       if (!isSupported) return
 
       // Create event listener that calls handler function stored in ref
-      const eventListener: EventListener<T, E> = event =>
+      const eventListener: EventListener<T, E> = (event) =>
         savedHandler.current(event)
 
       if (flag) {
@@ -57,12 +57,12 @@ const useEventListener = <T extends Target, E extends EventName<T>>(
         elementRef.current.addEventListener(
           eventName as string,
           eventListener as EventListenerOrEventListenerObject,
-          options
+          options,
         )
       } else {
         elementRef.current.removeEventListener(
           eventName as string,
-          eventListener as EventListenerOrEventListenerObject
+          eventListener as EventListenerOrEventListenerObject,
         )
       }
 
@@ -70,7 +70,7 @@ const useEventListener = <T extends Target, E extends EventName<T>>(
       return () => {
         elementRef.current.removeEventListener(
           eventName as string,
-          eventListener as EventListenerOrEventListenerObject
+          eventListener as EventListenerOrEventListenerObject,
         )
       }
     },
@@ -81,7 +81,7 @@ const useEventListener = <T extends Target, E extends EventName<T>>(
       element,
       elementRef.current,
       flag,
-    ] // Re-run if eventName or element changes
+    ], // Re-run if eventName or element changes
   )
 }
 

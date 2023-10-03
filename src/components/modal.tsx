@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import {
   useState,
@@ -7,9 +7,9 @@ import {
   MutableRefObject,
   useRef,
   useCallback,
-} from "react"
-import { local } from "../storage"
-import { useLockBodyScroll, useModal } from "../hooks"
+} from 'react'
+import { local } from '../storage'
+import { useLockBodyScroll, useModal } from '../hooks'
 
 interface Props {
   name: string
@@ -33,7 +33,7 @@ const Modal = ({
 
   useEffect(() => {
     if (dismissable) {
-      setDismissed(local.getItem(`${name}-popup-dismissed`) === "true")
+      setDismissed(local.getItem(`${name}-popup-dismissed`) === 'true')
     }
   }, [])
 
@@ -50,7 +50,7 @@ const Modal = ({
     closeModal()
 
     if (dismissable) {
-      local.setItem(`${name}-popup-dismissed`, "true")
+      local.setItem(`${name}-popup-dismissed`, 'true')
       setDismissed(true)
     }
   }, [name, closeModal])

@@ -1,13 +1,13 @@
-import { ease, EasingFunction } from "./easing-functions"
+import { ease, EasingFunction } from './easing-functions'
 
 const animate = (
   from: number,
   to: number,
   callback: (value: number) => void,
   duration = 500,
-  easing: EasingFunction = ease
+  easing: EasingFunction = ease,
 ): Promise<void> =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     const diff = to - from
 
     if (!diff) {

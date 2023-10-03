@@ -5,9 +5,9 @@ import {
   useEffect,
   useRef,
   useState,
-} from "react"
-import { useDraggable } from "react-use-draggable-scroll"
-import { useEventListener, useIsInViewport } from "../hooks"
+} from 'react'
+import { useDraggable } from 'react-use-draggable-scroll'
+import { useEventListener, useIsInViewport } from '../hooks'
 
 interface Events {
   onMouseDown: MouseEventHandler<HTMLElement>
@@ -15,7 +15,7 @@ interface Events {
 
 const useDraggableScroll = (
   ref: MutableRefObject<HTMLElement>,
-  { className, ...opts }: { className: string }
+  { className, ...opts }: { className: string },
 ) => {
   const { isInViewport, setRef } = useIsInViewport(false)
   const { events } = useDraggable(ref, {
@@ -36,7 +36,7 @@ const useDraggableScroll = (
       ref.current?.scrollHeight > ref.current?.clientHeight
     setShouldScroll(shouldScroll)
 
-    const fn = shouldScroll ? "add" : "remove"
+    const fn = shouldScroll ? 'add' : 'remove'
     ref.current?.classList[fn](`${className}--draggable`)
   }, [ref.current])
 
@@ -59,18 +59,18 @@ const useDraggableScroll = (
   }
 
   useEventListener(
-    "mousemove",
+    'mousemove',
     onDragMove,
     undefined,
     undefined,
-    isInViewport && shouldScroll
+    isInViewport && shouldScroll,
   )
   useEventListener(
-    "mouseup",
+    'mouseup',
     onDragEnd,
     undefined,
     undefined,
-    isInViewport && shouldScroll
+    isInViewport && shouldScroll,
   )
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const useDraggableScroll = (
     const originalOnMouseDown = events.onMouseDown
 
     setModifiedEvents({
-      onMouseDown: event => {
+      onMouseDown: (event) => {
         onDragStart()
         originalOnMouseDown(event)
       },

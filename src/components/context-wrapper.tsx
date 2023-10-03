@@ -1,9 +1,9 @@
-import { PropsWithChildren } from "react"
+import { PropsWithChildren } from 'react'
 import {
   CookiesContextProvider,
   ModalContextProvider,
   NavContextProvider,
-} from "../context"
+} from '../context'
 
 const ContextWrapper = ({ children }: PropsWithChildren<{}>) => (
   <CookiesContextProvider>

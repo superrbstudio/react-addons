@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import { FormEvent, FormEventHandler, useEffect, useState } from "react";
-import { AnySchema } from "yup";
-import { UseFormRegisterReturn } from "react-hook-form";
+import { FormEvent, FormEventHandler, useEffect, useState } from 'react'
+import { AnySchema } from 'yup'
+import { UseFormRegisterReturn } from 'react-hook-form'
 
 interface Props {
-  register: UseFormRegisterReturn<string>;
-  schema: AnySchema<any>;
-  id?: string;
-  onInput?: FormEventHandler<HTMLElement>;
+  register: UseFormRegisterReturn<string>
+  schema: AnySchema<any>
+  id?: string
+  onInput?: FormEventHandler<HTMLElement>
 }
 
 const FormField = ({ register, schema, id, onInput }: Props) => {
-  const [touched, setTouched] = useState<boolean>(false);
-  const [rendered, setRendered] = useState<boolean>(false);
+  const [touched, setTouched] = useState<boolean>(false)
+  const [rendered, setRendered] = useState<boolean>(false)
   const fieldProps = {
     ...register,
     ...(!touched && schema?.spec?.default
@@ -25,23 +25,23 @@ const FormField = ({ register, schema, id, onInput }: Props) => {
       ? { placeholder: schema?.spec?.meta?.placeholder }
       : {}),
     onInput: (event: FormEvent<HTMLElement>) => {
-      setTouched(true);
+      setTouched(true)
 
       if (onInput) {
-        onInput(event);
+        onInput(event)
       }
     },
-  };
+  }
 
   useEffect(() => {
-    setRendered(true);
-  }, []);
+    setRendered(true)
+  }, [])
 
   if (schema?.spec?.meta?.options?.length > 0) {
     return (
       <select className="form__control form__control--select" {...fieldProps}>
         {schema?.spec?.meta?.placeholder ? (
-          <option value="" key={"placeholder"}>
+          <option value="" key={'placeholder'}>
             {schema?.spec?.meta?.placeholder}
           </option>
         ) : null}
@@ -51,14 +51,14 @@ const FormField = ({ register, schema, id, onInput }: Props) => {
           </option>
         ))}
       </select>
-    );
+    )
   }
 
   return (
     <>
       {schema?.spec?.meta?.textarea === true ? (
         <textarea className="form__control" {...fieldProps} />
-      ) : schema?.type === "boolean" ? (
+      ) : schema?.type === 'boolean' ? (
         <input
           type="checkbox"
           className="form__control form__control--checkbox"
@@ -71,7 +71,7 @@ const FormField = ({ register, schema, id, onInput }: Props) => {
           className="form__control form__control--hidden"
           {...fieldProps}
         />
-      ) : schema?.type === "mixed" ? (
+      ) : schema?.type === 'mixed' ? (
         <input
           className="form__control form__control--mixed"
           type="file"
@@ -81,7 +81,7 @@ const FormField = ({ register, schema, id, onInput }: Props) => {
         <input className="form__control" {...fieldProps} />
       )}
     </>
-  );
-};
+  )
+}
 
-export default FormField;
+export default FormField

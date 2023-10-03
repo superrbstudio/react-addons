@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react"
-import { ModalContext } from "../context"
+import { useContext, useEffect, useState } from 'react'
+import { ModalContext } from '../context'
 
 const useModal = (name: string) => {
   const [open, setOpen] = useState<boolean>(false)

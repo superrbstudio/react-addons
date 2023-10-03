@@ -1,11 +1,11 @@
-import { useEventListener, useMotionAllowed } from "../hooks"
-import { useCallback } from "react"
+import { useEventListener, useMotionAllowed } from '../hooks'
+import { useCallback } from 'react'
 
 const useParallax = (items: HTMLElement[], flag: boolean = true) => {
   const isMotionAllowed = useMotionAllowed()
 
   const onScroll = useCallback(
-    (event: GlobalEventHandlersEventMap["scroll"]) => {
+    (event: GlobalEventHandlersEventMap['scroll']) => {
       items.forEach((item, index) => {
         if (!item) {
           return
@@ -20,15 +20,15 @@ const useParallax = (items: HTMLElement[], flag: boolean = true) => {
         })
       })
     },
-    [items]
+    [items],
   )
 
   useEventListener(
-    "scroll",
+    'scroll',
     onScroll,
     { passive: true },
     undefined,
-    flag && isMotionAllowed
+    flag && isMotionAllowed,
   )
 }
 

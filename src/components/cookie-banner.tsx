@@ -1,31 +1,31 @@
-"use client"
+'use client'
 
-import { useContext, useState } from "react"
-import { CookiesContext } from "../context"
-import { Button, Form } from "../components"
-import * as Yup from "yup"
-import SubmitButton from "./form/submit-button"
-import { session } from "../storage"
+import { useContext, useState } from 'react'
+import { CookiesContext } from '../context'
+import { Button, Form } from '../components'
+import * as Yup from 'yup'
+import SubmitButton from './form/submit-button'
+import { session } from '../storage'
 
 const content = {
-  title: "Cookie Notice",
-  text: "We use cookies to ensure you get the best experience on our website.",
-  form_text: "Select the type of cookies you wish to allow.",
-  policyLink: "/legal/cookies-policy",
-  policyLabel: "Cookie Policy",
-  customiseLabel: "Customise",
-  rejectLabel: "Reject",
-  acceptLabel: "Accept",
-  acceptAllLabel: "Accept All",
+  title: 'Cookie Notice',
+  text: 'We use cookies to ensure you get the best experience on our website.',
+  form_text: 'Select the type of cookies you wish to allow.',
+  policyLink: '/legal/cookies-policy',
+  policyLabel: 'Cookie Policy',
+  customiseLabel: 'Customise',
+  rejectLabel: 'Reject',
+  acceptLabel: 'Accept',
+  acceptAllLabel: 'Accept All',
   tracking: {
-    title: "Optional Cookies",
+    title: 'Optional Cookies',
     description:
-      "These cookies are set by third-parties to track browsing habits in order to personalise your experience.",
+      'These cookies are set by third-parties to track browsing habits in order to personalise your experience.',
   },
   necessary: {
-    title: "Necessary Cookies",
+    title: 'Necessary Cookies',
     description:
-      "These cookies are necessary for the website to function and cannot be switched off.",
+      'These cookies are necessary for the website to function and cannot be switched off.',
   },
 }
 
@@ -51,7 +51,7 @@ const CookieBanner = ({
   const [animate, setAnimate] = useState<boolean>(false)
   const [formOpen, setFormOpen] = useState<boolean>(false)
   const [rejected, setRejected] = useState<boolean>(
-    !!session.getItem("cookies-rejected")
+    !!session.getItem('cookies-rejected'),
   )
 
   const openForm = () => {
@@ -60,7 +60,7 @@ const CookieBanner = ({
 
   const reject = () => {
     setRejected(true)
-    session.setItem("cookies-rejected", "true")
+    session.setItem('cookies-rejected', 'true')
   }
 
   const accept = (necessary: boolean, tracking: boolean) => {
@@ -96,7 +96,7 @@ const CookieBanner = ({
         `
         <strong>${content.necessary?.title}</strong>
         <p>${content.necessary?.description}</p>
-      `
+      `,
       )
       .meta({ disabled: true }),
   })
@@ -105,7 +105,7 @@ const CookieBanner = ({
     <>
       {!rejected && !cookiesAccepted ? (
         <div
-          className={`cookie-banner ${animate ? " cookie-banner--hide" : ""} `}
+          className={`cookie-banner ${animate ? ' cookie-banner--hide' : ''} `}
         >
           <div className="cookie-banner__container container">
             <div className="cookie-banner__inner">
@@ -160,7 +160,7 @@ const CookieBanner = ({
           </div>
         </div>
       ) : (
-        ""
+        ''
       )}
     </>
   )

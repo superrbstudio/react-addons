@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import {
   PropsWithChildren,
@@ -6,8 +6,8 @@ import {
   useCallback,
   useEffect,
   useState,
-} from "react"
-import Cookies from "js-cookie"
+} from 'react'
+import Cookies from 'js-cookie'
 
 export const CookiesContext = createContext({
   cookiesAccepted: false,
@@ -22,33 +22,33 @@ export const CookiesContextProvider = ({ children }: PropsWithChildren<{}>) => {
     useState<boolean>(false)
 
   useEffect(() => {
-    const accepted = Cookies.get("accepted-cookies") || false
+    const accepted = Cookies.get('accepted-cookies') || false
     setCookiesAcceptedStorage(!!accepted)
   }, [setCookiesAcceptedStorage])
 
   useEffect(() => {
-    const accepted = Cookies.get("accepted-tracking-cookies") || false
+    const accepted = Cookies.get('accepted-tracking-cookies') || false
     setTrackingCookiesAcceptedStorage(!!accepted)
   }, [setTrackingCookiesAcceptedStorage])
 
   const setCookiesAccepted = useCallback(
     (accepted: boolean) => {
-      Cookies.set("accepted-cookies", accepted.toString(), {
+      Cookies.set('accepted-cookies', accepted.toString(), {
         expires: 30,
       })
       setCookiesAcceptedStorage(accepted)
     },
-    [setCookiesAcceptedStorage]
+    [setCookiesAcceptedStorage],
   )
 
   const setTrackingCookiesAccepted = useCallback(
     (accepted: boolean) => {
-      Cookies.set("accepted-tracking-cookies", accepted.toString(), {
+      Cookies.set('accepted-tracking-cookies', accepted.toString(), {
         expires: 30,
       })
       setTrackingCookiesAcceptedStorage(accepted)
     },
-    [setTrackingCookiesAcceptedStorage]
+    [setTrackingCookiesAcceptedStorage],
   )
 
   return (

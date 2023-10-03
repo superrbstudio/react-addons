@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { createContext, PropsWithChildren, useState } from "react"
+import { createContext, PropsWithChildren, useState } from 'react'
 
 export const ModalContext = createContext({
   openState: {} as OpenState,
@@ -21,7 +21,7 @@ export const ModalContextProvider = ({ children }: PropsWithChildren) => {
   }
 
   const openModal = (name: string) => {
-    setOpenState(state => {
+    setOpenState((state) => {
       const newState = { ...state }
       newState[name] = true
 
@@ -30,7 +30,7 @@ export const ModalContextProvider = ({ children }: PropsWithChildren) => {
   }
 
   const closeModal = (name: string) => {
-    setOpenState(state => {
+    setOpenState((state) => {
       const newState = { ...state }
       newState[name] = false
 
