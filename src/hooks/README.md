@@ -211,6 +211,21 @@ const MyComponent = () => {
 }
 ```
 
+## [useIsOverflowing](./use-is-overflowing.ts)
+
+Returns true if the passed ref contains enough content to cause it to scroll.
+
+### Usage
+
+```tsx
+const element = useRef<HTMLElement>() as MutableRefObject<HTMLElement>
+const isOverflowing = useIsOverflowing(element.current)
+
+return (
+  <div ref={element} />
+)
+```
+
 ## [useLockBodyScroll](./use-lock-body-scroll.ts)
 
 Use a boolean flag to determine whether scrolling should be disabled on the body (for example when a modal is open)
@@ -225,6 +240,20 @@ const MyComponent = () => {
   const [open, setOpen] = useState<boolean>(false)
 
   useLockBodyScroll(open)
+}
+```
+
+## [useModal](./use-modal.ts)
+
+When used in conjunction with the `[Modal](../components/README.md#modal)` component, provides methods for opening/closing the modal from another component.
+
+### Usage
+
+```tsx
+const { isOpen, openModal, closeModal } = useModal('newsletter')
+
+if (isOpen) {
+    closeModal()
 }
 ```
 

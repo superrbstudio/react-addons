@@ -79,6 +79,30 @@ import { getYPos } from '@superrb/gatsby-addons/utils'
 getYPos(document.getElementById('#content'))
 ```
 
+## [get](./get.ts)
+
+An adaptation of `lodash.get`, used to retrieve deeply-nested properties from objects using dot-notation.
+
+### Usage
+
+```tsx
+const object = {
+  first: {
+    second: {
+      third: true
+    }
+  }
+}
+
+const value = get('first.second.third', object) // true
+```
+
+You can also pass a third parameter to set a default to be return if any level of the object returns undefined.
+
+```tsx
+const value = get('first.fourth', object, 'Default') // Default
+```
+
 ## [isExternalLink](./is-external-link.ts)
 
 Compares a given URL with the current hostname to check if link is to an external site or not
