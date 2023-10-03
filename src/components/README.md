@@ -4,7 +4,7 @@
 
 Adds a hidden back-to-top link for accessibility purposes.
 
-### Usage
+### Usage
 
 ```tsx
 <BackToTop />
@@ -30,7 +30,7 @@ Creates a button. Determines whether to use an `<a>`, `<Link>` or `<button>` ele
 <Button href={'https://superrb.com'} label={'The visible label'} label_a11y={'A separate label for screenreaders'} />
 ```
 
-## [ContextWrapper](./context-wrapper.tsx)
+## [ContextWrapper](./context-wrapper.tsx)
 
 A wrapper component containing providers for all contexts within addons.
 
@@ -46,7 +46,7 @@ A wrapper component containing providers for all contexts within addons.
 
 A cookie banner container user-customisable options for tracking.
 
-### Usage
+### Usage
 
 ```tsx
 <CookieBanner
@@ -103,7 +103,8 @@ A reusable modal component.
 <Modal
   name="newsletter"   {/* The name used to refer to this modal when using the ModalContext or useModal hook */}
   openAfter={5000}    {/* If set, the modal will automatically open after the number of ms */}
-  dismissable={true}  {/* If false, the modal will not include a close button and cannot be dismissed. Use the `[useModal](../hooks/README.md#useModal)` hook to close the modal */}
+  dismissable={true}  {/* If false, the modal will not include a close button and cannot be dismissed.
+                          Use the [`useModal`](../hooks/README.md#useModal) hook to close the modal */}
 >
   {children}
 </Modal>
