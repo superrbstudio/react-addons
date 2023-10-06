@@ -41,7 +41,7 @@ const MenuToggle = ({
     }
 
     setIcon(navOpen ? '×' : '꠵')
-  }, [navOpen])
+  }, [navOpen, renderIcon])
 
   const handleClick = useCallback(() => {
     if (
