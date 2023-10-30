@@ -5,7 +5,7 @@ const useIsMobile = (initial = true, size = '63.75em') => {
 
   const setScreenSize = useCallback(() => {
     setIsMobile(!window.matchMedia(`(min-width: ${size})`).matches)
-  }, [setIsMobile])
+  }, [setIsMobile, size])
 
   useEffect(() => {
     setScreenSize()
