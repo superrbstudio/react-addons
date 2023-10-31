@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  useCallback,
   useState,
   ReactNode,
   useEffect,
@@ -10,6 +9,7 @@ import {
   MutableRefObject,
   useRef,
   ForwardedRef,
+  useCallback,
 } from 'react'
 import { ObjectSchema, InferType, AnySchema } from 'yup'
 import { paramCase, sentenceCase } from 'change-case'
@@ -22,6 +22,8 @@ import ErrorMessage from './form/error-message'
 import FormField from './form/field'
 import SubmitButton from './form/submit-button'
 import messages from './form/messages.json'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import ApiResponse from '@/types/api-response'
 
 export interface FormProps<T extends ObjectSchema<any>> {
   schema: T
@@ -39,7 +41,7 @@ export interface FormProps<T extends ObjectSchema<any>> {
   ) => ReactNode
   renderSubmit?: () => ReactNode
   renderers?: { [P in T as string]: FieldRenderer }
-  executeRecaptcha?: () => Promise<string>
+  useRecaptcha?: boolean
 }
 
 const toBase64 = (file: File) =>
@@ -64,8 +66,8 @@ function Form(
     action,
     className,
     initialData,
+    onSubmit,
     method = 'post',
-    onSubmit = () => {},
     onStatusChange = () => {},
     renderSuccessMessage = (data) => <SuccessMessage />,
     renderErrorMessage = (error?: FieldError, fieldSchema?: AnySchema) => (
@@ -73,7 +75,7 @@ function Form(
     ),
     renderSubmit = () => <SubmitButton />,
     renderers = {},
-    executeRecaptcha = undefined,
+    useRecaptcha = true,
     ...props
   }: FormProps<ObjectSchema<any>>,
   ref: ForwardedRef<HTMLFormElement>,
@@ -83,6 +85,7 @@ function Form(
   const fieldRefs = useRef<{ [P in DataStructure as string]?: HTMLElement }>(
     {},
   ) as MutableRefObject<{ [P in DataStructure as string]?: HTMLElement }>
+  const { executeRecaptcha } = useGoogleReCaptcha()
 
   for (const name of Object.keys(schema.fields)) {
     const field: AnySchema = schema.fields[name] as AnySchema
@@ -124,7 +127,7 @@ function Form(
       }
 
       // if recaptcha is enabled generate a token and add to the data
-      if (executeRecaptcha) {
+      if (useRecaptcha && executeRecaptcha) {
         const token = await executeRecaptcha()
         data['recaptchaToken'] = token
       }
@@ -137,9 +140,9 @@ function Form(
         body: JSON.stringify(data),
       })
 
-      const responseData = await response.json()
+      const responseData: ApiResponse = await response.json()
 
-      if (!response.ok) {
+      if (!response.ok || !responseData.success) {
         if (responseData.error) {
           throw new Error(responseData.error)
         }
@@ -151,7 +154,7 @@ function Form(
 
       return responseData
     },
-    [action, onSubmit],
+    [action, executeRecaptcha, onSubmit, useRecaptcha],
   )
 
   const { execute, status, error } = useAsync(onSubmitHandler, false, [
@@ -170,6 +173,8 @@ function Form(
       field.spec.label = sentenceCase(fieldName)
     }
   })
+
+  console.log(status)
 
   return (
     <>
@@ -251,6 +256,28 @@ function Form(
           })}
 
           {renderSubmit()}
+
+          {useRecaptcha && (
+            <p className="form__recaptcha-message">
+              This site is protected by reCAPTCHA and the Google{' '}
+              <a
+                href="https://policies.google.com/privacy"
+                target="_blank"
+                rel="noopener"
+              >
+                Privacy Policy
+              </a>{' '}
+              and{' '}
+              <a
+                href="https://policies.google.com/terms"
+                target="_blank"
+                rel="noopener"
+              >
+                Terms of Service
+              </a>{' '}
+              apply.
+            </p>
+          )}
         </form>
       )}
     </>

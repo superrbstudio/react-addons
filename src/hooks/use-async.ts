@@ -23,7 +23,7 @@ const useAsync = <T, E = string>(
     setStatus('idle')
     setValue(null)
     setError(null)
-  }, dependencies)
+  }, dependencies) // eslint-disable-line react-hooks/exhaustive-deps
 
   // The execute function wraps asyncFunction and
   // handles setting state for pending, value, and error.
