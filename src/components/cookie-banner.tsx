@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, useState } from 'react'
+import { ReactNode, useContext, useState } from 'react'
 import { CookiesContext } from '../context'
 import { Button, Form } from '../components'
 import * as Yup from 'yup'
@@ -37,6 +37,10 @@ const CookieBanner = ({
   formText = content.form_text,
   policyLink = content.policyLink,
   policyLabel = content.policyLabel,
+  renderAcceptButton,
+  renderCustomiseButton,
+  renderRejectButton,
+  renderSubmitButton,
 }: {
   allowCustomisation?: boolean
   allowReject?: boolean
@@ -45,6 +49,10 @@ const CookieBanner = ({
   formText?: string
   policyLink?: string
   policyLabel?: string
+  renderAcceptButton?: (props: {}) => ReactNode
+  renderCustomiseButton?: (props: {}) => ReactNode
+  renderRejectButton?: (props: {}) => ReactNode
+  renderSubmitButton?: () => ReactNode
 }) => {
   const { cookiesAccepted, setCookiesAccepted, setTrackingCookiesAccepted } =
     useContext(CookiesContext)
@@ -119,7 +127,13 @@ const CookieBanner = ({
                     className="cookie-banner__form"
                     schema={schema}
                     onSubmit={submit}
-                    renderSubmit={() => <SubmitButton label={acceptLabel} />}
+                    renderSubmit={() =>
+                      renderSubmitButton ? (
+                        renderSubmitButton()
+                      ) : (
+                        <SubmitButton label={acceptLabel} />
+                      )
+                    }
                     renderSuccessMessage={false}
                   />
                 </div>
@@ -135,25 +149,43 @@ const CookieBanner = ({
                 </div>
                 <div className="cookie-banner__buttons">
                   {allowReject && !allowCustomisation && !formOpen && (
-                    <Button
-                      onClick={reject}
-                      className="cookie-banner__reject button button__rounded button__rounded--black-fill"
-                      label={content.rejectLabel}
-                    />
+                    <>
+                      {renderRejectButton ? (
+                        renderRejectButton({ onClick: reject })
+                      ) : (
+                        <Button
+                          onClick={reject}
+                          className="cookie-banner__reject"
+                          label={content.rejectLabel}
+                        />
+                      )}
+                    </>
                   )}
                   {allowCustomisation && !formOpen && (
-                    <Button
-                      onClick={openForm}
-                      className="cookie-banner__reject button button__rounded button__rounded--black-fill"
-                      label={content.customiseLabel}
-                    />
+                    <>
+                      {renderCustomiseButton ? (
+                        renderCustomiseButton({ onClick: openForm })
+                      ) : (
+                        <Button
+                          onClick={openForm}
+                          className="cookie-banner__customise"
+                          label={content.customiseLabel}
+                        />
+                      )}
+                    </>
                   )}
                   {!formOpen && (
-                    <Button
-                      onClick={acceptAll}
-                      className="cookie-banner__agree button button__rounded button__rounded--black"
-                      label={acceptLabel}
-                    />
+                    <>
+                      {renderAcceptButton ? (
+                        renderAcceptButton({ onClick: acceptAll })
+                      ) : (
+                        <Button
+                          onClick={acceptAll}
+                          className="cookie-banner__accept"
+                          label={acceptLabel}
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               </div>
