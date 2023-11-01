@@ -1,4 +1,6 @@
-export let animator: (element: HTMLElement) => void
+import {LegacyRef} from "react"
+
+export let animator: LegacyRef<HTMLElement>
 export let observer: IntersectionObserver
 
 if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
@@ -19,7 +21,7 @@ if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
     threshold: [0, 0.25, 0.5, 0.75, 1],
   })
 
-  animator = (element) => {
+  animator = (element: HTMLElement) => {
     if (!element || typeof element !== 'object') {
       return
     }
