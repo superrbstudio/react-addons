@@ -1,4 +1,4 @@
-import {LegacyRef} from "react"
+import { LegacyRef } from 'react'
 
 export let animator: LegacyRef<HTMLElement>
 export let observer: IntersectionObserver
@@ -8,11 +8,8 @@ if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
     entries.forEach((entry) => {
       if (entry.isIntersecting && entry.intersectionRatio > 0) {
         entry.target.classList.add('animated')
-
-        return
+        observer.unobserve(entry.target)
       }
-
-      entry.target.classList.remove('animated')
     })
   }
 
