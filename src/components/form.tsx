@@ -28,7 +28,7 @@ import ApiResponse from '@/types/api-response'
 export interface FormProps<T extends ObjectSchema<any>> {
   schema: T
   name?: string
-  action?: string
+  action?: string | ((formData: FormData) => any)
   className?: string
   method?: string
   initialData?: { [P in T as string]: any }
@@ -111,6 +111,15 @@ function Form(
         return onSubmit(data)
       }
 
+      if (typeof action === 'function') {
+        const formData = new FormData()
+        for (const [key, value] of Object.entries(data)) {
+          formData.append(key, value as string)
+        }
+
+        return action(formData)
+      }
+
       for (const [key, value] of Object.entries(data)) {
         if (value instanceof FileList) {
           data[`file_${key}`] = []
@@ -185,7 +194,7 @@ function Form(
       ) : (
         <form
           className={`form ${className}`}
-          action={action}
+          action={action as string}
           method={method}
           onSubmit={handleSubmit(execute)}
           noValidate={true}
