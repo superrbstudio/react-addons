@@ -22,7 +22,7 @@ import ErrorMessage from './form/error-message'
 import FormField from './form/field'
 import SubmitButton from './form/submit-button'
 import messages from './form/messages.json'
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+// import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import ApiResponse from '@/types/api-response'
 
 export interface FormProps<T extends ObjectSchema<any>> {
@@ -85,7 +85,9 @@ function Form(
   const fieldRefs = useRef<{ [P in DataStructure as string]?: HTMLElement }>(
     {},
   ) as MutableRefObject<{ [P in DataStructure as string]?: HTMLElement }>
-  const { executeRecaptcha } = useGoogleReCaptcha()
+  // const { executeRecaptcha } = useGoogleReCaptcha()
+
+  let executeRecaptcha: () => void
 
   for (const name of Object.keys(schema.fields)) {
     const field: AnySchema = schema.fields[name] as AnySchema
@@ -154,7 +156,7 @@ function Form(
 
       return responseData
     },
-    [action, executeRecaptcha, onSubmit, useRecaptcha],
+    [action, onSubmit, useRecaptcha],
   )
 
   const { execute, status, error } = useAsync(onSubmitHandler, false, [

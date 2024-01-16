@@ -1,11 +1,11 @@
 'use client'
 
-import { ReactNode, useContext, useState } from 'react'
-import { CookiesContext } from '../context'
+import { ReactNode, useState } from 'react'
 import { Button, Form } from '../components'
 import * as Yup from 'yup'
 import SubmitButton from './form/submit-button'
 import { session } from '../storage'
+import { useCookieStore } from '../store'
 
 const content = {
   title: 'Cookie Notice',
@@ -54,8 +54,13 @@ const CookieBanner = ({
   renderRejectButton?: (props: {}) => ReactNode
   renderSubmitButton?: () => ReactNode
 }) => {
-  const { cookiesAccepted, setCookiesAccepted, setTrackingCookiesAccepted, popupOpen, closePopup } =
-    useContext(CookiesContext)
+  const {
+    cookiesAccepted,
+    setCookiesAccepted,
+    setTrackingCookiesAccepted,
+    popupOpen,
+    closePopup,
+  } = useCookieStore()
   const [animate, setAnimate] = useState<boolean>(false)
   const [formOpen, setFormOpen] = useState<boolean>(false)
   const [rejected, setRejected] = useState<boolean>(
@@ -114,7 +119,7 @@ const CookieBanner = ({
 
   return (
     <>
-      {!rejected && !cookiesAccepted || popupOpen ? (
+      {(!rejected && !cookiesAccepted) || popupOpen ? (
         <div
           className={`cookie-banner ${animate ? ' cookie-banner--hide' : ''} `}
         >
