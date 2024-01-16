@@ -20,7 +20,8 @@
   "peerDependencies": {
     "@superrb/react-addons": "^1.0.0",
     "react": "^18.2.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "zustand": "^4.4.7"
   },
   "scripts": {
     "build": "tsc",
@@ -38,6 +39,7 @@
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.2.2",
     "typescript-eslint": "^0.0.1-alpha.0",
     "watch": "^1.0.2"
   }
