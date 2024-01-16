@@ -1,11 +1,11 @@
 'use client'
 
-import { ReactNode, useContext, useState } from 'react'
-import { CookiesContext } from '../context'
+import { ReactNode, useState } from 'react'
 import { Button, Form } from '../components'
 import * as Yup from 'yup'
 import SubmitButton from './form/submit-button'
 import { session } from '../storage'
+import { useCookieStore } from '../store'
 
 const content = {
   title: 'Cookie Notice',
@@ -55,7 +55,7 @@ const CookieBanner = ({
   renderSubmitButton?: () => ReactNode
 }) => {
   const { cookiesAccepted, setCookiesAccepted, setTrackingCookiesAccepted } =
-    useContext(CookiesContext)
+    useCookieStore()
   const [animate, setAnimate] = useState<boolean>(false)
   const [formOpen, setFormOpen] = useState<boolean>(false)
   const [rejected, setRejected] = useState<boolean>(
