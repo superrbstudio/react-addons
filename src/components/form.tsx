@@ -226,7 +226,9 @@ function Form(
                         className="form__label-text"
                         dangerouslySetInnerHTML={{
                           __html: `${field?.spec?.label} ${
-                            !field?.spec?.optional ? '*' : ''
+                            !field?.spec?.optional
+                              ? '<span className="form__required-indicator">*</span>'
+                              : ''
                           }`,
                         }}
                       />
