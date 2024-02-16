@@ -227,7 +227,7 @@ function Form(
                         dangerouslySetInnerHTML={{
                           __html: `${field?.spec?.label} ${
                             !field?.spec?.optional
-                              ? '<span className="form__required-indicator">*</span>'
+                              ? '<span class="form__required-indicator">*</span>'
                               : ''
                           }`,
                         }}
