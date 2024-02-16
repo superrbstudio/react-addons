@@ -35,7 +35,7 @@ const Modal = ({
     if (dismissable) {
       setDismissed(local.getItem(`${name}-popup-dismissed`) === 'true')
     }
-  }, [])
+  }, [dismissable, name])
 
   useEffect(() => {
     clearTimeout(openTimer.current)
@@ -53,16 +53,16 @@ const Modal = ({
       local.setItem(`${name}-popup-dismissed`, 'true')
       setDismissed(true)
     }
-  }, [name, closeModal])
+  }, [dismissable, name, closeModal])
 
   return (
     <aside id={name} className={`modal ${className}`} aria-hidden={!isOpen}>
-      <button className={`modal__close`} onClick={close}>
+      <button className={'modal__close'} onClick={close}>
         <span className="screenreader-text">Close Modal</span>
         &times;
       </button>
 
-      <div className={`modal__inner`}>{children}</div>
+      <div className={'modal__inner'}>{children}</div>
     </aside>
   )
 }

@@ -5,13 +5,12 @@ import {
   PropsWithChildren,
   ReactElement,
   useCallback,
-  useContext,
   useEffect,
   useState,
 } from 'react'
-import { NavContext } from '../context'
 import { Button } from '../components'
 import { extendClass } from '../utils'
+import useNavStore from '../store/nav'
 
 interface Props
   extends PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>> {
@@ -30,7 +29,7 @@ const MenuToggle = ({
   renderIcon = undefined,
   ...props
 }: Props) => {
-  const { navOpen, toggleNav } = useContext(NavContext)
+  const { navOpen, toggleNav } = useNavStore()
   const [icon, setIcon] = useState<ReactElement | string>(navOpen ? '×' : '꠵')
 
   useEffect(() => {
