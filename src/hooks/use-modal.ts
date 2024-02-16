@@ -1,16 +1,12 @@
-import { useContext, useEffect, useState } from 'react'
-import { ModalContext } from '../context'
+import useModalStore from '../store/modal'
 
 const useModal = (name: string) => {
-  const [open, setOpen] = useState<boolean>(false)
-  const { openState, openModal, closeModal } = useContext(ModalContext)
-
-  useEffect(() => {
-    setOpen(openState[name])
-  }, [openState[name]])
+  const isOpen = useModalStore((state) => state.openState[name])
+  const openModal = useModalStore((state) => state.openModal)
+  const closeModal = useModalStore((state) => state.closeModal)
 
   return {
-    isOpen: open,
+    isOpen,
     openModal: () => openModal(name),
     closeModal: () => closeModal(name),
   }
