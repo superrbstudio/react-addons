@@ -5,5 +5,15 @@ import { animator } from './utils/animator'
 import getYPos from './utils/get-y-pos'
 import get from './utils/get'
 import scrollToHash from './utils/scroll-to-hash'
+import isExternalLink from './utils/is-external-link'
 
-export { extendClass, animator, animate, get, getYPos, scrollToHash, Easing }
+export {
+  extendClass,
+  animator,
+  animate,
+  get,
+  getYPos,
+  scrollToHash,
+  Easing,
+  isExternalLink,
+}
