@@ -13,6 +13,7 @@ import useLockBodyScroll from './hooks/use-lock-body-scroll'
 import useModal from './hooks/use-modal'
 import useMotionAllowed from './hooks/use-motion-allowed'
 import useParallax from './hooks/use-parallax'
+import useSlideshow from './hooks/use-slideshow'
 
 export {
   useAsync,
@@ -27,4 +28,5 @@ export {
   useModal,
   useMotionAllowed,
   useParallax,
+  useSlideshow,
 }
