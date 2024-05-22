@@ -24,12 +24,15 @@ import SubmitButton from './form/submit-button'
 import messages from './form/messages.json'
 // import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import ApiResponse from '@/types/api-response'
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import {
+  GoogleReCaptchaProvider,
+  useGoogleReCaptcha,
+} from 'react-google-recaptcha-v3'
 
 export interface FormProps<T extends ObjectSchema<any>> {
   schema: T
   name?: string
-  action?: string | ((formData: FormData) => any)
+  action?: string | ((data: InferType<T> & { recaptchaToken?: string }) => any)
   className?: string
   method?: string
   initialData?: { [P in T as string]: any }
@@ -60,7 +63,7 @@ const toBase64 = (file: File) =>
     reader.onerror = reject
   })
 
-function Form(
+const FormInner = forwardRef(function FormInner(
   {
     schema,
     name,
@@ -81,7 +84,7 @@ function Form(
   }: FormProps<ObjectSchema<any>>,
   ref: ForwardedRef<HTMLFormElement>,
 ) {
-  type DataStructure = InferType<typeof schema>
+  type DataStructure = InferType<typeof schema> & { recaptchaToken?: string }
   const [data, setData] = useState<DataStructure>({})
   const fieldRefs = useRef<{ [P in DataStructure as string]?: HTMLElement }>(
     {},
@@ -110,13 +113,15 @@ function Form(
         return onSubmit(data)
       }
 
-      if (typeof action === 'function') {
-        const formData = new FormData()
-        for (const [key, value] of Object.entries(data)) {
-          formData.append(key, value as string)
-        }
+      // if recaptcha is enabled generate a token and add to the data
+      if (useRecaptcha && executeRecaptcha) {
+        const token = await executeRecaptcha()
+        data['recaptchaToken'] = token
+      }
 
-        return action(formData)
+      // Intercept submissions for Next server actions
+      if (typeof action === 'function') {
+        return action(data)
       }
 
       for (const [key, value] of Object.entries(data)) {
@@ -134,12 +139,6 @@ function Form(
             }
           }
         }
-      }
-
-      // if recaptcha is enabled generate a token and add to the data
-      if (useRecaptcha && executeRecaptcha) {
-        const token = await executeRecaptcha()
-        data['recaptchaToken'] = token
       }
 
       const response = await fetch(action as string, {
@@ -291,6 +290,28 @@ function Form(
         </form>
       )}
     </>
+  )
+})
+
+const Form = (
+  props: FormProps<ObjectSchema<any>>,
+  ref: ForwardedRef<HTMLFormElement>,
+) => {
+  if (props.useRecaptcha === false) {
+    return <FormInner {...props} ref={ref} />
+  }
+
+  const key = process.env.NEXT_PUBLIC_RECAPTCHA_KEY as string
+  if (!key) {
+    throw new Error('Env var NEXT_PUBLIC_RECAPTCHA_KEY is not set')
+  }
+
+  return (
+    <GoogleReCaptchaProvider
+      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY as string}
+    >
+      <FormInner {...props} ref={ref} />
+    </GoogleReCaptchaProvider>
   )
 }
 
