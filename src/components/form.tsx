@@ -68,7 +68,7 @@ function Form(
     className,
     initialData,
     onSubmit,
-    method = 'post',
+    method = 'POST',
     onStatusChange = () => {},
     renderSuccessMessage = (data) => <SuccessMessage />,
     renderErrorMessage = (error?: FieldError, fieldSchema?: AnySchema) => (
