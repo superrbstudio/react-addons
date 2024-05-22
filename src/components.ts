@@ -8,5 +8,15 @@ import Form from './components/form'
 import MenuToggle from './components/menu-toggle'
 import Modal from './components/modal'
 import SkipTo from './components/skip-to'
+import SlideshowButtons from './components/slideshow-buttons'
 
-export { BackToTop, Button, CookieBanner, Form, MenuToggle, Modal, SkipTo }
+export {
+  BackToTop,
+  Button,
+  CookieBanner,
+  Form,
+  MenuToggle,
+  Modal,
+  SkipTo,
+  SlideshowButtons,
+}
