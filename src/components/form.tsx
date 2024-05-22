@@ -32,7 +32,7 @@ import {
 export interface FormProps<T extends ObjectSchema<any>> {
   schema: T
   name?: string
-  action?: string | ((data: InferType<T> & { recaptchaToken?: string }) => any)
+  action?: string | ((data: InferType<T>, token?: string) => any)
   className?: string
   method?: string
   initialData?: { [P in T as string]: any }
@@ -121,7 +121,8 @@ const FormInner = forwardRef(function FormInner(
 
       // Intercept submissions for Next server actions
       if (typeof action === 'function') {
-        return action(data)
+        const { recaptchaToken, ...formData } = data
+        return action(formData, recaptchaToken)
       }
 
       for (const [key, value] of Object.entries(data)) {
