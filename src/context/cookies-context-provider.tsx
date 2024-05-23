@@ -14,10 +14,12 @@ export const CookiesContext = createContext({
   setCookiesAccepted: (accepted: boolean) => {},
   trackingCookiesAccepted: false,
   setTrackingCookiesAccepted: (accepted: boolean) => {},
+  popupOpen: false
 })
 
 export const CookiesContextProvider = ({ children }: PropsWithChildren<{}>) => {
   const [cookiesAccepted, setCookiesAcceptedStorage] = useState<boolean>(false)
+  const [popupOpen, setPopupOpenStorage] = useState<boolean>(false)
   const [trackingCookiesAccepted, setTrackingCookiesAcceptedStorage] =
     useState<boolean>(false)
 
@@ -51,6 +53,13 @@ export const CookiesContextProvider = ({ children }: PropsWithChildren<{}>) => {
     [setTrackingCookiesAcceptedStorage],
   )
 
+  const setPopupOpen = useCallback(
+    (open: boolean) => {
+      setPopupOpenStorage(open)
+    },
+    [setPopupOpenStorage],
+  )
+
   return (
     <CookiesContext.Provider
       value={{
@@ -58,6 +67,8 @@ export const CookiesContextProvider = ({ children }: PropsWithChildren<{}>) => {
         setCookiesAccepted,
         trackingCookiesAccepted,
         setTrackingCookiesAccepted,
+        popupOpen,
+        setPopupOpen
       }}
     >
       {children}

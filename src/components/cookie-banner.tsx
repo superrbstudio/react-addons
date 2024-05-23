@@ -41,7 +41,6 @@ const CookieBanner = ({
   renderCustomiseButton,
   renderRejectButton,
   renderSubmitButton,
-  popupOpen
 }: {
   allowCustomisation?: boolean
   allowReject?: boolean
@@ -54,9 +53,8 @@ const CookieBanner = ({
   renderCustomiseButton?: (props: {}) => ReactNode
   renderRejectButton?: (props: {}) => ReactNode
   renderSubmitButton?: () => ReactNode
-  popupOpen?: boolean
 }) => {
-  const { cookiesAccepted, setCookiesAccepted, setTrackingCookiesAccepted } =
+  const { cookiesAccepted, setCookiesAccepted, setTrackingCookiesAccepted, popupOpen } =
     useContext(CookiesContext)
   const [animate, setAnimate] = useState<boolean>(false)
   const [formOpen, setFormOpen] = useState<boolean>(false)
