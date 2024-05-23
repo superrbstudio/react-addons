@@ -14,7 +14,9 @@ export const CookiesContext = createContext({
   setCookiesAccepted: (accepted: boolean) => {},
   trackingCookiesAccepted: false,
   setTrackingCookiesAccepted: (accepted: boolean) => {},
-  popupOpen: false
+  popupOpen: false,
+  openPopup: () => {},
+  closePopup: () => {},
 })
 
 export const CookiesContextProvider = ({ children }: PropsWithChildren<{}>) => {
@@ -53,19 +55,13 @@ export const CookiesContextProvider = ({ children }: PropsWithChildren<{}>) => {
     [setTrackingCookiesAcceptedStorage],
   )
 
-  const openPopup = useCallback(
-    (open: boolean) => {
-      setPopupOpenStorage(true)
-    },
-    [setPopupOpenStorage],
-  )
+  const openPopup = useCallback(() => {
+    setPopupOpenStorage(true)
+  }, [setPopupOpenStorage])
 
-  const closePopup = useCallback(
-    (open: boolean) => {
-      setPopupOpenStorage(false)
-    },
-    [setPopupOpenStorage],
-  )
+  const closePopup = useCallback(() => {
+    setPopupOpenStorage(false)
+  }, [setPopupOpenStorage])
 
   return (
     <CookiesContext.Provider
