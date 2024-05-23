@@ -55,7 +55,14 @@ export const CookiesContextProvider = ({ children }: PropsWithChildren<{}>) => {
 
   const setPopupOpen = useCallback(
     (open: boolean) => {
-      setPopupOpenStorage(open)
+      setPopupOpenStorage(true)
+    },
+    [setPopupOpenStorage],
+  )
+
+  const setPopupClose = useCallback(
+    (open: boolean) => {
+      setPopupOpenStorage(false)
     },
     [setPopupOpenStorage],
   )
@@ -68,7 +75,8 @@ export const CookiesContextProvider = ({ children }: PropsWithChildren<{}>) => {
         trackingCookiesAccepted,
         setTrackingCookiesAccepted,
         popupOpen,
-        setPopupOpen
+        setPopupOpen,
+        setPopupClose,
       }}
     >
       {children}
