@@ -54,7 +54,7 @@ const CookieBanner = ({
   renderRejectButton?: (props: {}) => ReactNode
   renderSubmitButton?: () => ReactNode
 }) => {
-  const { cookiesAccepted, setCookiesAccepted, setTrackingCookiesAccepted, popupOpen } =
+  const { cookiesAccepted, setCookiesAccepted, setTrackingCookiesAccepted, popupOpen, closePopup } =
     useContext(CookiesContext)
   const [animate, setAnimate] = useState<boolean>(false)
   const [formOpen, setFormOpen] = useState<boolean>(false)
@@ -72,6 +72,7 @@ const CookieBanner = ({
   }
 
   const accept = (necessary: boolean, tracking: boolean) => {
+    closePopup()
     setAnimate(true)
     setTimeout(() => {
       setCookiesAccepted(necessary)
@@ -80,10 +81,12 @@ const CookieBanner = ({
   }
 
   const acceptAll = () => {
+    closePopup()
     accept(true, true)
   }
 
   const submit = (data: { [key: string]: boolean }) => {
+    closePopup()
     accept(true, !!data.tracking)
   }
 
