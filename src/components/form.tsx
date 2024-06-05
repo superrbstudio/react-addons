@@ -32,7 +32,7 @@ import {
 export interface FormProps<T extends ObjectSchema<any>> {
   schema: T
   name?: string
-  action?: string | ((data: InferType<T>, token?: string) => any)
+  action?: string | ((data: InferType<T>, token: string) => any)
   className?: string
   method?: string
   initialData?: { [P in T as string]: any }
@@ -294,7 +294,7 @@ const FormInner = forwardRef(function FormInner(
   )
 })
 
-const Form = (
+const Form = <T extends any>(
   props: FormProps<ObjectSchema<any>>,
   ref: ForwardedRef<HTMLFormElement>,
 ) => {

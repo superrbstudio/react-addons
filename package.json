@@ -14,12 +14,12 @@
     "js-cookie": "^3.0.5",
     "react-google-recaptcha-v3": "^1.10.1",
     "react-hook-form": "^7.46.1",
-    "react-use-draggable-scroll": "^0.4.7",
-    "yup": "^1.2.0"
+    "react-use-draggable-scroll": "^0.4.7"
   },
   "peerDependencies": {
     "react": "^18.2.0",
     "typescript": "^5.2.2",
+    "yup": "^1.2.0",
     "zustand": "^4.4.7"
   },
   "scripts": {
