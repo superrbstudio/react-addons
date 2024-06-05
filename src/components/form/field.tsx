@@ -24,6 +24,9 @@ const FormField = ({ register, schema, id, onInput }: Props) => {
     ...(schema?.spec?.meta?.placeholder
       ? { placeholder: schema?.spec?.meta?.placeholder }
       : {}),
+    ...(schema?.spec?.meta?.autocomplete
+      ? { autocomplete: schema?.spec?.meta?.autocomplete }
+      : {}),
     onInput: (event: FormEvent<HTMLElement>) => {
       setTouched(true)
 
