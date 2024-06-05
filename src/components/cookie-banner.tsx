@@ -65,6 +65,7 @@ const CookieBanner = ({
   const {
     cookiesAccepted,
     setCookiesAccepted,
+    trackingCookiesAccepted,
     setTrackingCookiesAccepted,
     popupOpen,
     closePopup,
