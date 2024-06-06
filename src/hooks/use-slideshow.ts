@@ -13,6 +13,17 @@ export type Slideshow = {
   atEnd: boolean
 }
 
+export const isHorizontal = (element: SlideshowElement): boolean => {
+  return window.getComputedStyle(element).scrollSnapType.startsWith('x')
+}
+
+export const isCentered = (element: SlideshowElement): boolean => {
+  return (
+    window.getComputedStyle(element.firstElementChild as Element)
+      ?.scrollSnapAlign === 'center'
+  )
+}
+
 export const getScrollProgress = (target: SlideshowElement) => {
   if (!target || target.scrollWidth === target.clientWidth) {
     return -1
@@ -34,6 +45,8 @@ export const getCurrentSlideIndex = (
     return currentIndex
   }
 
+  const centered = isCentered(element)
+  const horizontal = isHorizontal(element)
   const direction =
     element.scrollLeft > element.previousScroll ? 'right' : 'left'
   let gap = parseFloat(window.getComputedStyle(element).gap) || 0
@@ -41,12 +54,6 @@ export const getCurrentSlideIndex = (
     gap = 0
   }
 
-  const horizontal = window
-    .getComputedStyle(element)
-    .scrollSnapType.startsWith('x')
-  const centered =
-    window.getComputedStyle(element.firstElementChild as Element)
-      ?.scrollSnapAlign === 'center'
   const containerEdge =
     element.getBoundingClientRect()[horizontal ? 'left' : 'top']
 
@@ -123,11 +130,24 @@ const useSlideshow = (
     currentSlide,
     slideCount: slideshow.current?.children.length || 0,
     goTo: (index: number) => {
-      slideshow.current?.children[index]?.scrollIntoView({
+      const scrollOpts: ScrollIntoViewOptions = {
         behavior: 'smooth',
-        block: 'nearest',
-        inline: 'nearest',
-      })
+        block: 'start',
+        inline: 'start',
+      }
+
+      if (isCentered(slideshow.current)) {
+        scrollOpts.block = 'center'
+        scrollOpts.inline = 'center'
+      }
+
+      if (isHorizontal(slideshow.current)) {
+        scrollOpts.block = 'nearest'
+      } else {
+        scrollOpts.inline = 'nearest'
+      }
+
+      slideshow.current?.children[index]?.scrollIntoView(scrollOpts)
     },
     atStart: getScrollProgress(slideshow.current) <= 0,
     atEnd: getScrollProgress(slideshow.current) >= 1,
