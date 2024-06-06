@@ -1,6 +1,7 @@
 /**
  * Components
  */
+import { Accordion, AccordionItem } from './components/accordion'
 import BackToTop from './components/back-to-top'
 import Button from './components/button'
 import CookieBanner from './components/cookie-banner'
@@ -11,6 +12,8 @@ import SkipTo from './components/skip-to'
 import SlideshowButtons from './components/slideshow-buttons'
 
 export {
+  Accordion,
+  AccordionItem,
   BackToTop,
   Button,
   CookieBanner,

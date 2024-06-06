@@ -1,5 +1,25 @@
 # React Addons Components
 
+## [Accordion](./accordion.tsx)
+
+Creates an accordion element with expandable tabs
+
+### Usage
+
+```tsx
+import { Accordion, AccordionItem } from '@superrb/react-addons/components'
+
+const MyComponent = (items) => (
+  <Accordion multiple={false /* Defines if more than one item can be open at a time */}>
+    {items.map(({ title, content }, index) => (
+      <AccordionItem key={index} title={title} expanded={index === 0 /* Defines if the item should be open on first render */}>
+        {content}
+      </AccordionItem>
+    ))}
+  </Accordion>
+)
+```
+
 ## [BackToTop](./back-to-top.tsx)
 
 Adds a hidden back-to-top link for accessibility purposes.
