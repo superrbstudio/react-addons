@@ -10,6 +10,7 @@ import MenuToggle from './components/menu-toggle'
 import Modal from './components/modal'
 import SkipTo from './components/skip-to'
 import SlideshowButtons from './components/slideshow-buttons'
+import SlideshowPagination from './components/slideshow-pagination'
 
 export {
   Accordion,
@@ -22,4 +23,5 @@ export {
   Modal,
   SkipTo,
   SlideshowButtons,
+  SlideshowPagination,
 }
