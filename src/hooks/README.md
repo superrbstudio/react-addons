@@ -295,3 +295,35 @@ const MyComponent = () => {
   )
 }
 ```
+
+## [useSlideshow](./use-slideshow.ts)
+
+Creates event handlers and states needed to add functional controls to a CSS-based slideshow. See [`<SlideshowButtons />`](../components/README.md#slideshowbuttons) and [`<SlideshowPagination />`](../components/README.md#slideshowpagination) components.
+
+### Usage
+
+```tsx
+import { SlideshowButtons, SlideshowPagination } from '@superrb/react-addons/components'
+import { useSlideshow } from '@superrb/react-addons/hooks'
+import { MutableRefObject, useRef } from 'react'
+
+const MySlideshow = ({ items }) => {
+  const slideshowRef = useRef<HTMLElement>() as MutableRefObject<HTMLElement>
+  const slideshow = useSlideshow(slideshowRef.current)
+
+  return (
+    <div>
+      <ul ref={slideshowRef}>
+        {items.map(item => (
+          <li>
+            {/* slide content */}
+          </li>
+        ))}
+      </ul>
+
+      <SlideshowButtons slideshow={slideshow} />
+      <SlideshowPagination slideshow={slideshow} />
+    </div>
+  )
+}
+```
