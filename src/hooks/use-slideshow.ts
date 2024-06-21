@@ -1,4 +1,5 @@
-import { MutableRefObject, useEffect, useState } from 'react'
+import { MutableRefObject, useCallback, useEffect, useState } from 'react'
+import useEventListener from './use-event-listener'
 
 export type SlideshowElement = HTMLElement & {
   previousScroll?: number
@@ -94,36 +95,42 @@ const useSlideshow = (
   slideshow: MutableRefObject<SlideshowElement>,
 ): Slideshow => {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [progress, setProgress] = useState(-1)
+  const [ready, setReady] = useState<boolean>(false)
+
+  const update = useCallback(() => {
+    if (!slideshow.current) {
+      return
+    }
+
+    setCurrentSlide((current) =>
+      getCurrentSlideIndex(slideshow.current, current),
+    )
+    setProgress(getScrollProgress(slideshow.current))
+  }, [setCurrentSlide, slideshow])
+
+  useEventListener(
+    'scroll',
+    update,
+    { passive: true },
+    slideshow.current,
+    !!slideshow.current && ready,
+  )
+  useEventListener(
+    'resize',
+    update,
+    { passive: true },
+    slideshow.current,
+    !!slideshow.current && ready,
+  )
 
   useEffect(() => {
+    setReady(true)
+
     if (slideshow.current) {
-      setCurrentSlide((current) =>
-        getCurrentSlideIndex(slideshow.current, current),
-      )
-
-      slideshow.current.addEventListener('scroll', () => {
-        setCurrentSlide((current) =>
-          getCurrentSlideIndex(slideshow.current, current),
-        )
-      })
-      slideshow.current.addEventListener('resize', () =>
-        setCurrentSlide((current) =>
-          getCurrentSlideIndex(slideshow.current, current),
-        ),
-      )
+      update()
     }
-  }, [slideshow])
-
-  if (!slideshow.current) {
-    return {
-      slideshowRef: slideshow,
-      currentSlide: 0,
-      slideCount: 0,
-      goTo: () => {},
-      atStart: true,
-      atEnd: true,
-    }
-  }
+  }, [slideshow, update])
 
   return {
     slideshowRef: slideshow,
@@ -149,8 +156,8 @@ const useSlideshow = (
 
       slideshow.current?.children[index]?.scrollIntoView(scrollOpts)
     },
-    atStart: getScrollProgress(slideshow.current) <= 0,
-    atEnd: getScrollProgress(slideshow.current) >= 1,
+    atStart: progress <= 0 || progress === -1,
+    atEnd: progress >= 1 || progress === -1,
   }
 }
 
