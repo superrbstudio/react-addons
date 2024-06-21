@@ -1,4 +1,11 @@
-import { MutableRefObject, useEffect, useState } from 'react'
+import {
+  MutableRefObject,
+  startTransition,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
+import useEventListener from './use-event-listener'
 
 export type SlideshowElement = HTMLElement & {
   previousScroll?: number
@@ -95,24 +102,22 @@ const useSlideshow = (
 ): Slideshow => {
   const [currentSlide, setCurrentSlide] = useState(0)
 
-  useEffect(() => {
-    if (slideshow.current) {
+  const updateSlide = useCallback(() => {
+    startTransition(() => {
       setCurrentSlide((current) =>
         getCurrentSlideIndex(slideshow.current, current),
       )
-
-      slideshow.current.addEventListener('scroll', () => {
-        setCurrentSlide((current) =>
-          getCurrentSlideIndex(slideshow.current, current),
-        )
-      })
-      slideshow.current.addEventListener('resize', () =>
-        setCurrentSlide((current) =>
-          getCurrentSlideIndex(slideshow.current, current),
-        ),
-      )
-    }
+    })
   }, [slideshow])
+
+  useEventListener('scroll', updateSlide, { passive: true }, slideshow.current)
+  useEventListener('resize', updateSlide, {}, slideshow.current)
+
+  useEffect(() => {
+    if (slideshow.current) {
+      updateSlide()
+    }
+  }, [slideshow, updateSlide])
 
   if (!slideshow.current) {
     return {
