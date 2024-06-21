@@ -50,6 +50,7 @@ export const getCurrentSlideIndex = (
   const horizontal = isHorizontal(element)
   const direction =
     element.scrollLeft > element.previousScroll ? 'right' : 'left'
+  const offset = 50
   let gap = parseFloat(window.getComputedStyle(element).gap) || 0
   if (isNaN(gap)) {
     gap = 0
@@ -75,8 +76,8 @@ export const getCurrentSlideIndex = (
     } else {
       const threshold =
         direction === 'right'
-          ? (horizontal ? child.clientWidth : child.clientHeight) - gap
-          : 0 + gap
+          ? (horizontal ? child.clientWidth : child.clientHeight) - gap - offset
+          : 0 + gap + offset
 
       if (edge >= 0 - threshold) {
         return i
