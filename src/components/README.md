@@ -149,3 +149,23 @@ Should be combined with the following sass
   &:focus-within
     display: block
 ```
+
+## [SlideshowButtons](./slideshow-buttons.tsx)
+
+Adds next/previous buttons for controlling a CSS-based slideshow. The `slideshow` prop accepts the return value of the [`useSlideshow`](../hooks/README.md#useslideshow) hook.
+
+### Usage
+
+```tsx
+<SlideshowButtons slideshow={slideshow} />
+```
+
+## [SlideshowPagination](./slideshow-pagination.tsx)
+
+Adds pagination for controlling a CSS-based slideshow. The `slideshow` prop accepts the return value of the [`useSlideshow`](../hooks/README.md#useslideshow) hook.
+
+### Usage
+
+```tsx
+<SlideshowPagination slideshow={slideshow} />
+```
