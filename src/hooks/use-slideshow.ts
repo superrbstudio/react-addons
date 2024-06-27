@@ -130,8 +130,17 @@ const useSlideshow = (
 
     if (slideshow.current) {
       update()
+
+      slideshow.current.setAttribute('role', 'region')
+      slideshow.current.setAttribute('aria-label', 'carousel')
+      slideshow.current.setAttribute('aria-live', 'polite')
     }
   }, [slideshow, update])
+
+  useEffect(() => {
+    [...slideshow.current?.children].forEach(child => child.setAttribute('aria-hidden', 'true'))
+    slideshow.current?.children[currentSlide].setAttribute('aria-hidden', 'false')
+  }, [currentSlide, slideshow])
 
   return {
     slideshowRef: slideshow,
