@@ -38,7 +38,7 @@ const useEventListener = <T extends Target, E extends EventName<T>>(
   // ... and potentially cause effect to re-run every render.
   useEffect(() => {
     savedHandler.current = handler
-  }, [handler, elementRef.current])
+  }, [handler])
 
   useEffect(
     () => {
@@ -77,9 +77,8 @@ const useEventListener = <T extends Target, E extends EventName<T>>(
     [
       eventName,
       handler,
-      savedHandler.current,
+      options,
       element,
-      elementRef.current,
       flag,
     ], // Re-run if eventName or element changes
   )
