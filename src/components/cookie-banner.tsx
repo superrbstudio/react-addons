@@ -41,6 +41,8 @@ const CookieBanner = ({
   acceptAllLabel = content.acceptAllLabel,
   rejectLabel = content.rejectLabel,
   customiseLabel = content.customiseLabel,
+  tracking = content.tracking,
+  necessary = content.necessary,
   renderAcceptButton,
   renderCustomiseButton,
   renderRejectButton,
@@ -57,6 +59,8 @@ const CookieBanner = ({
   acceptAllLabel?: string
   rejectLabel?: string
   customiseLabel?: string
+  tracking?: { [key: string]: string }
+  necessary?: { [key: string]: string }
   renderAcceptButton?: (props: {}) => ReactNode
   renderCustomiseButton?: (props: {}) => ReactNode
   renderRejectButton?: (props: {}) => ReactNode
@@ -110,16 +114,16 @@ const CookieBanner = ({
 
   const schema = Yup.object().shape({
     tracking: Yup.boolean().required().default(trackingCookiesAccepted).label(`
-      <strong>${content.tracking?.title}</strong>
-      <p>${content.tracking?.description}</p>
+      <strong>${tracking?.title}</strong>
+      <p>${tracking?.description}</p>
     `),
     necessary: Yup.boolean()
       .required()
       .default(true)
       .label(
         `
-        <strong>${content.necessary?.title}</strong>
-        <p>${content.necessary?.description}</p>
+        <strong>${necessary?.title}</strong>
+        <p>${necessary?.description}</p>
       `,
       )
       .meta({ disabled: true }),
