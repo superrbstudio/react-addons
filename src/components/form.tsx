@@ -71,7 +71,7 @@ const FormInner = forwardRef(function FormInner(
     className,
     initialData,
     onSubmit,
-    method = 'POST',
+    method,
     onStatusChange = () => {},
     renderSuccessMessage = (data) => <SuccessMessage />,
     renderErrorMessage = (error?: FieldError, fieldSchema?: AnySchema) => (
@@ -192,7 +192,7 @@ const FormInner = forwardRef(function FormInner(
         <form
           className={`form ${className}`}
           action={action as string}
-          method={method}
+          {...(method ? { method } : {})}
           onSubmit={handleSubmit(execute)}
           noValidate={true}
           ref={ref as MutableRefObject<HTMLFormElement>}
