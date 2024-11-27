@@ -3,14 +3,14 @@ const isExternalLink = (url: string, forceExternal = false) => {
     return true
   }
 
-  // In SSR mode, treat everything as an external link
-  if (!url || typeof window === 'undefined') {
-    return true
-  }
-
   // Override is needed for relative or hash URLs, as they cannot be parsed
   if (url.startsWith('/') || url.startsWith('#')) {
     return false
+  }
+
+  // In SSR mode, treat everything as an external link
+  if (!url || typeof window === 'undefined') {
+    return true
   }
 
   let tmp: URL
