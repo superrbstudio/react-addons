@@ -64,18 +64,20 @@ const useIsInViewport = (
     })
   }
 
-  const setRef = async (ref: HTMLElement | null) => {
-    element.current = ref
-    if (ref) {
-      try {
-        const observer = await waitForObserver()
-        observer.observe(ref)
-      } catch (error) {
-        // If IntersectionObserver fails, just set isInViewport to true
-        console.error(error)
-        setIsInViewport(true)
+  const setRef = (ref: HTMLElement | null) => {
+    ;(async () => {
+      element.current = ref
+      if (ref) {
+        try {
+          const observer = await waitForObserver()
+          observer.observe(ref)
+        } catch (error) {
+          // If IntersectionObserver fails, just set isInViewport to true
+          console.error(error)
+          setIsInViewport(true)
+        }
       }
-    }
+    })()
   }
 
   return { isInViewport, setRef }
