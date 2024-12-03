@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { mountStoreDevtool } from 'simple-zustand-devtools'
 
 interface ModalState {
   openState: {
@@ -19,5 +20,9 @@ const useModalStore = create<ModalState>()((set, get) => {
       set((state) => ({ openState: { ...state.openState, [name]: false } })),
   }
 })
+
+if (process.env.NODE_ENV === 'development') {
+  mountStoreDevtool('ModalStore', useModalStore)
+}
 
 export default useModalStore
