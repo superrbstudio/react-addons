@@ -3,10 +3,8 @@
 import {
   ButtonHTMLAttributes,
   PropsWithChildren,
-  ReactElement,
+  ReactNode,
   useCallback,
-  useEffect,
-  useState,
 } from 'react'
 import { Button } from '../components'
 import { extendClass } from '../utils'
@@ -18,7 +16,7 @@ interface Props
   className?: string
   label?: string
   closeLabel?: string
-  renderIcon?: (navOpen: boolean) => ReactElement
+  renderIcon?: (navOpen: boolean) => ReactNode
 }
 
 const MenuToggle = ({
@@ -26,21 +24,10 @@ const MenuToggle = ({
   className = '',
   label = 'Open Nav',
   closeLabel = 'Close Nav',
-  renderIcon = undefined,
+  renderIcon = (navOpen) => (navOpen ? '×' : '☰'),
   ...props
 }: Props) => {
   const { navOpen, toggleNav } = useNavStore()
-  const [icon, setIcon] = useState<ReactElement | string>(navOpen ? '×' : '꠵')
-
-  useEffect(() => {
-    if (renderIcon) {
-      setIcon(renderIcon(navOpen))
-
-      return
-    }
-
-    setIcon(navOpen ? '×' : '꠵')
-  }, [navOpen, renderIcon])
 
   const handleClick = useCallback(() => {
     if (
@@ -64,7 +51,7 @@ const MenuToggle = ({
       {...props}
     >
       <span className={`menu-toggle__icon ${extendClass(className, 'icon')}`}>
-        {icon}
+        {renderIcon(navOpen)}
       </span>
     </Button>
   )
