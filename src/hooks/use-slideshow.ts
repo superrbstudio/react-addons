@@ -50,7 +50,7 @@ export const getCurrentSlideIndex = (
   const horizontal = isHorizontal(element)
   const direction =
     element.scrollLeft > element.previousScroll ? 'right' : 'left'
-  const offset = 50
+  const offset =25 
   let gap = parseFloat(window.getComputedStyle(element).gap) || 0
   if (isNaN(gap)) {
     gap = 0
@@ -71,7 +71,8 @@ export const getCurrentSlideIndex = (
         : element.clientHeight / 2
 
       if (edge >= 0 && edge < threshold) {
-        return i
+        newIndex = i
+        break
       }
     } else {
       const threshold =
@@ -80,7 +81,8 @@ export const getCurrentSlideIndex = (
           : 0 + gap + offset
 
       if (edge >= 0 - threshold) {
-        return i
+        newIndex = i
+        break
       }
     }
 
@@ -138,8 +140,13 @@ const useSlideshow = (
   }, [slideshow, update])
 
   useEffect(() => {
-    [...slideshow.current?.children].forEach(child => child.setAttribute('aria-hidden', 'true'))
-    slideshow.current?.children[currentSlide].setAttribute('aria-hidden', 'false')
+    ;[...slideshow.current?.children].forEach((child) =>
+      child.setAttribute('aria-hidden', 'true'),
+    )
+    slideshow.current?.children[currentSlide].setAttribute(
+      'aria-hidden',
+      'false',
+    )
   }, [currentSlide, slideshow])
 
   return {
@@ -147,24 +154,31 @@ const useSlideshow = (
     currentSlide,
     slideCount: slideshow.current?.children.length || 0,
     goTo: (index: number) => {
-      const scrollOpts: ScrollIntoViewOptions = {
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'start',
-      }
+      index = Math.min(
+        slideshow.current?.children.length - 1,
+        Math.max(0, index),
+      )
+      const newElement = slideshow.current?.children[index] as HTMLElement
 
-      if (isCentered(slideshow.current)) {
-        scrollOpts.block = 'center'
-        scrollOpts.inline = 'center'
+      const scrollOpts: ScrollToOptions = {
+        behavior: 'smooth',
       }
 
       if (isHorizontal(slideshow.current)) {
-        scrollOpts.block = 'nearest'
+        if (isCentered(slideshow.current)) {
+          scrollOpts.left = newElement?.offsetLeft + newElement?.clientWidth / 2
+        } else {
+          scrollOpts.left = newElement?.offsetLeft
+        }
       } else {
-        scrollOpts.inline = 'nearest'
+        if (isCentered(slideshow.current)) {
+          scrollOpts.top = newElement?.offsetTop + newElement?.clientHeight / 2
+        } else {
+          scrollOpts.top = newElement?.offsetTop
+        }
       }
 
-      slideshow.current?.children[index]?.scrollIntoView(scrollOpts)
+      slideshow.current?.scrollTo(scrollOpts)
     },
     atStart: progress <= 0 || progress === -1,
     atEnd: progress >= 1 || progress === -1,
