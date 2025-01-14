@@ -48,8 +48,8 @@ export interface FormProps<T extends ObjectSchema<any>> {
   useRecaptcha?: boolean
 }
 
-const toBase64 = (file: File) =>
-  new Promise((resolve, reject) => {
+function toBase64(file: File) {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onloadend = () => {
       // Use a regex to remove data url part
@@ -62,6 +62,7 @@ const toBase64 = (file: File) =>
     reader.readAsDataURL(file)
     reader.onerror = reject
   })
+}
 
 const FormInner = forwardRef(function FormInner(
   {
@@ -294,10 +295,10 @@ const FormInner = forwardRef(function FormInner(
   )
 })
 
-const Form = <T extends any>(
+function Form<T extends any>(
   props: FormProps<ObjectSchema<any>>,
   ref: ForwardedRef<HTMLFormElement>,
-) => {
+) {
   if (props.useRecaptcha === false) {
     return <FormInner {...props} ref={ref} />
   }

@@ -1,13 +1,13 @@
 import { ease, EasingFunction } from './easing-functions'
 
-const animate = (
+export default function animate(
   from: number,
   to: number,
   callback: (value: number) => void,
   duration = 500,
   easing: EasingFunction = ease,
-): Promise<void> =>
-  new Promise((resolve) => {
+): Promise<void> {
+  return new Promise((resolve) => {
     const diff = to - from
 
     if (!diff) {
@@ -40,5 +40,4 @@ const animate = (
 
     requestAnimationFrame(step)
   })
-
-export default animate
+}

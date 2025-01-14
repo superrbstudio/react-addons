@@ -19,14 +19,14 @@ interface Props
   renderIcon?: (navOpen: boolean) => ReactNode
 }
 
-const MenuToggle = ({
+export default function MenuToggle({
   'aria-controls': ariaControls,
   className = '',
   label = 'Open Nav',
   closeLabel = 'Close Nav',
   renderIcon = (navOpen) => (navOpen ? '×' : '☰'),
   ...props
-}: Props) => {
+}: Props) {
   const { navOpen, toggleNav } = useNavStore()
 
   const handleClick = useCallback(() => {
@@ -56,5 +56,3 @@ const MenuToggle = ({
     </Button>
   )
 }
-
-export default MenuToggle

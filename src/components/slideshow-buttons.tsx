@@ -2,13 +2,13 @@ import { FC } from 'react'
 import Button, { ButtonProps } from './button'
 import { Slideshow } from '@/hooks/use-slideshow'
 
-const SlideshowButtons = ({
+export default function SlideshowButtons({
   slideshow: { currentSlide, goTo, slideshowRef, atStart, atEnd },
   ButtonComponent = Button,
 }: {
   slideshow: Slideshow
   ButtonComponent?: FC<ButtonProps>
-}): JSX.Element => {
+}): JSX.Element {
   return (
     <nav className="slideshow-buttons">
       <ButtonComponent
@@ -30,5 +30,3 @@ const SlideshowButtons = ({
     </nav>
   )
 }
-
-export default SlideshowButtons

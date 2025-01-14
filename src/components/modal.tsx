@@ -18,13 +18,13 @@ interface Props {
   dismissable?: boolean
 }
 
-const Modal = ({
+export default function Modal({
   name,
   className,
   openAfter,
   dismissable = false,
   children,
-}: PropsWithChildren<Props>) => {
+}: PropsWithChildren<Props>) {
   const [dismissed, setDismissed] = useState<boolean>(false)
   const openTimer = useRef<NodeJS.Timeout>() as MutableRefObject<NodeJS.Timeout>
 
@@ -66,5 +66,3 @@ const Modal = ({
     </aside>
   )
 }
-
-export default Modal

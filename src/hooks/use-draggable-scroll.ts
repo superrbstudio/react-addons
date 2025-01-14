@@ -13,10 +13,10 @@ interface Events {
   onMouseDown: MouseEventHandler<HTMLElement>
 }
 
-const useDraggableScroll = (
+export default function useDraggableScroll(
   ref: MutableRefObject<HTMLElement>,
   { className, ...opts }: { className: string },
-) => {
+) {
   const { isInViewport, setRef } = useIsInViewport(false)
   const { events } = useDraggable(ref, {
     ...opts,
@@ -94,5 +94,3 @@ const useDraggableScroll = (
 
   return { events: modifiedEvents }
 }
-
-export default useDraggableScroll

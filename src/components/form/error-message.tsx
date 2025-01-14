@@ -6,7 +6,7 @@ export interface ErrorMessageProps {
   fieldSchema?: AnySchema
 }
 
-const ErrorMessage = ({ error }: ErrorMessageProps) => {
+export default function ErrorMessage({ error }: ErrorMessageProps) {
   const GENERIC_ERROR = 'Sorry, an error occurred'
 
   return (
@@ -15,5 +15,3 @@ const ErrorMessage = ({ error }: ErrorMessageProps) => {
     </span>
   )
 }
-
-export default ErrorMessage

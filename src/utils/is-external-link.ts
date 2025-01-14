@@ -1,4 +1,4 @@
-const isExternalLink = (url: string, forceExternal = false) => {
+export default function isExternalLink(url: string, forceExternal = false) {
   if (forceExternal) {
     return true
   }
@@ -22,5 +22,3 @@ const isExternalLink = (url: string, forceExternal = false) => {
 
   return tmp?.host !== window.location.host
 }
-
-export default isExternalLink

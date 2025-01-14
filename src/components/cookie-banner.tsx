@@ -29,7 +29,7 @@ const content = {
   },
 }
 
-const CookieBanner = ({
+export default function CookieBanner({
   allowCustomisation = true,
   allowReject = false,
   title = content.title,
@@ -65,7 +65,7 @@ const CookieBanner = ({
   renderCustomiseButton?: (props: {}) => ReactNode
   renderRejectButton?: (props: {}) => ReactNode
   renderSubmitButton?: () => ReactNode
-}) => {
+}) {
   const {
     cookiesAccepted,
     setCookiesAccepted,
@@ -222,5 +222,3 @@ const CookieBanner = ({
     </>
   )
 }
-
-export default CookieBanner

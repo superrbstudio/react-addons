@@ -11,7 +11,7 @@ interface Props {
   onInput?: FormEventHandler<HTMLElement>
 }
 
-const FormField = ({ register, schema, id, onInput }: Props) => {
+export default function FormField({ register, schema, id, onInput }: Props) {
   const [touched, setTouched] = useState<boolean>(false)
   const [rendered, setRendered] = useState<boolean>(false)
   const fieldProps = {
@@ -86,5 +86,3 @@ const FormField = ({ register, schema, id, onInput }: Props) => {
     </>
   )
 }
-
-export default FormField

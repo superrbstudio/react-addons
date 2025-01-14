@@ -1,4 +1,4 @@
-const SkipTo = () => {
+export default function SkipTo() {
   return (
     <div className="skip-to" id="skip-to">
       <a href="#content">Skip to Content</a>
@@ -6,5 +6,3 @@ const SkipTo = () => {
     </div>
   )
 }
-
-export default SkipTo

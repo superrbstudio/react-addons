@@ -10,7 +10,7 @@ export const NavContext = createContext({
   closeNav: () => {},
 })
 
-export const NavContextProvider = ({ children }: PropsWithChildren) => {
+export function NavContextProvider({ children }: PropsWithChildren) {
   const [navOpen, setNavOpen] = useState<boolean>(false)
   useLockBodyScroll(navOpen)
 

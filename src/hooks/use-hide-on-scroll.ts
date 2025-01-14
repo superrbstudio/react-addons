@@ -1,7 +1,9 @@
 import { useEventListener } from '../hooks'
 import { useCallback, useEffect, useState } from 'react'
 
-const useHideOnScroll = (hiddenOnLoad: boolean = false): boolean => {
+export default function useHideOnScroll(
+  hiddenOnLoad: boolean = false,
+): boolean {
   const [hidden, setHidden] = useState<boolean>(hiddenOnLoad)
 
   const handleScroll = useCallback(() => {
@@ -65,5 +67,3 @@ const useHideOnScroll = (hiddenOnLoad: boolean = false): boolean => {
 
   return hidden
 }
-
-export default useHideOnScroll

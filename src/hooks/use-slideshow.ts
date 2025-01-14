@@ -14,18 +14,18 @@ export type Slideshow = {
   atEnd: boolean
 }
 
-export const isHorizontal = (element: SlideshowElement): boolean => {
+export function isHorizontal(element: SlideshowElement): boolean {
   return window.getComputedStyle(element).scrollSnapType.startsWith('x')
 }
 
-export const isCentered = (element: SlideshowElement): boolean => {
+export function isCentered(element: SlideshowElement): boolean {
   return (
     window.getComputedStyle(element.firstElementChild as Element)
       ?.scrollSnapAlign === 'center'
   )
 }
 
-export const getScrollProgress = (target: SlideshowElement) => {
+export function getScrollProgress(target: SlideshowElement) {
   if (!target || target.scrollWidth === target.clientWidth) {
     return -1
   }
@@ -33,10 +33,10 @@ export const getScrollProgress = (target: SlideshowElement) => {
   return target.scrollLeft / (target.scrollWidth - target.clientWidth)
 }
 
-export const getCurrentSlideIndex = (
+export function getCurrentSlideIndex(
   element: SlideshowElement,
   currentIndex: number,
-): number => {
+): number {
   if (!element) {
     return currentIndex
   }
@@ -50,7 +50,7 @@ export const getCurrentSlideIndex = (
   const horizontal = isHorizontal(element)
   const direction =
     element.scrollLeft > element.previousScroll ? 'right' : 'left'
-  const offset =25 
+  const offset = 25
   let gap = parseFloat(window.getComputedStyle(element).gap) || 0
   if (isNaN(gap)) {
     gap = 0
@@ -94,9 +94,9 @@ export const getCurrentSlideIndex = (
   return newIndex
 }
 
-const useSlideshow = (
+export default function useSlideshow(
   slideshow: MutableRefObject<SlideshowElement>,
-): Slideshow => {
+): Slideshow {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [progress, setProgress] = useState(-1)
   const [ready, setReady] = useState<boolean>(false)
@@ -153,7 +153,7 @@ const useSlideshow = (
     slideshowRef: slideshow,
     currentSlide,
     slideCount: slideshow.current?.children.length || 0,
-    goTo: (index: number) => {
+    goTo(index: number) {
       index = Math.min(
         slideshow.current?.children.length - 1,
         Math.max(0, index),
@@ -184,5 +184,3 @@ const useSlideshow = (
     atEnd: progress >= 1 || progress === -1,
   }
 }
-
-export default useSlideshow

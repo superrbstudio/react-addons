@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-const useIsMobile = (initial = true, size = '63.75em') => {
+export default function useIsMobile(initial = true, size = '63.75em') {
   const [isMobile, setIsMobile] = useState(initial)
 
   const setScreenSize = useCallback(() => {
@@ -18,5 +18,3 @@ const useIsMobile = (initial = true, size = '63.75em') => {
 
   return isMobile
 }
-
-export default useIsMobile
