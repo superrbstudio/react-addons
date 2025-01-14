@@ -1,9 +1,8 @@
-const extendClass = (className: string, extension: string) =>
-  className
+export default function extendClass(className: string, extension: string) {
+  return className
     ? className
         .split(' ')
         .map((name) => `${name}__${extension}`)
         .join(' ')
     : ''
-
-export default extendClass
+}

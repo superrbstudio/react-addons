@@ -5,8 +5,8 @@ type Target = Document | Window | Element
 type EventMap<T extends Target> = T extends Window
   ? WindowEventHandlersEventMap & GlobalEventHandlersEventMap
   : T extends Document
-  ? DocumentEventMap
-  : GlobalEventHandlersEventMap
+    ? DocumentEventMap
+    : GlobalEventHandlersEventMap
 
 type EventName<T extends Target> = keyof EventMap<T>
 
@@ -15,13 +15,16 @@ type EventListener<T extends Target, E extends EventName<T>> = (
 ) => void | boolean
 
 // Hook
-const useEventListener = <T extends Target, E extends EventName<T>>(
+export default function useEventListener<
+  T extends Target,
+  E extends EventName<T>,
+>(
   eventName: E,
   handler: EventListener<T, E>,
   options: boolean | AddEventListenerOptions = {},
   element?: T,
   flag: boolean = true,
-) => {
+) {
   // Create a ref that stores handler
   const savedHandler = useRef<EventListener<T, E>>() as MutableRefObject<
     EventListener<T, E>
@@ -40,48 +43,37 @@ const useEventListener = <T extends Target, E extends EventName<T>>(
     savedHandler.current = handler
   }, [handler])
 
-  useEffect(
-    () => {
-      // Make sure element supports addEventListener
-      // On
-      const isSupported =
-        elementRef.current && elementRef.current.addEventListener
-      if (!isSupported) return
+  useEffect(() => {
+    // Make sure element supports addEventListener
+    // On
+    const isSupported =
+      elementRef.current && elementRef.current.addEventListener
+    if (!isSupported) return
 
-      // Create event listener that calls handler function stored in ref
-      const eventListener: EventListener<T, E> = (event) =>
-        savedHandler.current(event)
+    // Create event listener that calls handler function stored in ref
+    const eventListener: EventListener<T, E> = (event) =>
+      savedHandler.current(event)
 
-      if (flag) {
-        // Add event listener
-        elementRef.current.addEventListener(
-          eventName as string,
-          eventListener as EventListenerOrEventListenerObject,
-          options,
-        )
-      } else {
-        elementRef.current.removeEventListener(
-          eventName as string,
-          eventListener as EventListenerOrEventListenerObject,
-        )
-      }
+    if (flag) {
+      // Add event listener
+      elementRef.current.addEventListener(
+        eventName as string,
+        eventListener as EventListenerOrEventListenerObject,
+        options,
+      )
+    } else {
+      elementRef.current.removeEventListener(
+        eventName as string,
+        eventListener as EventListenerOrEventListenerObject,
+      )
+    }
 
-      // Remove event listener on cleanup
-      return () => {
-        elementRef.current.removeEventListener(
-          eventName as string,
-          eventListener as EventListenerOrEventListenerObject,
-        )
-      }
-    },
-    [
-      eventName,
-      handler,
-      options,
-      element,
-      flag,
-    ], // Re-run if eventName or element changes
-  )
+    // Remove event listener on cleanup
+    return () => {
+      elementRef.current.removeEventListener(
+        eventName as string,
+        eventListener as EventListenerOrEventListenerObject,
+      )
+    }
+  }, [eventName, handler, options, element, flag])
 }
-
-export default useEventListener

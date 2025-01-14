@@ -10,11 +10,11 @@ interface ReturnType<T, E = string> {
 }
 
 // Hook
-const useAsync = <T, E = string>(
+export default function useAsync<T, E = string>(
   asyncFunction: (...args: any[]) => Promise<T>, // eslint-disable-line @typescript-eslint/no-explicit-any
   immediate = false,
-  dependencies: any[] = [], // eslint-disable-line @typescript-eslint/no-explicit-any
-): ReturnType<T, E> => {
+  dependencies: any[] = [],
+): ReturnType<T, E> {
   const [status, setStatus] = useState<Status>('idle')
   const [value, setValue] = useState<T | null>(null)
   const [error, setError] = useState<E | null>(null)
@@ -58,5 +58,3 @@ const useAsync = <T, E = string>(
 
   return { execute, status, value, error }
 }
-
-export default useAsync

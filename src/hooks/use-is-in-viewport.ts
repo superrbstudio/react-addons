@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, MutableRefObject } from 'react'
 
-const useIsInViewport = (
+export default function useIsInViewport(
   initial = false,
   rootMargin = '0px 0px',
   threshold = [0, 0.25, 0.5, 0.75, 1],
-) => {
+) {
   const [isInViewport, setIsInViewport] = useState(initial)
   const element =
     useRef<HTMLElement | null>() as MutableRefObject<HTMLElement | null>
@@ -82,5 +82,3 @@ const useIsInViewport = (
 
   return { isInViewport, setRef }
 }
-
-export default useIsInViewport

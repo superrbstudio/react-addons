@@ -1,4 +1,4 @@
-const scrollToHash = (hash: string) => {
+export default function scrollToHash(hash: string) {
   const element = document.getElementById(hash)
 
   if (!element) {
@@ -9,5 +9,3 @@ const scrollToHash = (hash: string) => {
   window.scrollTo({ top, behavior: 'auto' })
   history.pushState({}, '', `#${hash}`)
 }
-
-export default scrollToHash

@@ -1,4 +1,4 @@
-const getYPos = (element: HTMLElement) => {
+export default function getYPos(element: HTMLElement) {
   let y = 0
   while (element) {
     y += element.offsetTop - element.scrollTop + element.clientTop
@@ -6,5 +6,3 @@ const getYPos = (element: HTMLElement) => {
   }
   return y
 }
-
-export default getYPos

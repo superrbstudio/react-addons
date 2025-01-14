@@ -1,12 +1,12 @@
 type GetIndexedField<T, K> = K extends keyof T
   ? T[K]
   : K extends `${number}`
-  ? '0' extends keyof T
-    ? undefined
-    : number extends keyof T
-    ? T[number]
+    ? '0' extends keyof T
+      ? undefined
+      : number extends keyof T
+        ? T[number]
+        : undefined
     : undefined
-  : undefined
 
 type FieldWithPossiblyUndefined<T, Key> =
   | GetFieldType<Exclude<T, undefined>, Key>
@@ -20,22 +20,22 @@ export type GetFieldType<T, P> = P extends `${infer Left}.${infer Right}`
   ? Left extends keyof T
     ? FieldWithPossiblyUndefined<T[Left], Right>
     : Left extends `${infer FieldKey}[${infer IndexKey}]`
-    ? FieldKey extends keyof T
-      ? FieldWithPossiblyUndefined<
-          IndexedFieldWithPossiblyUndefined<T[FieldKey], IndexKey>,
-          Right
-        >
+      ? FieldKey extends keyof T
+        ? FieldWithPossiblyUndefined<
+            IndexedFieldWithPossiblyUndefined<T[FieldKey], IndexKey>,
+            Right
+          >
+        : undefined
       : undefined
-    : undefined
   : P extends keyof T
-  ? T[P]
-  : P extends `${infer FieldKey}[${infer IndexKey}]`
-  ? FieldKey extends keyof T
-    ? IndexedFieldWithPossiblyUndefined<T[FieldKey], IndexKey>
-    : undefined
-  : undefined
+    ? T[P]
+    : P extends `${infer FieldKey}[${infer IndexKey}]`
+      ? FieldKey extends keyof T
+        ? IndexedFieldWithPossiblyUndefined<T[FieldKey], IndexKey>
+        : undefined
+      : undefined
 
-function get<
+export default function get<
   TPath extends string,
   TData,
   TDefault = GetFieldType<TData, TPath>,
@@ -54,5 +54,3 @@ function get<
 
   return value !== undefined ? value : (defaultValue as TDefault)
 }
-
-export default get

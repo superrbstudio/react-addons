@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const useId = (prefix: string) => {
+export default function useId(prefix: string) {
   const [id, setId] = useState(
     `${prefix}-${Math.random().toString(36).substring(2, 9)}`,
   )
@@ -11,5 +11,3 @@ const useId = (prefix: string) => {
 
   return id
 }
-
-export default useId

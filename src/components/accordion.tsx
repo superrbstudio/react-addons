@@ -21,11 +21,11 @@ const AccordionContext = createContext<AccordionContextType>({
   setExpandedItems: () => {},
 })
 
-export const AccordionItem = ({
+export function AccordionItem({
   title,
   expanded = false,
   children,
-}: PropsWithChildren<{ title: string; expanded?: boolean }>) => {
+}: PropsWithChildren<{ title: string; expanded?: boolean }>) {
   const { multiple, expandedItems, setExpandedItems } =
     useContext(AccordionContext)
   const id = useId()
@@ -87,10 +87,10 @@ export const AccordionItem = ({
   )
 }
 
-export const Accordion = ({
+export function Accordion({
   multiple = false,
   children,
-}: PropsWithChildren<{ multiple?: boolean }>) => {
+}: PropsWithChildren<{ multiple?: boolean }>) {
   const [expandedItemsStorage, setExpandedItemsStorage] = useState<string[]>([])
 
   const setExpandedItems = (newState: (state: string[]) => string[]) => {
@@ -115,5 +115,3 @@ export const Accordion = ({
     </AccordionContext.Provider>
   )
 }
-
-export default Accordion

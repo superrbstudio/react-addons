@@ -1,7 +1,10 @@
 import { useEventListener, useMotionAllowed } from '../hooks'
 import { useCallback } from 'react'
 
-const useParallax = (items: HTMLElement[], flag: boolean = true) => {
+export default function useParallax(
+  items: HTMLElement[],
+  flag: boolean = true,
+) {
   const isMotionAllowed = useMotionAllowed()
 
   const onScroll = useCallback(
@@ -14,9 +17,7 @@ const useParallax = (items: HTMLElement[], flag: boolean = true) => {
         const box = item.getBoundingClientRect()
 
         requestAnimationFrame(() => {
-          item.style.transform = `translate3d(0, ${
-            (box.top / window.innerHeight) * 100 * (1 + index / 500)
-          }%, 0)`
+          item.style.transform = `translate3d(0, ${(box.top / window.innerHeight) * 100 * (1 + index / 500)}%, 0)`
         })
       })
     },
@@ -31,5 +32,3 @@ const useParallax = (items: HTMLElement[], flag: boolean = true) => {
     flag && isMotionAllowed,
   )
 }
-
-export default useParallax

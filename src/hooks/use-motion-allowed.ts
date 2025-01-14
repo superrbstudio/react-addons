@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const useMotionAllowed = () => {
+export default function useMotionAllowed() {
   const [motionAllowed, setMotionAllowed] = useState(true)
 
   useEffect(() => {
@@ -11,5 +11,3 @@ const useMotionAllowed = () => {
 
   return motionAllowed
 }
-
-export default useMotionAllowed

@@ -23,67 +23,65 @@ type Props = (
   href?: string
 }
 
-const Button = forwardRef(
-  (
-    {
-      children,
-      label,
-      label_a11y,
-      onClick,
-      className = '',
-      href,
-      ...props
-    }: Props,
-    ref: ForwardedRef<HTMLAnchorElement | HTMLButtonElement>,
-  ) => {
-    className = `button ${className}`
-    const renderedChildren = (
-      <>
-        {label_a11y && <span className="screenreader-text">{label_a11y}</span>}
-        {label && (
-          <span
-            className={`${extendClass(className, 'label')}`}
-            aria-hidden={label_a11y !== undefined}
-            data-text={label}
-          >
-            {label}
-          </span>
-        )}
-        {children}
-      </>
+function Button(
+  {
+    children,
+    label,
+    label_a11y,
+    onClick,
+    className = '',
+    href,
+    ...props
+  }: Props,
+  ref: ForwardedRef<HTMLAnchorElement | HTMLButtonElement>,
+) {
+  className = `button ${className}`
+  const renderedChildren = (
+    <>
+      {label_a11y && <span className="screenreader-text">{label_a11y}</span>}
+      {label && (
+        <span
+          className={`${extendClass(className, 'label')}`}
+          aria-hidden={label_a11y !== undefined}
+          data-text={label}
+        >
+          {label}
+        </span>
+      )}
+      {children}
+    </>
+  )
+
+  const linkProps = {
+    ...props,
+    onClick,
+    className,
+    'aria-label': label_a11y || label,
+    ref,
+  }
+
+  if (href) {
+    type AnchorProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
+      ref: MutableRefObject<HTMLAnchorElement>
+    }
+
+    return (
+      <a {...{ ...(linkProps as AnchorProps), href }}>{renderedChildren}</a>
     )
+  }
 
-    const linkProps = {
-      ...props,
-      onClick,
-      className,
-      'aria-label': label_a11y || label,
-      ref,
-    }
+  const buttonProps = {
+    ...props,
+    onClick,
+    className,
+    'aria-label': label_a11y || label,
+    ref,
+  } as ButtonHTMLAttributes<HTMLButtonElement> & {
+    ref: MutableRefObject<HTMLButtonElement>
+  }
 
-    if (href) {
-      type AnchorProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
-        ref: MutableRefObject<HTMLAnchorElement>
-      }
+  return <button {...buttonProps}>{renderedChildren}</button>
+}
 
-      return (
-        <a {...{ ...(linkProps as AnchorProps), href }}>{renderedChildren}</a>
-      )
-    }
-
-    const buttonProps = {
-      ...props,
-      onClick,
-      className,
-      'aria-label': label_a11y || label,
-      ref,
-    } as ButtonHTMLAttributes<HTMLButtonElement> & {
-      ref: MutableRefObject<HTMLButtonElement>
-    }
-
-    return <button {...buttonProps}>{renderedChildren}</button>
-  },
-)
-
-export default memo(Button)
+export default memo(forwardRef(Button))
 export type { Props as ButtonProps }

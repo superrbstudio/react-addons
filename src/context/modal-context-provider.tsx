@@ -13,7 +13,7 @@ interface OpenState {
   [key: string]: boolean
 }
 
-export const ModalContextProvider = ({ children }: PropsWithChildren) => {
+export function ModalContextProvider({ children }: PropsWithChildren) {
   const [openState, setOpenState] = useState<OpenState>({})
 
   const isOpen = (name: string) => {
