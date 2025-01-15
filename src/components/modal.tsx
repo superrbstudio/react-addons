@@ -16,6 +16,7 @@ interface Props {
   className?: string
   openAfter?: number
   dismissable?: boolean
+  preventScroll?: boolean
 }
 
 export default function Modal({
@@ -23,13 +24,14 @@ export default function Modal({
   className,
   openAfter,
   dismissable = false,
+  preventScroll = true,
   children,
 }: PropsWithChildren<Props>) {
   const [dismissed, setDismissed] = useState<boolean>(false)
   const openTimer = useRef<NodeJS.Timeout>() as MutableRefObject<NodeJS.Timeout>
 
   const { isOpen, openModal, closeModal } = useModal(name)
-  useLockBodyScroll(isOpen)
+  useLockBodyScroll(isOpen && preventScroll)
 
   useEffect(() => {
     if (dismissable) {
