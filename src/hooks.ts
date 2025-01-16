@@ -3,6 +3,7 @@
  */
 import useAsync from './hooks/use-async'
 import useDraggableScroll from './hooks/use-draggable-scroll'
+import useEscape from './hooks/use-escape'
 import useEventListener from './hooks/use-event-listener'
 import useHideOnScroll from './hooks/use-hide-on-scroll'
 import useId from './hooks/use-id'
@@ -18,6 +19,7 @@ import useSlideshow from './hooks/use-slideshow'
 export {
   useAsync,
   useDraggableScroll,
+  useEscape,
   useEventListener,
   useHideOnScroll,
   useId,
