@@ -9,7 +9,12 @@ import {
   useCallback,
 } from 'react'
 import { local } from '../storage'
-import { useLockBodyScroll, useModal } from '../hooks'
+import {
+  useEscape,
+  useEventListener,
+  useLockBodyScroll,
+  useModal,
+} from '../hooks'
 
 interface Props {
   name: string
@@ -29,6 +34,8 @@ export default function Modal({
 }: PropsWithChildren<Props>) {
   const [dismissed, setDismissed] = useState<boolean>(false)
   const openTimer = useRef<NodeJS.Timeout>() as MutableRefObject<NodeJS.Timeout>
+  const ref = useRef<HTMLElement>() as MutableRefObject<HTMLElement>
+  const innerRef = useRef<HTMLDivElement>() as MutableRefObject<HTMLDivElement>
 
   const { isOpen, openModal, closeModal } = useModal(name)
   useLockBodyScroll(isOpen && preventScroll)
@@ -48,6 +55,22 @@ export default function Modal({
     }
   }, [dismissed, openAfter, openModal])
 
+  useEscape(ref, closeModal)
+
+  useEventListener(
+    'click',
+    closeModal,
+    undefined,
+    typeof document !== 'undefined' ? document : undefined,
+  )
+
+  useEventListener(
+    'click',
+    (event) => event.stopPropagation(),
+    undefined,
+    innerRef.current,
+  )
+
   const close = useCallback(() => {
     closeModal()
 
@@ -58,13 +81,20 @@ export default function Modal({
   }, [dismissable, name, closeModal])
 
   return (
-    <aside id={name} className={`modal ${className}`} aria-hidden={!isOpen}>
+    <aside
+      id={name}
+      className={`modal ${className}`}
+      aria-hidden={!isOpen}
+      ref={ref}
+    >
       <button className={'modal__close'} onClick={close}>
         <span className="screenreader-text">Close Modal</span>
         &times;
       </button>
 
-      <div className={'modal__inner'}>{children}</div>
+      <div className={'modal__inner'} ref={innerRef}>
+        {children}
+      </div>
     </aside>
   )
 }
