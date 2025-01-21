@@ -256,7 +256,7 @@ const FormInner = forwardRef(function FormInner<
                         fieldName as string,
                       )} ${fieldName in errors ? 'form__group--error' : ''} ${
                         field?.type === 'boolean' ? 'form__group--checkbox' : ''
-                      }`}
+                      } ${field?.type === 'date' ? 'form__group--date' : ''}`}
                       ref={(ref) => {
                         fieldRefs.current.set(fieldName, ref as HTMLElement)
                       }}
@@ -309,6 +309,12 @@ const FormInner = forwardRef(function FormInner<
                                 errors[fieldName] as FieldError,
                                 field,
                               )}
+
+                            {field.spec?.meta?.help && (
+                              <p className="form__help">
+                                {field.spec.meta.help}
+                              </p>
+                            )}
                           </>
                         )}
                       </label>
