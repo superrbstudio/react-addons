@@ -12,7 +12,6 @@ interface File {
 }
 
 export function Files({ files }: { files: File[] }) {
-  console.log(files)
   return (
     <ul className="form__file-list">
       {files.map((file) => (
@@ -52,8 +51,6 @@ export default function FileField({ schema, ...fieldProps }: Props) {
       originalOnInput(event)
     }
   }
-
-  console.log(files)
 
   const input = (
     <>
