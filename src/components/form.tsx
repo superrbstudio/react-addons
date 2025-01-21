@@ -10,10 +10,12 @@ import {
   useRef,
   ForwardedRef,
   useCallback,
+  useImperativeHandle,
+  FormEvent,
 } from 'react'
 import { ObjectSchema, InferType, AnySchema } from 'yup'
 import { paramCase, sentenceCase } from 'change-case'
-import { FieldError, useForm } from 'react-hook-form'
+import { DefaultValues, FieldError, Path, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import useAsync, { Status } from '../hooks/use-async'
 import { FieldRenderer } from './form/types'
@@ -29,7 +31,12 @@ import {
   useGoogleReCaptcha,
 } from 'react-google-recaptcha-v3'
 
-export interface FormProps<T extends ObjectSchema<any>> {
+type WithRecaptcha<T> = T & { recaptchaToken?: string }
+
+export interface FormProps<
+  T extends ObjectSchema<any>,
+  DataStructure extends InferType<T> = InferType<T>,
+> {
   schema: T
   name?: string
   action?: string | ((data: InferType<T>, token: string) => any)
@@ -37,6 +44,7 @@ export interface FormProps<T extends ObjectSchema<any>> {
   method?: string
   initialData?: { [P in T as string]: any }
   onSubmit?: (data: InferType<T>) => void
+  onChange?: (data: InferType<T>) => void
   onStatusChange?: (status: Status) => void
   renderSuccessMessage?: ((data: InferType<T>) => ReactNode) | false
   renderErrorMessage?: (
@@ -44,52 +52,55 @@ export interface FormProps<T extends ObjectSchema<any>> {
     fieldSchema?: AnySchema,
   ) => ReactNode
   renderSubmit?: () => ReactNode
-  renderers?: { [P in T as string]: FieldRenderer }
+  renderers?: { [P in DataStructure]: FieldRenderer }
   useRecaptcha?: boolean
 }
 
-function toBase64(file: File) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      // Use a regex to remove data url part
-      const base64String = reader.result
-        ?.toString()
-        .replace('data:', '')
-        .replace(/^.+,/, '')
-      resolve(base64String)
-    }
-    reader.readAsDataURL(file)
-    reader.onerror = reject
-  })
+export interface FormRef<
+  T extends ObjectSchema<any>,
+  DataStructure extends InferType<T> = InferType<T>,
+> {
+  form: HTMLFormElement
+  submit: () => void
+  reset: () => void
+  values: WithRecaptcha<DataStructure>
+  fields: {
+    [P in DataStructure as string]?: HTMLElement
+  }
 }
 
-const FormInner = forwardRef(function FormInner(
+const FormInner = forwardRef(function FormInner<
+  T extends ObjectSchema<any>,
+  DataStructure extends InferType<T> = InferType<T>,
+>(
   {
     schema,
     name,
     action,
     className,
-    initialData,
+    initialData = {} as DataStructure,
     onSubmit,
+    onChange = () => {},
     method,
     onStatusChange = () => {},
-    renderSuccessMessage = (data) => <SuccessMessage />,
+    renderSuccessMessage = (data: DataStructure) => <SuccessMessage />,
     renderErrorMessage = (error?: FieldError, fieldSchema?: AnySchema) => (
       <ErrorMessage error={error} fieldSchema={fieldSchema} />
     ),
     renderSubmit = () => <SubmitButton />,
-    renderers = {},
+    renderers = {} as {
+      [P in DataStructure]: FieldRenderer
+    },
     useRecaptcha = true,
     ...props
-  }: FormProps<ObjectSchema<any>>,
-  ref: ForwardedRef<HTMLFormElement>,
+  }: FormProps<T>,
+  ref: ForwardedRef<FormRef<T>>,
 ) {
-  type DataStructure = InferType<typeof schema> & { recaptchaToken?: string }
-  const [data, setData] = useState<DataStructure>({})
-  const fieldRefs = useRef<{ [P in DataStructure as string]?: HTMLElement }>(
-    {},
-  ) as MutableRefObject<{ [P in DataStructure as string]?: HTMLElement }>
+  const [response, setResponse] = useState<ApiResponse>()
+  const formRef = useRef<HTMLFormElement>()
+  const fieldRefs = useRef<Map<keyof DataStructure, HTMLElement>>(
+    new Map<keyof DataStructure, HTMLElement>(),
+  ) as MutableRefObject<Map<keyof DataStructure, HTMLElement>>
   const { executeRecaptcha } = useGoogleReCaptcha()
 
   for (const name of Object.keys(schema.fields)) {
@@ -103,10 +114,53 @@ const FormInner = forwardRef(function FormInner(
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<DataStructure>({
+    getValues,
+    reset,
+  } = useForm<WithRecaptcha<DataStructure>>({
     resolver: yupResolver(schema),
-    defaultValues: initialData,
+    defaultValues: initialData as DefaultValues<DataStructure>,
+    mode: 'onTouched',
   })
+
+  useImperativeHandle(ref, () => ({
+    form: formRef.current as HTMLFormElement,
+    submit() {
+      handleSubmit(execute)()
+    },
+    reset() {
+      setResponse({} as ApiResponse)
+      reset
+    },
+    get values() {
+      return getValues()
+    },
+    fields: [...fieldRefs.current.entries()].reduce(
+      (refs, [key, value]) => ({
+        ...refs,
+        [key]: value,
+      }),
+      {} as {
+        [P in DataStructure as string]?: HTMLElement
+      },
+    ),
+
+    response,
+  }))
+
+  const handleInput = (
+    event: FormEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    const element = event.target as
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | HTMLSelectElement
+    onChange({
+      ...getValues(),
+      [element.name]: element.value,
+    })
+  }
 
   const onSubmitHandler = useCallback(
     async (data: DataStructure) => {
@@ -124,23 +178,6 @@ const FormInner = forwardRef(function FormInner(
       if (typeof action === 'function') {
         const { recaptchaToken, ...formData } = data
         return action(formData, recaptchaToken)
-      }
-
-      for (const [key, value] of Object.entries(data)) {
-        if (value instanceof FileList) {
-          data[`file_${key}`] = []
-          for (const [fileKey, fileValue] of Object.entries(value)) {
-            if (fileValue instanceof File && fileValue.size > 0) {
-              const insertFile = {
-                base64: await toBase64(fileValue),
-                name: fileValue.name,
-                type: fileValue.type,
-                size: fileValue.size,
-              }
-              data[`file_${key}`][fileKey] = insertFile
-            }
-          }
-        }
       }
 
       const response = await fetch(action as string, {
@@ -161,7 +198,7 @@ const FormInner = forwardRef(function FormInner(
         throw new Error(messages.form.error.endpoint_failure)
       }
 
-      setData(responseData)
+      setResponse(responseData)
 
       return responseData
     },
@@ -188,7 +225,7 @@ const FormInner = forwardRef(function FormInner(
   return (
     <>
       {status === 'success' && renderSuccessMessage !== false ? (
-        <>{renderSuccessMessage(data)}</>
+        <>{renderSuccessMessage(getValues())}</>
       ) : (
         <form
           className={`form ${className}`}
@@ -196,75 +233,91 @@ const FormInner = forwardRef(function FormInner(
           {...(method ? { method } : {})}
           onSubmit={handleSubmit(execute)}
           noValidate={true}
-          ref={ref as MutableRefObject<HTMLFormElement>}
+          ref={formRef as MutableRefObject<HTMLFormElement>}
           {...props}
         >
           {error && renderErrorMessage({ message: error } as FieldError)}
 
-          {Object.keys(schema.fields).map((fieldName, key) => {
-            const field: AnySchema = schema.fields[fieldName] as AnySchema
+          {Object.keys(schema.fields).map(
+            (fieldName: keyof DataStructure, key) => {
+              const field: AnySchema = schema.fields[fieldName] as AnySchema
 
-            return (
-              <Fragment key={key}>
-                {field?.spec?.meta?.hidden === true ? (
-                  <FormField register={register(fieldName)} schema={field} />
-                ) : (
-                  <div
-                    className={`form__group form__group--${paramCase(
-                      fieldName,
-                    )} ${fieldName in errors ? 'form__group--error' : ''} ${
-                      field?.type === 'boolean' ? 'form__group--checkbox' : ''
-                    }`}
-                    ref={(ref) => {
-                      fieldRefs.current[fieldName] = ref as HTMLElement
-                    }}
-                  >
-                    <label
-                      className="form__label"
-                      htmlFor={`${name}__${paramCase(fieldName)}`}
+              return (
+                <Fragment key={key}>
+                  {field?.spec?.meta?.hidden === true ? (
+                    <FormField
+                      register={register(fieldName as Path<DataStructure>)}
+                      schema={field}
+                      onInput={handleInput}
+                    />
+                  ) : (
+                    <div
+                      className={`form__group form__group--${paramCase(
+                        fieldName as string,
+                      )} ${fieldName in errors ? 'form__group--error' : ''} ${
+                        field?.type === 'boolean' ? 'form__group--checkbox' : ''
+                      }`}
+                      ref={(ref) => {
+                        fieldRefs.current.set(fieldName, ref as HTMLElement)
+                      }}
                     >
-                      <span
-                        className="form__label-text"
-                        dangerouslySetInnerHTML={{
-                          __html: `${field?.spec?.label} ${
-                            !field?.spec?.optional
-                              ? '<span class="form__required-indicator">*</span>'
-                              : ''
-                          }`,
-                        }}
-                      />
+                      <label
+                        className="form__label"
+                        htmlFor={`${name}__${paramCase(fieldName as string)}`}
+                      >
+                        <span
+                          className="form__label-text"
+                          dangerouslySetInnerHTML={{
+                            __html: `${field?.spec?.label} ${
+                              !field?.spec?.optional
+                                ? '<span class="form__required-indicator">*</span>'
+                                : ''
+                            }`,
+                          }}
+                        />
 
-                      {fieldName in renderers ? (
-                        renderers[fieldName](
-                          register(fieldName),
-                          errors[fieldName] as FieldError,
-                          field,
-                        )
-                      ) : (
-                        <>
-                          <FormField
-                            register={register(fieldName)}
-                            id={`${name}__${paramCase(fieldName)}`}
-                            schema={field}
-                            onInput={(event) => {
-                              fieldRefs.current[fieldName]?.classList.add(
-                                'form__group--filled',
-                              )
-                            }}
-                          />
-                          {fieldName in errors &&
-                            renderErrorMessage(
-                              errors[fieldName] as FieldError,
-                              field,
-                            )}
-                        </>
-                      )}
-                    </label>
-                  </div>
-                )}
-              </Fragment>
-            )
-          })}
+                        {fieldName in renderers ? (
+                          renderers[fieldName](
+                            register(fieldName as Path<DataStructure>),
+                            errors[fieldName] as FieldError,
+                            field,
+                          )
+                        ) : (
+                          <>
+                            <FormField
+                              register={register(
+                                fieldName as Path<DataStructure>,
+                              )}
+                              id={`${name}__${paramCase(fieldName as string)}`}
+                              schema={field}
+                              onInput={(event) => {
+                                fieldRefs.current
+                                  .get(fieldName)
+                                  ?.classList.add('form__group--filled')
+
+                                handleInput(
+                                  event as FormEvent<
+                                    | HTMLInputElement
+                                    | HTMLTextAreaElement
+                                    | HTMLSelectElement
+                                  >,
+                                )
+                              }}
+                            />
+                            {fieldName in errors &&
+                              renderErrorMessage(
+                                errors[fieldName] as FieldError,
+                                field,
+                              )}
+                          </>
+                        )}
+                      </label>
+                    </div>
+                  )}
+                </Fragment>
+              )
+            },
+          )}
 
           {renderSubmit()}
 
@@ -295,9 +348,9 @@ const FormInner = forwardRef(function FormInner(
   )
 })
 
-function Form<T extends any>(
-  props: FormProps<ObjectSchema<any>>,
-  ref: ForwardedRef<HTMLFormElement>,
+function Form<T extends ObjectSchema<any>>(
+  props: FormProps<T>,
+  ref: ForwardedRef<FormRef<T>>,
 ) {
   if (props.useRecaptcha === false) {
     return <FormInner {...props} ref={ref} />
