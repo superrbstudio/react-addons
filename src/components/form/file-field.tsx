@@ -1,0 +1,76 @@
+import { AnySchema } from 'yup'
+import { InputProps } from './field'
+import { FormEvent, MutableRefObject, useRef, useState } from 'react'
+
+interface Props extends InputProps {
+  schema: AnySchema<any>
+}
+
+interface File {
+  url: string
+  name: string
+}
+
+export function Files({ files }: { files: File[] }) {
+  console.log(files)
+  return (
+    <ul className="form__file-list">
+      {files.map((file) => (
+        <li key={file.name} className="form__file-list-item">
+          <figure className="form__file-list-image">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={file.url} alt={file.name} />
+          </figure>
+          <a
+            href={file.url}
+            download={file.name}
+            className="form__file-list-name"
+          >
+            {file.name}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+export default function FileField({ schema, ...fieldProps }: Props) {
+  const [files, setFiles] = useState<File[]>([])
+  const inputRef =
+    useRef<HTMLInputElement>() as MutableRefObject<HTMLInputElement>
+
+  const originalOnInput = fieldProps.onInput
+  fieldProps.onInput = (event: FormEvent<HTMLInputElement>) => {
+    const target = event.target as HTMLInputElement
+    const newFiles = Array.from(target.files || []).map((file) => ({
+      name: file.name,
+      url: URL.createObjectURL(file),
+    }))
+    setFiles(newFiles)
+
+    if (originalOnInput) {
+      originalOnInput(event)
+    }
+  }
+
+  console.log(files)
+
+  const input = (
+    <>
+      <input
+        ref={inputRef}
+        className="form__control form__control--mixed"
+        {...(schema.spec?.meta?.multiple ? { multiple: true } : {})}
+        type="file"
+        {...fieldProps}
+      />
+    </>
+  )
+
+  return (
+    <fieldset className="form__file-upload-wrapper">
+      {input}
+      <Files files={files} />
+    </fieldset>
+  )
+}
