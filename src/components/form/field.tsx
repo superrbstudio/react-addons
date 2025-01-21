@@ -89,6 +89,12 @@ export default function FormField({ register, schema, id, onInput }: Props) {
           checked={!rendered ? schema?.spec?.default : null}
           {...fieldProps as InputProps}
         />
+      ) : schema?.type === 'date' ? (
+        <input
+          type="date"
+          className="form__control form__control--date"
+          {...(fieldProps as InputProps)}
+        />
       ) : schema?.spec?.meta?.hidden === true ? (
         <input
           type="hidden"
