@@ -39,7 +39,7 @@ export interface FormProps<
 > {
   schema: T
   name?: string
-  action?: string | ((data: InferType<T>, token: string) => any)
+  action?: any
   className?: string
   method?: string
   initialData?: { [P in T as string]: any }
@@ -176,8 +176,9 @@ const FormInner = forwardRef(function FormInner<
 
       // Intercept submissions for Next server actions
       if (typeof action === 'function') {
-        const { recaptchaToken, ...formData } = data
-        return action(formData, recaptchaToken)
+        const formData = new FormData(formRef.current)
+        formData.set('recaptchaToken', data.recaptchaToken)
+        return action(formData)
       }
 
       const response = await fetch(action as string, {
@@ -229,7 +230,7 @@ const FormInner = forwardRef(function FormInner<
       ) : (
         <form
           className={`form ${className}`}
-          action={action as string}
+          action={action}
           {...(method ? { method } : {})}
           onSubmit={handleSubmit(execute)}
           noValidate={true}
