@@ -44,12 +44,10 @@ export function AccordionItem({
       const isExpanded = expandedItems.includes(id)
 
       if (isExpanded) {
-        console.log('Close', id)
         return expandedItems.filter((item) => item !== id)
       }
 
       if (!multiple) {
-        console.log('Open only', id)
         return [id]
       }
 
@@ -96,10 +94,6 @@ export function Accordion({
   const setExpandedItems = (newState: (state: string[]) => string[]) => {
     setExpandedItemsStorage((items) => [...new Set(newState(items))])
   }
-
-  useEffect(() => {
-    console.log(expandedItemsStorage)
-  }, [expandedItemsStorage])
 
   return (
     <AccordionContext.Provider
