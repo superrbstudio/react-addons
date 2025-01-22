@@ -77,7 +77,7 @@ const FormInner = forwardRef(function FormInner<
     schema,
     name,
     action,
-    className,
+    className = '',
     initialData = {} as DataStructure,
     onSubmit,
     onChange = () => {},
