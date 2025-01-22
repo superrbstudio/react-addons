@@ -119,7 +119,7 @@ const FormInner = forwardRef(function FormInner<
   } = useForm<WithRecaptcha<DataStructure>>({
     resolver: yupResolver(schema),
     defaultValues: initialData as DefaultValues<DataStructure>,
-    mode: 'onTouched',
+    mode: 'onSubmit',
   })
 
   useImperativeHandle(ref, () => ({
