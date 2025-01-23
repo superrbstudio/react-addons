@@ -21,7 +21,7 @@ import useAsync, { Status } from '../hooks/use-async'
 import { FieldRenderer } from './form/types'
 import SuccessMessage from './form/success-message'
 import ErrorMessage from './form/error-message'
-import FormField from './form/field'
+import FormField, { InputFieldType } from './form/field'
 import SubmitButton from './form/submit-button'
 import messages from './form/messages.json'
 // import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
@@ -244,6 +244,17 @@ const FormInner = forwardRef(function FormInner<
             (fieldName: keyof DataStructure, key) => {
               const field: AnySchema = schema.fields[fieldName] as AnySchema
 
+              const onInput = (event: FormEvent<InputFieldType>) => {
+                const field = fieldRefs.current.get(fieldName)
+                const el: InputFieldType | undefined =
+                  field?.querySelector('input, textarea, select') || undefined
+
+                const fn = (el?.value?.length || 0) > 0 ? 'add' : 'remove'
+                field?.classList[fn]('form__group--filled')
+
+                handleInput(event as FormEvent<InputFieldType>)
+              }
+
               return (
                 <Fragment key={key}>
                   {field?.spec?.meta?.hidden === true ? (
@@ -292,19 +303,8 @@ const FormInner = forwardRef(function FormInner<
                               )}
                               id={`${name}__${paramCase(fieldName as string)}`}
                               schema={field}
-                              onInput={(event) => {
-                                fieldRefs.current
-                                  .get(fieldName)
-                                  ?.classList.add('form__group--filled')
-
-                                handleInput(
-                                  event as FormEvent<
-                                    | HTMLInputElement
-                                    | HTMLTextAreaElement
-                                    | HTMLSelectElement
-                                  >,
-                                )
-                              }}
+                              onInput={onInput}
+                              onChange={onInput}
                             />
                             {fieldName in errors &&
                               renderErrorMessage(
