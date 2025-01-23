@@ -1,6 +1,6 @@
 import { AnySchema } from 'yup'
 import { InputProps } from './field'
-import { FormEvent, MutableRefObject, useRef, useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 interface Props extends InputProps {
   schema: AnySchema<any>
@@ -35,8 +35,6 @@ export function Files({ files }: { files: File[] }) {
 
 export default function FileField({ schema, ...fieldProps }: Props) {
   const [files, setFiles] = useState<File[]>([])
-  const inputRef =
-    useRef<HTMLInputElement>() as MutableRefObject<HTMLInputElement>
 
   const originalOnInput = fieldProps.onInput
   fieldProps.onInput = (event: FormEvent<HTMLInputElement>) => {
@@ -55,7 +53,6 @@ export default function FileField({ schema, ...fieldProps }: Props) {
   const input = (
     <>
       <input
-        ref={inputRef}
         className="form__control form__control--mixed"
         {...(schema.spec?.meta?.multiple ? { multiple: true } : {})}
         type="file"
