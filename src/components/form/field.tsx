@@ -18,15 +18,27 @@ interface Props {
   schema: AnySchema<any>
   id?: string
   onInput?: FormEventHandler<HTMLElement>
+  onChange?: FormEventHandler<HTMLElement>
 }
+
+export type InputFieldType =
+  | HTMLInputElement
+  | HTMLTextAreaElement
+  | HTMLSelectElement
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement>
 export type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>
 export type SelectProps = SelectHTMLAttributes<HTMLSelectElement>
 
-export type FieldProps = InputProps | SelectProps
+export type FieldProps = InputProps | TextareaProps | SelectProps
 
-export default function FormField({ register, schema, id, onInput }: Props) {
+export default function FormField({
+  register,
+  schema,
+  id,
+  onInput,
+  onChange,
+}: Props) {
   const [touched, setTouched] = useState<boolean>(false)
   const [rendered, setRendered] = useState<boolean>(false)
   const fieldProps: FieldProps = {
@@ -42,11 +54,18 @@ export default function FormField({ register, schema, id, onInput }: Props) {
     ...(schema?.spec?.meta?.autocomplete
       ? { autocomplete: schema?.spec?.meta?.autocomplete }
       : {}),
-    onInput: (event: FormEvent<HTMLElement>) => {
+    onInput: (event: FormEvent<InputFieldType>) => {
       setTouched(true)
 
       if (onInput) {
         onInput(event)
+      }
+    },
+    onChange: (event: FormEvent<InputFieldType>) => {
+      setTouched(true)
+
+      if (onChange) {
+        onChange(event)
       }
     },
   }
@@ -87,7 +106,7 @@ export default function FormField({ register, schema, id, onInput }: Props) {
           type="checkbox"
           className="form__control form__control--checkbox"
           checked={!rendered ? schema?.spec?.default : null}
-          {...fieldProps as InputProps}
+          {...(fieldProps as InputProps)}
         />
       ) : schema?.type === 'date' ? (
         <input
