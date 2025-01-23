@@ -1,7 +1,7 @@
 {
   "name": "@superrb/react-addons",
   "type": "module",
-  "version": "3.0.0-37",
+  "version": "3.0.0-38",
   "main": "index.js",
   "repository": "https://github.com/superrbstudio/react-addons",
   "author": "@molovo",
