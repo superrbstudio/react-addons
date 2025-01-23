@@ -131,8 +131,14 @@ const FormInner = forwardRef(function FormInner<
       setResponse({} as ApiResponse)
       reset
     },
-    get values() {
-      return getValues()
+    get values(): DataStructure {
+      return [...fieldRefs.current.entries()].reduce(
+        (values, [key, value]) => ({
+          ...values,
+          [key]: value.value,
+        }),
+        {} as DataStructure,
+      )
     },
     fields: [...fieldRefs.current.entries()].reduce(
       (refs, [key, value]) => ({
@@ -158,7 +164,7 @@ const FormInner = forwardRef(function FormInner<
       | HTMLTextAreaElement
       | HTMLSelectElement
     onChange({
-      ...getValues(),
+      ...(ref as MutableRefObject<FormRef<T>>)?.current?.values,
       [element.name]: element.value,
     })
   }
@@ -261,6 +267,7 @@ const FormInner = forwardRef(function FormInner<
                       register={register(fieldName as Path<DataStructure>)}
                       schema={field}
                       onInput={handleInput}
+                      value={getValues()[fieldName] as string}
                       ref={(ref) =>
                         fieldRefs.current.set(fieldName, ref as InputFieldType)
                       }
@@ -304,6 +311,7 @@ const FormInner = forwardRef(function FormInner<
                               schema={field}
                               onInput={onInput}
                               onChange={onInput}
+                              value={getValues()[fieldName] as string}
                               ref={(ref) => {
                                 fieldRefs.current.set(
                                   fieldName,
