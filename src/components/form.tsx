@@ -24,7 +24,6 @@ import ErrorMessage from './form/error-message'
 import FormField, { InputFieldType } from './form/field'
 import SubmitButton from './form/submit-button'
 import messages from './form/messages.json'
-// import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import ApiResponse from '@/types/api-response'
 import {
   GoogleReCaptchaProvider,
@@ -83,7 +82,9 @@ const FormInner = forwardRef(function FormInner<
     onChange = () => {},
     method,
     onStatusChange = () => {},
-    renderSuccessMessage = (data: DataStructure) => <SuccessMessage />,
+    renderSuccessMessage = (data: DataStructure) => (
+      <SuccessMessage data={data} />
+    ),
     renderErrorMessage = (error?: FieldError, fieldSchema?: AnySchema) => (
       <ErrorMessage error={error} fieldSchema={fieldSchema} />
     ),
@@ -115,11 +116,12 @@ const FormInner = forwardRef(function FormInner<
     handleSubmit,
     formState: { errors },
     getValues,
+    setValue,
     reset,
   } = useForm<WithRecaptcha<DataStructure>>({
     resolver: yupResolver(schema),
     defaultValues: initialData as DefaultValues<DataStructure>,
-    mode: 'onSubmit',
+    mode: 'onTouched',
   })
 
   useImperativeHandle(ref, () => ({
@@ -129,16 +131,10 @@ const FormInner = forwardRef(function FormInner<
     },
     reset() {
       setResponse({} as ApiResponse)
-      reset
+      reset()
     },
     get values(): DataStructure {
-      return [...fieldRefs.current.entries()].reduce(
-        (values, [key, value]) => ({
-          ...values,
-          [key]: value?.value,
-        }),
-        {} as DataStructure,
-      )
+      return getValues()
     },
     fields: [...fieldRefs.current.entries()].reduce(
       (refs, [key, value]) => ({
@@ -154,6 +150,8 @@ const FormInner = forwardRef(function FormInner<
     response,
   }))
 
+  const typedRef = ref as MutableRefObject<FormRef<T>>
+
   const handleInput = (
     event: FormEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -164,7 +162,7 @@ const FormInner = forwardRef(function FormInner<
       | HTMLTextAreaElement
       | HTMLSelectElement
     onChange({
-      ...(ref as MutableRefObject<FormRef<T>>)?.current?.values,
+      ...typedRef.current?.values,
       [element.name]: element.value,
     })
   }
@@ -233,7 +231,7 @@ const FormInner = forwardRef(function FormInner<
   return (
     <>
       {status === 'success' && renderSuccessMessage !== false ? (
-        <>{renderSuccessMessage(getValues())}</>
+        <>{renderSuccessMessage(typedRef.current?.values)}</>
       ) : (
         <form
           className={`form ${className}`}
@@ -257,6 +255,7 @@ const FormInner = forwardRef(function FormInner<
                 const fn = (field?.value?.length || 0) > 0 ? 'add' : 'remove'
                 group?.classList[fn]('form__group--filled')
 
+                setValue(fieldName as Path<DataStructure>, field?.value as any)
                 handleInput(event as FormEvent<InputFieldType>)
               }
 
@@ -266,8 +265,7 @@ const FormInner = forwardRef(function FormInner<
                     <FormField
                       register={register(fieldName as Path<DataStructure>)}
                       schema={field}
-                      onInput={handleInput}
-                      value={getValues()[fieldName] as string}
+                      onInput={onInput}
                       ref={(ref) =>
                         fieldRefs.current.set(fieldName, ref as InputFieldType)
                       }
@@ -311,7 +309,6 @@ const FormInner = forwardRef(function FormInner<
                               schema={field}
                               onInput={onInput}
                               onChange={onInput}
-                              value={getValues()[fieldName] as string}
                               ref={(ref) => {
                                 fieldRefs.current.set(
                                   fieldName,
