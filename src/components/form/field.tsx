@@ -48,6 +48,7 @@ export default function FormField({
       : {}),
     ...(id ? { id } : {}),
     ...(schema?.spec?.meta?.disabled ? { disabled: true } : {}),
+    ...(schema?.spec?.meta?.multiple ? { multiple: true } : {}),
     ...(schema?.spec?.meta?.placeholder
       ? { placeholder: schema?.spec?.meta?.placeholder }
       : {}),

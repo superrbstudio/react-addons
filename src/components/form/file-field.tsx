@@ -54,7 +54,6 @@ export default function FileField({ schema, ...fieldProps }: Props) {
     <>
       <input
         className="form__control form__control--mixed"
-        {...(schema.spec?.meta?.multiple ? { multiple: true } : {})}
         type="file"
         {...fieldProps}
       />
