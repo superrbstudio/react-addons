@@ -135,7 +135,7 @@ const FormInner = forwardRef(function FormInner<
       return [...fieldRefs.current.entries()].reduce(
         (values, [key, value]) => ({
           ...values,
-          [key]: value.value,
+          [key]: value?.value,
         }),
         {} as DataStructure,
       )
