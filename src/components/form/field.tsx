@@ -46,7 +46,7 @@ function FormField(
     ...register,
     ...(!touched && schema?.spec?.default
       ? { value: schema?.spec?.default }
-      : { value }),
+      : {}),
     ...(id ? { id } : {}),
     ...(schema?.spec?.meta?.disabled ? { disabled: true } : {}),
     ...(schema?.spec?.meta?.multiple ? { multiple: true } : {}),
@@ -57,7 +57,6 @@ function FormField(
       ? { autocomplete: schema?.spec?.meta?.autocomplete }
       : {}),
     onInput: (event: FormEvent<InputFieldType>) => {
-      register.onChange(event)
       setTouched(true)
 
       if (onInput) {
@@ -65,7 +64,6 @@ function FormField(
       }
     },
     onChange: (event: FormEvent<InputFieldType>) => {
-      register.onChange(event)
       setTouched(true)
 
       if (onChange) {
