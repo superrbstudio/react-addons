@@ -98,9 +98,9 @@ const FormInner = forwardRef(function FormInner<
 ) {
   const [response, setResponse] = useState<ApiResponse>()
   const formRef = useRef<HTMLFormElement>()
-  const fieldRefs = useRef<Map<keyof DataStructure, HTMLElement>>(
-    new Map<keyof DataStructure, HTMLElement>(),
-  ) as MutableRefObject<Map<keyof DataStructure, HTMLElement>>
+  const fieldRefs = useRef<Map<keyof DataStructure, InputFieldType>>(
+    new Map<keyof DataStructure, InputFieldType>(),
+  ) as MutableRefObject<Map<keyof DataStructure, InputFieldType>>
   const { executeRecaptcha } = useGoogleReCaptcha()
 
   for (const name of Object.keys(schema.fields)) {
@@ -246,11 +246,10 @@ const FormInner = forwardRef(function FormInner<
 
               const onInput = (event: FormEvent<InputFieldType>) => {
                 const field = fieldRefs.current.get(fieldName)
-                const el: InputFieldType | undefined =
-                  field?.querySelector('input, textarea, select') || undefined
+                const group = field?.closest('.form__group')
 
-                const fn = (el?.value?.length || 0) > 0 ? 'add' : 'remove'
-                field?.classList[fn]('form__group--filled')
+                const fn = (field?.value?.length || 0) > 0 ? 'add' : 'remove'
+                group?.classList[fn]('form__group--filled')
 
                 handleInput(event as FormEvent<InputFieldType>)
               }
@@ -262,6 +261,9 @@ const FormInner = forwardRef(function FormInner<
                       register={register(fieldName as Path<DataStructure>)}
                       schema={field}
                       onInput={handleInput}
+                      ref={(ref) =>
+                        fieldRefs.current.set(fieldName, ref as InputFieldType)
+                      }
                     />
                   ) : (
                     <div
@@ -270,9 +272,6 @@ const FormInner = forwardRef(function FormInner<
                       )} ${fieldName in errors ? 'form__group--error' : ''} ${
                         field?.type === 'boolean' ? 'form__group--checkbox' : ''
                       } ${field?.type === 'date' ? 'form__group--date' : ''}`}
-                      ref={(ref) => {
-                        fieldRefs.current.set(fieldName, ref as HTMLElement)
-                      }}
                     >
                       <label
                         className="form__label"
@@ -305,6 +304,12 @@ const FormInner = forwardRef(function FormInner<
                               schema={field}
                               onInput={onInput}
                               onChange={onInput}
+                              ref={(ref) => {
+                                fieldRefs.current.set(
+                                  fieldName,
+                                  ref as InputFieldType,
+                                )
+                              }}
                             />
                             {fieldName in errors &&
                               renderErrorMessage(
