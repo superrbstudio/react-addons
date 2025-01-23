@@ -1,6 +1,12 @@
 import { AnySchema } from 'yup'
 import { InputProps } from './field'
-import { FormEvent, ForwardedRef, forwardRef, useState } from 'react'
+import {
+  FormEvent,
+  ForwardedRef,
+  forwardRef,
+  MutableRefObject,
+  useState,
+} from 'react'
 
 interface Props extends InputProps {
   schema: AnySchema<any>
@@ -59,7 +65,7 @@ function FileField(
         className="form__control form__control--mixed"
         type="file"
         {...fieldProps}
-        ref={ref}
+        ref={ref as MutableRefObject<HTMLInputElement>}
       />
     </>
   )
