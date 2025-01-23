@@ -3,7 +3,10 @@
 import {
   FormEvent,
   FormEventHandler,
+  ForwardedRef,
+  forwardRef,
   InputHTMLAttributes,
+  MutableRefObject,
   SelectHTMLAttributes,
   TextareaHTMLAttributes,
   useEffect,
@@ -32,13 +35,10 @@ export type SelectProps = SelectHTMLAttributes<HTMLSelectElement>
 
 export type FieldProps = InputProps | TextareaProps | SelectProps
 
-export default function FormField({
-  register,
-  schema,
-  id,
-  onInput,
-  onChange,
-}: Props) {
+function FormField(
+  { register, schema, id, onInput, onChange }: Props,
+  ref: ForwardedRef<InputFieldType>,
+) {
   const [touched, setTouched] = useState<boolean>(false)
   const [rendered, setRendered] = useState<boolean>(false)
   const fieldProps: FieldProps = {
@@ -80,6 +80,7 @@ export default function FormField({
       <select
         className="form__control form__control--select"
         {...(fieldProps as SelectProps)}
+        ref={ref as MutableRefObject<HTMLSelectElement>}
       >
         {schema?.spec?.meta?.placeholder ? (
           <option value="" key={'placeholder'}>
@@ -101,6 +102,7 @@ export default function FormField({
         <textarea
           className="form__control"
           {...(fieldProps as TextareaProps)}
+          ref={ref as MutableRefObject<HTMLTextAreaElement>}
         />
       ) : schema?.type === 'boolean' ? (
         <input
@@ -108,26 +110,39 @@ export default function FormField({
           className="form__control form__control--checkbox"
           checked={!rendered ? schema?.spec?.default : null}
           {...(fieldProps as InputProps)}
+          ref={ref as MutableRefObject<HTMLInputElement>}
         />
       ) : schema?.type === 'date' ? (
         <input
           type="date"
           className="form__control form__control--date"
           {...(fieldProps as InputProps)}
+          ref={ref as MutableRefObject<HTMLInputElement>}
         />
       ) : schema?.spec?.meta?.hidden === true ? (
         <input
           type="hidden"
           className="form__control form__control--hidden"
           {...(fieldProps as InputProps)}
+          ref={ref as MutableRefObject<HTMLInputElement>}
         />
       ) : schema?.type === 'mixed' ? (
         <>
-          <FileField schema={schema} {...(fieldProps as InputProps)} />
+          <FileField
+            schema={schema}
+            {...(fieldProps as InputProps)}
+            ref={ref as MutableRefObject<HTMLInputElement>}
+          />
         </>
       ) : (
-        <input className="form__control" {...(fieldProps as InputProps)} />
+        <input
+          className="form__control"
+          {...(fieldProps as InputProps)}
+          ref={ref as MutableRefObject<HTMLInputElement>}
+        />
       )}
     </>
   )
 }
+
+export default forwardRef(FormField)
