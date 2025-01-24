@@ -181,6 +181,10 @@ const FormInner = forwardRef(function FormInner<
 
       // Intercept submissions for Next server actions
       if (typeof action === 'function') {
+        if (!formRef.current) {
+          throw new Error('Something went wrong while submitting the form')
+        }
+
         const formData = new FormData(formRef.current)
         formData.set('recaptchaToken', data.recaptchaToken)
         return action(formData)
