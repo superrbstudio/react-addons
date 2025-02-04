@@ -1,4 +1,4 @@
-import { MutableRefObject, useCallback, useEffect, useState } from 'react'
+import { MutableRefObject, useEffect, useState } from 'react'
 import useEventListener from './use-event-listener'
 
 export type SlideshowElement = HTMLElement & {
@@ -49,15 +49,24 @@ export function getCurrentSlideIndex(
   const centered = isCentered(element)
   const horizontal = isHorizontal(element)
   const direction =
-    element.scrollLeft > element.previousScroll ? 'right' : 'left'
+    element.scrollLeft > (element.previousScroll || 0) ? 'right' : 'left'
   const offset = 25
   let gap = parseFloat(window.getComputedStyle(element).gap) || 0
   if (isNaN(gap)) {
     gap = 0
   }
 
+  let padding =
+    parseFloat(
+      window.getComputedStyle(element)[
+        horizontal ? 'paddingLeft' : 'paddingTop'
+      ],
+    ) || 0
+  if (isNaN(padding)) {
+    padding = 0
+  }
   const containerEdge =
-    element.getBoundingClientRect()[horizontal ? 'left' : 'top']
+    element.getBoundingClientRect()[horizontal ? 'left' : 'top'] + padding
 
   let newIndex = currentIndex
   let i = 0
@@ -66,11 +75,12 @@ export function getCurrentSlideIndex(
       child.getBoundingClientRect()[horizontal ? 'left' : 'top'] - containerEdge
 
     if (centered) {
+      const centeredEdge = edge - child.clientWidth / 2
       const threshold = horizontal
         ? element.clientWidth / 2
         : element.clientHeight / 2
 
-      if (edge >= 0 && edge < threshold) {
+      if (centeredEdge >= 0 && centeredEdge < threshold) {
         newIndex = i
         break
       }
@@ -101,7 +111,7 @@ export default function useSlideshow(
   const [progress, setProgress] = useState(-1)
   const [ready, setReady] = useState<boolean>(false)
 
-  const update = useCallback(() => {
+  const update = () => {
     if (!slideshow.current) {
       return
     }
@@ -110,7 +120,7 @@ export default function useSlideshow(
       getCurrentSlideIndex(slideshow.current, current),
     )
     setProgress(getScrollProgress(slideshow.current))
-  }, [setCurrentSlide, slideshow])
+  }
 
   useEventListener(
     'scroll',
@@ -137,7 +147,7 @@ export default function useSlideshow(
       slideshow.current.setAttribute('aria-label', 'carousel')
       slideshow.current.setAttribute('aria-live', 'polite')
     }
-  }, [slideshow, update])
+  }, [slideshow]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     ;[...slideshow.current?.children].forEach((child) =>
@@ -160,25 +170,39 @@ export default function useSlideshow(
       )
       const newElement = slideshow.current?.children[index] as HTMLElement
 
-      const scrollOpts: ScrollToOptions = {
+      newElement.scrollIntoView({
         behavior: 'smooth',
-      }
+        block: isHorizontal(slideshow.current)
+          ? 'nearest'
+          : isCentered(slideshow.current)
+            ? 'center'
+            : 'start',
+        inline: isHorizontal(slideshow.current)
+          ? isCentered(slideshow.current)
+            ? 'center'
+            : 'start'
+          : 'nearest',
+      })
 
-      if (isHorizontal(slideshow.current)) {
-        if (isCentered(slideshow.current)) {
-          scrollOpts.left = newElement?.offsetLeft + newElement?.clientWidth / 2
-        } else {
-          scrollOpts.left = newElement?.offsetLeft
-        }
-      } else {
-        if (isCentered(slideshow.current)) {
-          scrollOpts.top = newElement?.offsetTop + newElement?.clientHeight / 2
-        } else {
-          scrollOpts.top = newElement?.offsetTop
-        }
-      }
+      // const scrollOpts: ScrollToOptions = {
+      //   behavior: 'smooth',
+      // }
 
-      slideshow.current?.scrollTo(scrollOpts)
+      // if (isHorizontal(slideshow.current)) {
+      //   if (isCentered(slideshow.current)) {
+      //     scrollOpts.left = newElement?.offsetLeft + newElement?.clientWidth / 2
+      //   } else {
+      //     scrollOpts.left = newElement?.offsetLeft
+      //   }
+      // } else {
+      //   if (isCentered(slideshow.current)) {
+      //     scrollOpts.top = newElement?.offsetTop + newElement?.clientHeight / 2
+      //   } else {
+      //     scrollOpts.top = newElement?.offsetTop
+      //   }
+      // }
+
+      // slideshow.current?.scrollTo(scrollOpts)
     },
     atStart: progress <= 0 || progress === -1,
     atEnd: progress >= 1 || progress === -1,
