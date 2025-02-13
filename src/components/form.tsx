@@ -148,7 +148,14 @@ const FormInner = forwardRef(function FormInner<
 
         const formData = new FormData(formRef.current)
         formData.set('recaptchaToken', data.recaptchaToken)
-        return action(formData)
+        const response = await action(formData)
+
+        if (response.statusCode === 200) {
+          setResponse(response.body)
+          return response.body
+        }
+
+        throw new Error(response.body?.message)
       }
 
       const response = await fetch(action as string, {
