@@ -23,15 +23,15 @@ const useCookieStore = create<CookieState>()((set) => {
       Cookies.set('accepted-cookies', accepted.toString(), {
         expires: 30,
       })
-      return set((state: CookieState) => ({ cookiesAccepted: accepted }))
+      return set({ cookiesAccepted: accepted })
     },
     setTrackingCookiesAccepted: (accepted: boolean) => {
       Cookies.set('accepted-tracking-cookies', accepted.toString(), {
         expires: 30,
       })
-      return set((state: CookieState) => ({
+      return set({
         trackingCookiesAccepted: accepted,
-      }))
+      })
     },
     popupOpen: false,
     openPopup: () => set({ popupOpen: true }),
