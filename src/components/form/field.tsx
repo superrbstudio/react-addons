@@ -112,6 +112,7 @@ function FormField(
           type="checkbox"
           className="form__control form__control--checkbox"
           checked={!rendered ? schema?.spec?.default : null}
+          value="true"
           {...(fieldProps as InputProps)}
           ref={ref as MutableRefObject<HTMLInputElement>}
         />
