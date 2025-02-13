@@ -111,45 +111,6 @@ const FormInner = forwardRef(function FormInner<
     }
   }
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    getValues,
-    setValue,
-    reset,
-  } = useForm<WithRecaptcha<DataStructure>>({
-    resolver: yupResolver(schema),
-    defaultValues: initialData as DefaultValues<DataStructure>,
-    mode: 'onTouched',
-  })
-
-  useImperativeHandle(ref, () => ({
-    form: formRef.current as HTMLFormElement,
-    submit() {
-      handleSubmit(execute)()
-    },
-    reset() {
-      setResponse({} as ApiResponse)
-      reset()
-    },
-    get values(): DataStructure {
-      return getValues()
-    },
-    fields: [...fieldRefs.current.entries()].reduce(
-      (refs, [key, value]) => ({
-        ...refs,
-        [key]: value,
-      }),
-      {} as {
-        [P in DataStructure as string]?: HTMLElement
-      },
-    ),
-
-    errors,
-    response,
-  }))
-
   const typedRef = ref as MutableRefObject<FormRef<T>>
 
   const handleInput = (
@@ -162,7 +123,7 @@ const FormInner = forwardRef(function FormInner<
       | HTMLTextAreaElement
       | HTMLSelectElement
     onChange({
-      ...typedRef.current?.values,
+      ...typedRef?.current?.values,
       [element.name]: element.value,
     })
   }
@@ -218,6 +179,45 @@ const FormInner = forwardRef(function FormInner<
   const { execute, status, error } = useAsync(onSubmitHandler, false, [
     onSubmitHandler,
   ])
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+    setValue,
+    reset,
+  } = useForm<WithRecaptcha<DataStructure>>({
+    resolver: yupResolver(schema),
+    defaultValues: initialData as DefaultValues<DataStructure>,
+    mode: 'onTouched',
+  })
+
+  useImperativeHandle(ref, () => ({
+    form: formRef.current as HTMLFormElement,
+    submit() {
+      handleSubmit(execute)()
+    },
+    reset() {
+      setResponse({} as ApiResponse)
+      reset()
+    },
+    get values(): DataStructure {
+      return getValues()
+    },
+    fields: [...fieldRefs.current.entries()].reduce(
+      (refs, [key, value]) => ({
+        ...refs,
+        [key]: value,
+      }),
+      {} as {
+        [P in DataStructure as string]?: HTMLElement
+      },
+    ),
+
+    errors,
+    response,
+  }))
 
   useEffect(() => {
     if (onStatusChange) {
