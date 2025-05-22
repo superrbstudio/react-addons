@@ -1,7 +1,11 @@
+import { ButtonHTMLAttributes } from 'react'
 import { Button } from '../../components'
 
-export default function SubmitButton({ label }: { label?: string }) {
+export default function SubmitButton({
+  label = 'Submit',
+  ...props
+}: { label?: string } & ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <Button label={label || 'Submit'} className="form__submit" type="submit" />
+    <Button label={label} className="form__submit" type="submit" {...props} />
   )
 }

@@ -12,6 +12,7 @@ import {
   useCallback,
   useImperativeHandle,
   FormEvent,
+  ButtonHTMLAttributes,
 } from 'react'
 import { ObjectSchema, InferType, AnySchema } from 'yup'
 import { paramCase, sentenceCase } from 'change-case'
@@ -39,6 +40,7 @@ export interface FormProps<
   schema: T
   name?: string
   action?: any
+  disabled?: boolean
   className?: string
   method?: string
   initialData?: { [P in T as string]: any }
@@ -50,7 +52,9 @@ export interface FormProps<
     error?: FieldError,
     fieldSchema?: AnySchema,
   ) => ReactNode
-  renderSubmit?: () => ReactNode
+  renderSubmit?: (
+    props: { label?: string } & ButtonHTMLAttributes<HTMLButtonElement>,
+  ) => ReactNode
   renderers?: { [P in DataStructure]: FieldRenderer }
   useRecaptcha?: boolean
 }
@@ -76,6 +80,7 @@ const FormInner = forwardRef(function FormInner<
     schema,
     name,
     action,
+    disabled = false,
     className = '',
     initialData = {} as DataStructure,
     onSubmit,
@@ -88,7 +93,7 @@ const FormInner = forwardRef(function FormInner<
     renderErrorMessage = (error?: FieldError, fieldSchema?: AnySchema) => (
       <ErrorMessage error={error} fieldSchema={fieldSchema} />
     ),
-    renderSubmit = () => <SubmitButton />,
+    renderSubmit = (props) => <SubmitButton {...props} />,
     renderers = {} as {
       [P in DataStructure]: FieldRenderer
     },
@@ -277,6 +282,7 @@ const FormInner = forwardRef(function FormInner<
                       register={register(fieldName as Path<DataStructure>)}
                       schema={field}
                       onInput={onInput}
+                      disabled={disabled}
                       ref={(ref) =>
                         fieldRefs.current.set(fieldName, ref as InputFieldType)
                       }
@@ -320,6 +326,7 @@ const FormInner = forwardRef(function FormInner<
                               schema={field}
                               onInput={onInput}
                               onChange={onInput}
+                              disabled={disabled}
                               ref={(ref) => {
                                 fieldRefs.current.set(
                                   fieldName,
@@ -348,7 +355,7 @@ const FormInner = forwardRef(function FormInner<
             },
           )}
 
-          {renderSubmit()}
+          {renderSubmit({ disabled })}
 
           {useRecaptcha && (
             <p className="form__recaptcha-message">

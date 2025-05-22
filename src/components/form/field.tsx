@@ -23,6 +23,7 @@ interface Props {
   onInput?: FormEventHandler<HTMLElement>
   onChange?: FormEventHandler<HTMLElement>
   value?: any
+  disabled?: boolean
 }
 
 export type InputFieldType =
@@ -37,7 +38,7 @@ export type SelectProps = SelectHTMLAttributes<HTMLSelectElement>
 export type FieldProps = InputProps | TextareaProps | SelectProps
 
 function FormField(
-  { register, schema, id, onInput, onChange, value }: Props,
+  { register, schema, id, onInput, onChange, value, disabled = false }: Props,
   ref: ForwardedRef<InputFieldType>,
 ) {
   const [touched, setTouched] = useState<boolean>(false)
@@ -48,7 +49,7 @@ function FormField(
       ? { value: schema?.spec?.default }
       : {}),
     ...(id ? { id } : {}),
-    ...(schema?.spec?.meta?.disabled ? { disabled: true } : {}),
+    ...(disabled || schema?.spec?.meta?.disabled ? { disabled: true } : {}),
     ...(schema?.spec?.meta?.multiple ? { multiple: true } : {}),
     ...(schema?.spec?.meta?.placeholder
       ? { placeholder: schema?.spec?.meta?.placeholder }
