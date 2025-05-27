@@ -301,6 +301,7 @@ const FormInner = forwardRef(function FormInner<
                       >
                         <span
                           className="form__label-text"
+                          data-label={`${field?.spec?.meta?.buttonLabel ? field?.spec?.meta?.buttonLabel : field?.spec?.label}`}
                           dangerouslySetInnerHTML={{
                             __html: `${field?.spec?.label} ${
                               !field?.spec?.optional
