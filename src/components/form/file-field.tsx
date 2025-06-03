@@ -54,6 +54,8 @@ function FileField(
     }))
     setFiles(newFiles)
 
+    target.blur()
+
     if (originalOnInput) {
       originalOnInput(event)
     }
