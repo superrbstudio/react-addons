@@ -389,20 +389,25 @@ function Form<T extends ObjectSchema<any>>(
   props: FormProps<T>,
   ref: ForwardedRef<FormRef<T>>,
 ) {
-  if (props.useRecaptcha === false) {
-    return <FormInner {...props} ref={ref} />
+  const key = process.env.NEXT_PUBLIC_RECAPTCHA_KEY as string
+  let { useRecaptcha } = props
+
+  if (useRecaptcha === true && !key) {
+    console.error(
+      'Env var NEXT_PUBLIC_RECAPTCHA_KEY is not set. Recaptcha is disabled.',
+    )
+    useRecaptcha = false
   }
 
-  const key = process.env.NEXT_PUBLIC_RECAPTCHA_KEY as string
-  if (!key) {
-    throw new Error('Env var NEXT_PUBLIC_RECAPTCHA_KEY is not set')
+  if (useRecaptcha === false) {
+    return <FormInner {...props} ref={ref} useRecaptcha={false} />
   }
 
   return (
     <GoogleReCaptchaProvider
       reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY as string}
     >
-      <FormInner {...props} ref={ref} />
+      <FormInner {...props} ref={ref} useRecaptcha={true} />
     </GoogleReCaptchaProvider>
   )
 }
