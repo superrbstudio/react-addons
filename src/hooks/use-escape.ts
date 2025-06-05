@@ -1,6 +1,10 @@
+import { RefObject } from 'react'
 import { useEventListener } from '../hooks'
 
-const useEscape = (ref: React.RefObject<HTMLElement>, callback: () => void) => {
+const useEscape = (
+  ref: RefObject<HTMLElement | null>,
+  callback: () => void,
+) => {
   useEventListener(
     'keydown',
     (event) => {

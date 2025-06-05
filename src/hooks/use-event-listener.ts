@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 type Target = Document | Window | Element
 
@@ -22,14 +22,12 @@ export default function useEventListener<
   eventName: E,
   handler: EventListener<T, E>,
   options: boolean | AddEventListenerOptions = {},
-  element?: T,
+  element?: T | null,
   flag: boolean = true,
 ) {
   // Create a ref that stores handler
-  const savedHandler = useRef<EventListener<T, E>>() as MutableRefObject<
-    EventListener<T, E>
-  >
-  const elementRef = useRef<T>() as MutableRefObject<T>
+  const savedHandler = useRef<EventListener<T, E>>(null)
+  const elementRef = useRef<T>(null)
 
   useEffect(() => {
     elementRef.current = element || (window as Window as T)
@@ -52,17 +50,17 @@ export default function useEventListener<
 
     // Create event listener that calls handler function stored in ref
     const eventListener: EventListener<T, E> = (event) =>
-      savedHandler.current(event)
+      savedHandler.current?.(event)
 
     if (flag) {
       // Add event listener
-      elementRef.current.addEventListener(
+      elementRef.current?.addEventListener(
         eventName as string,
         eventListener as EventListenerOrEventListenerObject,
         options,
       )
     } else {
-      elementRef.current.removeEventListener(
+      elementRef.current?.removeEventListener(
         eventName as string,
         eventListener as EventListenerOrEventListenerObject,
       )
@@ -70,7 +68,7 @@ export default function useEventListener<
 
     // Remove event listener on cleanup
     return () => {
-      elementRef.current.removeEventListener(
+      elementRef.current?.removeEventListener(
         eventName as string,
         eventListener as EventListenerOrEventListenerObject,
       )

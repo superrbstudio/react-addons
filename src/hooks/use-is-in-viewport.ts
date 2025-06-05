@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, MutableRefObject } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function useIsInViewport(
   initial = false,
@@ -6,10 +6,8 @@ export default function useIsInViewport(
   threshold = [0, 0.25, 0.5, 0.75, 1],
 ) {
   const [isInViewport, setIsInViewport] = useState(initial)
-  const element =
-    useRef<HTMLElement | null>() as MutableRefObject<HTMLElement | null>
-  const observer =
-    useRef<IntersectionObserver>() as MutableRefObject<IntersectionObserver | null>
+  const element = useRef<HTMLElement>(null)
+  const observer = useRef<IntersectionObserver>(null)
 
   useEffect(() => {
     if (!observer.current) {
@@ -32,7 +30,7 @@ export default function useIsInViewport(
         observer.current = null
       }
     }
-  }, [])
+  }, [rootMargin, threshold])
 
   const waitForObserver: () => Promise<IntersectionObserver> = () => {
     return new Promise((resolve, reject) => {

@@ -8,7 +8,7 @@ export default function SlideshowButtons({
 }: {
   slideshow: Slideshow
   ButtonComponent?: FC<ButtonProps>
-}): JSX.Element {
+}) {
   return (
     <nav className="slideshow-buttons">
       <ButtonComponent

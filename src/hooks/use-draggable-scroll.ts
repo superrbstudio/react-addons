@@ -1,7 +1,7 @@
 import {
   MouseEvent,
   MouseEventHandler,
-  MutableRefObject,
+  RefObject,
   useEffect,
   useRef,
   useState,
@@ -14,16 +14,16 @@ interface Events {
 }
 
 export default function useDraggableScroll(
-  ref: MutableRefObject<HTMLElement>,
+  ref: RefObject<HTMLElement | null>,
   { className, ...opts }: { className: string },
 ) {
   const { isInViewport, setRef } = useIsInViewport(false)
-  const { events } = useDraggable(ref, {
+  const { events } = useDraggable(ref as RefObject<HTMLElement>, {
     ...opts,
     isMounted: ref.current !== undefined,
   })
   const [modifiedEvents, setModifiedEvents] = useState<Events>(events)
-  const timer = useRef<NodeJS.Timeout>() as MutableRefObject<NodeJS.Timeout>
+  const timer = useRef<NodeJS.Timeout>(null)
   const [dragging, setDragging] = useState<boolean>(false)
 
   const [shouldScroll, setShouldScroll] = useState<boolean>(false)
@@ -31,6 +31,10 @@ export default function useDraggableScroll(
   setRef(ref.current)
 
   useEffect(() => {
+    if (!ref.current) {
+      return
+    }
+
     const shouldScroll =
       ref.current?.scrollWidth > ref.current?.clientWidth ||
       ref.current?.scrollHeight > ref.current?.clientHeight
@@ -38,7 +42,7 @@ export default function useDraggableScroll(
 
     const fn = shouldScroll ? 'add' : 'remove'
     ref.current?.classList[fn](`${className}--draggable`)
-  }, [ref.current])
+  }, [ref, className])
 
   const onDragStart = () => {
     setDragging(true)
@@ -90,7 +94,7 @@ export default function useDraggableScroll(
         originalOnMouseDown(event)
       },
     } as Events)
-  }, [ref, ref.current, setModifiedEvents, shouldScroll])
+  }, [ref, ref.current, setModifiedEvents, shouldScroll]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return { events: modifiedEvents }
 }

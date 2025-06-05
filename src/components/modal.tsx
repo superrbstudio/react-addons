@@ -4,7 +4,6 @@ import {
   useState,
   PropsWithChildren,
   useEffect,
-  MutableRefObject,
   useRef,
   useCallback,
 } from 'react'
@@ -33,9 +32,9 @@ export default function Modal({
   children,
 }: PropsWithChildren<Props>) {
   const [dismissed, setDismissed] = useState<boolean>(false)
-  const openTimer = useRef<NodeJS.Timeout>() as MutableRefObject<NodeJS.Timeout>
-  const ref = useRef<HTMLElement>() as MutableRefObject<HTMLElement>
-  const innerRef = useRef<HTMLDivElement>() as MutableRefObject<HTMLDivElement>
+  const openTimer = useRef<NodeJS.Timeout>(null)
+  const ref = useRef<HTMLElement>(null)
+  const innerRef = useRef<HTMLDivElement>(null)
 
   const { isOpen, openModal, closeModal } = useModal(name)
   useLockBodyScroll(isOpen && preventScroll)
@@ -47,7 +46,10 @@ export default function Modal({
   }, [dismissable, name])
 
   useEffect(() => {
-    clearTimeout(openTimer.current)
+    if (openTimer.current) {
+      clearTimeout(openTimer.current)
+    }
+
     if (!dismissed && openAfter) {
       openTimer.current = setTimeout(() => {
         openModal()

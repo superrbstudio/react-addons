@@ -6,16 +6,16 @@ import {
   useEffect,
   Fragment,
   forwardRef,
-  MutableRefObject,
   useRef,
   ForwardedRef,
   useCallback,
   useImperativeHandle,
   FormEvent,
   ButtonHTMLAttributes,
+  RefObject,
 } from 'react'
 import { ObjectSchema, InferType, AnySchema } from 'yup'
-import { paramCase, sentenceCase } from 'change-case'
+import { kebabCase, sentenceCase } from 'change-case'
 import { DefaultValues, FieldError, Path, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import useAsync, { Status } from '../hooks/use-async'
@@ -103,10 +103,10 @@ const FormInner = forwardRef(function FormInner<
   ref: ForwardedRef<FormRef<T>>,
 ) {
   const [response, setResponse] = useState<ApiResponse>()
-  const formRef = useRef<HTMLFormElement>()
+  const formRef = useRef<HTMLFormElement>(null)
   const fieldRefs = useRef<Map<keyof DataStructure, InputFieldType>>(
     new Map<keyof DataStructure, InputFieldType>(),
-  ) as MutableRefObject<Map<keyof DataStructure, InputFieldType>>
+  )
   const { executeRecaptcha } = useGoogleReCaptcha()
 
   for (const name of Object.keys(schema.fields)) {
@@ -116,7 +116,7 @@ const FormInner = forwardRef(function FormInner<
     }
   }
 
-  const typedRef = ref as MutableRefObject<FormRef<T>>
+  const typedRef = ref as RefObject<FormRef<T>>
 
   const handleInput = (
     event: FormEvent<
@@ -255,7 +255,7 @@ const FormInner = forwardRef(function FormInner<
           {...(method ? { method } : {})}
           onSubmit={handleSubmit(execute)}
           noValidate={true}
-          ref={formRef as MutableRefObject<HTMLFormElement>}
+          ref={formRef}
           {...props}
         >
           {error && renderErrorMessage({ message: error } as FieldError)}
@@ -283,13 +283,13 @@ const FormInner = forwardRef(function FormInner<
                       schema={field}
                       onInput={onInput}
                       disabled={disabled}
-                      ref={(ref) =>
+                      ref={(ref) => {
                         fieldRefs.current.set(fieldName, ref as InputFieldType)
-                      }
+                      }}
                     />
                   ) : (
                     <div
-                      className={`form__group form__group--${paramCase(
+                      className={`form__group form__group--${kebabCase(
                         fieldName as string,
                       )} ${fieldName in errors ? 'form__group--error' : ''} ${
                         field?.type === 'boolean' ? 'form__group--checkbox' : ''
@@ -297,7 +297,7 @@ const FormInner = forwardRef(function FormInner<
                     >
                       <label
                         className="form__label"
-                        htmlFor={`${name}__${paramCase(fieldName as string)}`}
+                        htmlFor={`${name}__${kebabCase(fieldName as string)}`}
                       >
                         <span
                           className="form__label-text"
@@ -323,7 +323,7 @@ const FormInner = forwardRef(function FormInner<
                               register={register(
                                 fieldName as Path<DataStructure>,
                               )}
-                              id={`${name}__${paramCase(fieldName as string)}`}
+                              id={`${name}__${kebabCase(fieldName as string)}`}
                               schema={field}
                               onInput={onInput}
                               onChange={onInput}
