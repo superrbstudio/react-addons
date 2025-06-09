@@ -64,6 +64,7 @@ export interface FormRef<
   DataStructure extends InferType<T> = InferType<T>,
 > {
   form: HTMLFormElement
+  setValue: (name: Path<DataStructure>, value: any) => void
   submit: () => void
   reset: () => void
   values: WithRecaptcha<DataStructure>
