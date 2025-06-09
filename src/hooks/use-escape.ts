@@ -18,7 +18,7 @@ const useEscape = (
     },
     {},
     typeof document !== 'undefined' ? document : undefined,
-    ref.current !== undefined && document !== undefined,
+    ref.current !== undefined && typeof document !== 'undefined',
   )
 }
 
