@@ -227,6 +227,7 @@ const FormInner = forwardRef(function FormInner<
       },
     ),
 
+    setValue,
     errors,
     response,
   }))
