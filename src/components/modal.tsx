@@ -66,13 +66,6 @@ export default function Modal({
     typeof document !== 'undefined' ? document : undefined,
   )
 
-  useEventListener(
-    'click',
-    (event) => event.stopPropagation(),
-    undefined,
-    innerRef.current,
-  )
-
   const close = useCallback(() => {
     closeModal()
 
@@ -87,6 +80,7 @@ export default function Modal({
       id={name}
       className={`modal ${className}`}
       aria-hidden={!isOpen}
+      onClick={event => event.stopPropagation()}
       ref={ref}
     >
       <button className={'modal__close'} onClick={close}>
