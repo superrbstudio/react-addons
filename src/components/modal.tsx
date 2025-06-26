@@ -57,7 +57,7 @@ export default function Modal({
     }
   }, [dismissed, openAfter, openModal])
 
-  useEscape(ref, closeModal)
+  useEscape(ref, closeModal, { requireFocus: false })
 
   useEventListener(
     'click',
@@ -80,7 +80,6 @@ export default function Modal({
       id={name}
       className={`modal ${className}`}
       aria-hidden={!isOpen}
-      onClick={event => event.stopPropagation()}
       ref={ref}
     >
       <button className={'modal__close'} onClick={close}>
@@ -88,7 +87,11 @@ export default function Modal({
         &times;
       </button>
 
-      <div className={'modal__inner'} ref={innerRef}>
+      <div
+        className={'modal__inner'}
+        ref={innerRef}
+        onClick={(event) => event.nativeEvent.stopImmediatePropagation()}
+      >
         {children}
       </div>
     </aside>
