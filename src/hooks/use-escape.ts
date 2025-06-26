@@ -4,12 +4,15 @@ import { useEventListener } from '../hooks'
 const useEscape = (
   ref: RefObject<HTMLElement | null>,
   callback: () => void,
+  opts = {
+    requireFocus: true
+  }
 ) => {
   useEventListener(
     'keydown',
     (event) => {
       if (
-        ref.current?.contains(document.activeElement) &&
+        (opts.requireFocus == false || ref.current?.contains(document.activeElement)) &&
         event.key === 'Escape'
       ) {
         event.preventDefault()
