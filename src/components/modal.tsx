@@ -8,12 +8,7 @@ import {
   useCallback,
 } from 'react'
 import { local } from '../storage'
-import {
-  useEscape,
-  useEventListener,
-  useLockBodyScroll,
-  useModal,
-} from '../hooks'
+import { useEventListener, useLockBodyScroll, useModal } from '../hooks'
 
 interface Props {
   name: string
@@ -33,7 +28,7 @@ export default function Modal({
 }: PropsWithChildren<Props>) {
   const [dismissed, setDismissed] = useState<boolean>(false)
   const openTimer = useRef<NodeJS.Timeout>(null)
-  const ref = useRef<HTMLElement>(null)
+  const ref = useRef<HTMLDialogElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
 
   const { isOpen, openModal, closeModal } = useModal(name)
@@ -57,7 +52,17 @@ export default function Modal({
     }
   }, [dismissed, openAfter, openModal])
 
-  useEscape(ref, closeModal, { requireFocus: false })
+  useEffect(() => {
+    if (isOpen) {
+      ref.current?.showModal()
+    } else {
+      ref.current?.close()
+    }
+
+    return () => {
+      ref.current?.close()
+    }
+  }, [isOpen])
 
   useEventListener(
     'click',
@@ -76,12 +81,7 @@ export default function Modal({
   }, [dismissable, name, closeModal])
 
   return (
-    <aside
-      id={name}
-      className={`modal ${className}`}
-      aria-hidden={!isOpen}
-      ref={ref}
-    >
+    <dialog id={name} className={`modal ${className}`} ref={ref}>
       <button className={'modal__close'} onClick={close}>
         <span className="screenreader-text">Close Modal</span>
         &times;
@@ -94,6 +94,6 @@ export default function Modal({
       >
         {children}
       </div>
-    </aside>
+    </dialog>
   )
 }
