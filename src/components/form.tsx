@@ -358,7 +358,7 @@ const FormInner = forwardRef(function FormInner<
             },
           )}
 
-          {renderSubmit({ disabled })}
+          {renderSubmit({ disabled: disabled || status === 'pending' })}
 
           {useRecaptcha && (
             <p className="form__recaptcha-message">
