@@ -188,17 +188,25 @@ export default function useSlideshow(
         behavior: 'smooth',
       }
 
+      const horizontal = isHorizontal(slideshow.current)
+      const styles = window.getComputedStyle(slideshow.current)
+      const padding = horizontal
+        ? parseInt(styles.paddingLeft)
+        : parseInt(styles.paddingTop)
+
       if (isHorizontal(slideshow.current)) {
         if (isCentered(slideshow.current)) {
-          scrollOpts.left = newElement?.offsetLeft + newElement?.clientWidth / 2
+          scrollOpts.left =
+            newElement?.offsetLeft + newElement?.clientWidth / 2 - padding
         } else {
-          scrollOpts.left = newElement?.offsetLeft
+          scrollOpts.left = newElement?.offsetLeft - padding
         }
       } else {
         if (isCentered(slideshow.current)) {
-          scrollOpts.top = newElement?.offsetTop + newElement?.clientHeight / 2
+          scrollOpts.top =
+            newElement?.offsetTop + newElement?.clientHeight / 2 - padding
         } else {
-          scrollOpts.top = newElement?.offsetTop
+          scrollOpts.top = newElement?.offsetTop - padding
         }
       }
 
