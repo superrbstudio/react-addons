@@ -170,39 +170,39 @@ export default function useSlideshow(
       )
       const newElement = slideshow.current?.children[index] as HTMLElement
 
-      newElement.scrollIntoView({
-        behavior: 'smooth',
-        block: isHorizontal(slideshow.current)
-          ? 'nearest'
-          : isCentered(slideshow.current)
-            ? 'center'
-            : 'start',
-        inline: isHorizontal(slideshow.current)
-          ? isCentered(slideshow.current)
-            ? 'center'
-            : 'start'
-          : 'nearest',
-      })
-
-      // const scrollOpts: ScrollToOptions = {
+      // newElement.scrollIntoView({
       //   behavior: 'smooth',
-      // }
+      //   block: isHorizontal(slideshow.current)
+      //     ? 'nearest'
+      //     : isCentered(slideshow.current)
+      //       ? 'center'
+      //       : 'start',
+      //   inline: isHorizontal(slideshow.current)
+      //     ? isCentered(slideshow.current)
+      //       ? 'center'
+      //       : 'start'
+      //     : 'nearest',
+      // })
 
-      // if (isHorizontal(slideshow.current)) {
-      //   if (isCentered(slideshow.current)) {
-      //     scrollOpts.left = newElement?.offsetLeft + newElement?.clientWidth / 2
-      //   } else {
-      //     scrollOpts.left = newElement?.offsetLeft
-      //   }
-      // } else {
-      //   if (isCentered(slideshow.current)) {
-      //     scrollOpts.top = newElement?.offsetTop + newElement?.clientHeight / 2
-      //   } else {
-      //     scrollOpts.top = newElement?.offsetTop
-      //   }
-      // }
+      const scrollOpts: ScrollToOptions = {
+        behavior: 'smooth',
+      }
 
-      // slideshow.current?.scrollTo(scrollOpts)
+      if (isHorizontal(slideshow.current)) {
+        if (isCentered(slideshow.current)) {
+          scrollOpts.left = newElement?.offsetLeft + newElement?.clientWidth / 2
+        } else {
+          scrollOpts.left = newElement?.offsetLeft
+        }
+      } else {
+        if (isCentered(slideshow.current)) {
+          scrollOpts.top = newElement?.offsetTop + newElement?.clientHeight / 2
+        } else {
+          scrollOpts.top = newElement?.offsetTop
+        }
+      }
+
+      slideshow.current?.scrollTo(scrollOpts)
     },
     atStart: progress <= 0 || progress === -1,
     atEnd: progress >= 1 || progress === -1,
