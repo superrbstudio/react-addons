@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 
 type Target = Document | Window | Element
 
@@ -25,53 +25,26 @@ export default function useEventListener<
   element?: T | null,
   flag: boolean = true,
 ) {
-  // Create a ref that stores handler
-  const savedHandler = useRef<EventListener<T, E>>(null)
-  const elementRef = useRef<T>(null)
-
+  element = element || (window as Window as T)
   useEffect(() => {
-    elementRef.current = element || (window as Window as T)
-  }, [element])
-
-  // Update ref.current value if handler changes.
-  // This allows our effect below to always get latest handler ...
-  // ... without us needing to pass it in effect deps array ...
-  // ... and potentially cause effect to re-run every render.
-  useEffect(() => {
-    savedHandler.current = handler
-  }, [handler])
-
-  useEffect(() => {
-    // Make sure element supports addEventListener
-    // On
-    const isSupported =
-      elementRef.current && elementRef.current.addEventListener
-    if (!isSupported) return
-
-    // Create event listener that calls handler function stored in ref
-    const eventListener: EventListener<T, E> = (event) =>
-      savedHandler.current?.(event)
-
     if (flag) {
-      // Add event listener
-      elementRef.current?.addEventListener(
+      element?.addEventListener(
         eventName as string,
-        eventListener as EventListenerOrEventListenerObject,
+        handler as EventListenerOrEventListenerObject,
         options,
       )
     } else {
-      elementRef.current?.removeEventListener(
+      element?.removeEventListener(
         eventName as string,
-        eventListener as EventListenerOrEventListenerObject,
+        handler as EventListenerOrEventListenerObject,
       )
     }
 
-    // Remove event listener on cleanup
     return () => {
-      elementRef.current?.removeEventListener(
+      element?.removeEventListener(
         eventName as string,
-        eventListener as EventListenerOrEventListenerObject,
+        handler as EventListenerOrEventListenerObject,
       )
     }
-  }, [eventName, handler, options, element, flag])
+  }, [element, eventName, handler, options, flag])
 }
