@@ -34,7 +34,7 @@
     "@types/js-cookie": "^3.0.3",
     "@types/node": "^20.5.7",
     "@types/react": "^19.1.0",
-    "csp-header": "^6.1.0",
+    "csp-header": "^6.3.0",
     "eslint": "^8.50.0",
     "eslint-config-next": "^13.5.3",
     "eslint-config-prettier": "^9.0.0",
