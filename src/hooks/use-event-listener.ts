@@ -25,23 +25,23 @@ export default function useEventListener<
   element?: T | null,
   flag: boolean = true,
 ) {
-  element = element || (window as Window as T)
   useEffect(() => {
+    const target = element || (window as Window as T)
     if (flag) {
-      element?.addEventListener(
+      target?.addEventListener(
         eventName as string,
         handler as EventListenerOrEventListenerObject,
         options,
       )
     } else {
-      element?.removeEventListener(
+      target?.removeEventListener(
         eventName as string,
         handler as EventListenerOrEventListenerObject,
       )
     }
 
     return () => {
-      element?.removeEventListener(
+      target?.removeEventListener(
         eventName as string,
         handler as EventListenerOrEventListenerObject,
       )
