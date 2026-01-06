@@ -9,6 +9,10 @@ export default function useParallax(
 
   const onScroll = useCallback(
     (event: GlobalEventHandlersEventMap['scroll']) => {
+      if (!flag || !isMotionAllowed) {
+        return
+      }
+
       items.forEach((item, index) => {
         if (!item) {
           return
@@ -21,14 +25,8 @@ export default function useParallax(
         })
       })
     },
-    [items],
+    [items, flag, isMotionAllowed],
   )
 
-  useEventListener(
-    'scroll',
-    onScroll,
-    { passive: true },
-    undefined,
-    flag && isMotionAllowed,
-  )
+  useEventListener('scroll', onScroll, { passive: true })
 }

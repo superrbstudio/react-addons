@@ -45,37 +45,37 @@ export default function useDraggableScroll(
   }, [ref, className])
 
   const onDragStart = () => {
+    if (!isInViewport) {
+      return
+    }
+
     setDragging(true)
     ref.current?.classList.add(`${className}--dragging`)
   }
 
   const onDragMove = () => {
+    if (!isInViewport) {
+      return
+    }
+
     if (timer.current && dragging) {
       clearTimeout(timer.current)
     }
   }
 
   const onDragEnd = () => {
+    if (!isInViewport) {
+      return
+    }
+
     setDragging(false)
     timer.current = setTimeout(() => {
       ref.current?.classList.remove(`${className}--dragging`)
     }, 100)
   }
 
-  useEventListener(
-    'mousemove',
-    onDragMove,
-    undefined,
-    undefined,
-    isInViewport && shouldScroll,
-  )
-  useEventListener(
-    'mouseup',
-    onDragEnd,
-    undefined,
-    undefined,
-    isInViewport && shouldScroll,
-  )
+  useEventListener('mousemove', onDragMove)
+  useEventListener('mouseup', onDragEnd)
 
   useEffect(() => {
     if (!shouldScroll) {

@@ -109,7 +109,6 @@ export default function useSlideshow(
 ): Slideshow {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [progress, setProgress] = useState(-1)
-  const [ready, setReady] = useState<boolean>(false)
 
   const update = () => {
     if (!slideshow.current) {
@@ -122,24 +121,10 @@ export default function useSlideshow(
     setProgress(getScrollProgress(slideshow.current))
   }
 
-  useEventListener(
-    'scroll',
-    update,
-    { passive: true },
-    slideshow.current,
-    !!slideshow.current && ready,
-  )
-  useEventListener(
-    'resize',
-    update,
-    { passive: true },
-    slideshow.current,
-    !!slideshow.current && ready,
-  )
+  useEventListener('scroll', update, { passive: true }, slideshow)
+  useEventListener('resize', update, { passive: true }, slideshow)
 
   useEffect(() => {
-    setReady(true)
-
     if (slideshow.current) {
       update()
 

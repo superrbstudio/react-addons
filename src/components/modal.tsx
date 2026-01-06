@@ -6,6 +6,7 @@ import {
   useEffect,
   useRef,
   useCallback,
+  RefObject,
 } from 'react'
 import { local } from '../storage'
 import { useEventListener, useLockBodyScroll, useModal } from '../hooks'
@@ -30,6 +31,9 @@ export default function Modal({
   const openTimer = useRef<NodeJS.Timeout>(null)
   const ref = useRef<HTMLDialogElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
+  const documentRef = useRef<Document>(
+    typeof document !== 'undefined' ? document : null,
+  ) as RefObject<Document>
 
   const { isOpen, openModal, closeModal } = useModal(name)
   useLockBodyScroll(isOpen && preventScroll)
@@ -64,12 +68,7 @@ export default function Modal({
     }
   }, [isOpen])
 
-  useEventListener(
-    'click',
-    closeModal,
-    undefined,
-    typeof document !== 'undefined' ? document : undefined,
-  )
+  useEventListener('click', closeModal, undefined, documentRef)
 
   const close = useCallback(() => {
     closeModal()

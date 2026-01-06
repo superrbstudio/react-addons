@@ -165,6 +165,7 @@ __metadata:
     react-use-draggable-scroll: "npm:^0.4.7"
     typescript: "npm:^5.2.2"
     typescript-eslint: "npm:^0.0.1-alpha.0"
+    usehooks-ts: "npm:^3.1.1"
     watch: "npm:^1.0.2"
     yup: "npm:^1.7.1"
     zustand: "npm:^5.0.5"
@@ -172,6 +173,7 @@ __metadata:
     csp-header: ^6.1.0
     react: ^19.1.0
     typescript: ^5.2.2
+    usehooks-ts: ^3.1.1
     yup: ^1.4.0
     zustand: ^5.0.5
   languageName: unknown
@@ -1836,6 +1838,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.debounce@npm:^4.0.8":
+  version: 4.0.8
+  resolution: "lodash.debounce@npm:4.0.8"
+  checksum: 10c0/762998a63e095412b6099b8290903e0a8ddcb353ac6e2e0f2d7e7d03abd4275fe3c689d88960eb90b0dde4f177554d51a690f22a343932ecbc50a5d111849987
+  languageName: node
+  linkType: hard
+
 "lodash.merge@npm:^4.6.2":
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
@@ -2680,6 +2689,17 @@ __metadata:
   dependencies:
     punycode: "npm:^2.1.0"
   checksum: 10c0/4ef57b45aa820d7ac6496e9208559986c665e49447cb072744c13b66925a362d96dd5a46c4530a6b8e203e5db5fe849369444440cb22ecfc26c679359e5dfa3c
+  languageName: node
+  linkType: hard
+
+"usehooks-ts@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "usehooks-ts@npm:3.1.1"
+  dependencies:
+    lodash.debounce: "npm:^4.0.8"
+  peerDependencies:
+    react: ^16.8.0  || ^17 || ^18 || ^19 || ^19.0.0-rc
+  checksum: 10c0/8bbebf52b063f2e705eb27364f08ec2eff987b9e8d28d82a28248652dd89ef53cb514e1f2ee1cbc6ac6e083a8dce86310301c3e92a99902b98c32a26381202d7
   languageName: node
   linkType: hard
 
