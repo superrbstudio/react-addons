@@ -163,7 +163,6 @@ __metadata:
     react-google-recaptcha-v3: "npm:^1.10.1"
     react-hook-form: "npm:^7.46.1"
     react-use-draggable-scroll: "npm:^0.4.7"
-    simple-zustand-devtools: "npm:^1.1.0"
     typescript: "npm:^5.2.2"
     typescript-eslint: "npm:^0.0.1-alpha.0"
     watch: "npm:^1.0.2"
@@ -2409,19 +2408,6 @@ __metadata:
     get-intrinsic: "npm:^1.0.2"
     object-inspect: "npm:^1.9.0"
   checksum: 10c0/054a5d23ee35054b2c4609b9fd2a0587760737782b5d765a9c7852264710cc39c6dcb56a9bbd6c12cd84071648aea3edb2359d2f6e560677eedadce511ac1da5
-  languageName: node
-  linkType: hard
-
-"simple-zustand-devtools@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "simple-zustand-devtools@npm:1.1.0"
-  peerDependencies:
-    "@types/react": ">=18.0.0"
-    "@types/react-dom": ">=18.0.0"
-    react: ">=18.0.0"
-    react-dom: ">=18.0.0"
-    zustand: ">=1.0.2"
-  checksum: 10c0/8214dafd66ca7581c0f474c8a19a1717f0391f8e5f93125aaeb44a350fed1dfaf9b68c4ac05e7fd7cdf7a52109536c1197b4bddeb8f1886489090aa381245f17
   languageName: node
   linkType: hard
 
