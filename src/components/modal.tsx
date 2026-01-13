@@ -51,10 +51,12 @@ export default function Modal({
 
     if (!dismissed && openAfter) {
       openTimer.current = setTimeout(() => {
-        openModal()
+        if (!dismissed) {
+          openModal()
+        }
       }, openAfter)
     }
-  }, [dismissed, openAfter, openModal])
+  }, [isOpen, dismissed, openAfter, openModal])
 
   useEffect(() => {
     if (isOpen) {
