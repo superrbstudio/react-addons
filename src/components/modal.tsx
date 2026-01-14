@@ -9,7 +9,12 @@ import {
   RefObject,
 } from 'react'
 import { local } from '../storage'
-import { useEventListener, useLockBodyScroll, useModal } from '../hooks'
+import {
+  useEscape,
+  useEventListener,
+  useLockBodyScroll,
+  useModal,
+} from '../hooks'
 
 interface Props {
   name: string
@@ -70,8 +75,6 @@ export default function Modal({
     }
   }, [isOpen])
 
-  useEventListener('click', closeModal, undefined, documentRef)
-
   const close = useCallback(() => {
     closeModal()
 
@@ -80,6 +83,11 @@ export default function Modal({
       setDismissed(true)
     }
   }, [dismissable, name, closeModal])
+
+  useEventListener('click', close, undefined, documentRef)
+  useEscape(documentRef as unknown as RefObject<HTMLElement>, close, {
+    requireFocus: false,
+  })
 
   return (
     <dialog id={name} className={`modal ${className}`} ref={ref}>
