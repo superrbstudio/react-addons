@@ -138,7 +138,7 @@ export default function useSlideshow(
     ;[...slideshow.current?.children].forEach((child) =>
       child.setAttribute('aria-hidden', 'true'),
     )
-    slideshow.current?.children[currentSlide].setAttribute(
+    slideshow.current?.children?.[currentSlide]?.setAttribute(
       'aria-hidden',
       'false',
     )
@@ -153,7 +153,7 @@ export default function useSlideshow(
         slideshow.current?.children.length - 1,
         Math.max(0, index),
       )
-      const newElement = slideshow.current?.children[index] as HTMLElement
+      const newElement = slideshow.current?.children?.[index] as HTMLElement
 
       // newElement.scrollIntoView({
       //   behavior: 'smooth',
