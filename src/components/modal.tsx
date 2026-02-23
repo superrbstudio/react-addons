@@ -76,13 +76,15 @@ export default function Modal({
   }, [isOpen])
 
   const close = useCallback(() => {
+    if (!isOpen) return
+
     closeModal()
 
     if (dismissable) {
       local.setItem(`${name}-popup-dismissed`, 'true')
       setDismissed(true)
     }
-  }, [dismissable, name, closeModal])
+  }, [isOpen, dismissable, name, closeModal])
 
   useEventListener('click', close, undefined, documentRef)
   useEscape(documentRef as unknown as RefObject<HTMLElement>, close, {
