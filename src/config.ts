@@ -81,6 +81,7 @@ export const facebookPixelCspConfig: CSPPresetGenerator = () => ({
 export const typekitCspConfig: CSPPresetGenerator = () => ({
   'script-src': ['use.typekit.net'],
   'style-src': ['use.typekit.net'],
+  'font-src': ['use.typekit.net'],
   'img-src': ['p.typekit.net'],
   'connect-src': ['performance.typekit.net'],
 })
