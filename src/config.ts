@@ -84,3 +84,15 @@ export const typekitCspConfig: CSPPresetGenerator = () => ({
   'img-src': ['p.typekit.net'],
   'connect-src': ['performance.typekit.net'],
 })
+
+export const cloudflareCspConfig: CSPPresetGenerator = () => ({
+  'script-src': [
+    SELF,
+    INLINE,
+    'ajax.cloudflare.com',
+    'static.cloudflareinsights.com',
+    'https://challenges.cloudflare.com',
+  ],
+  'connect-src': ['cloudflareinsights.com'],
+  'frame-src': ['https://challenges.cloudflare.com'],
+})
