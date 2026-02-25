@@ -13,7 +13,7 @@
     "install-peers-cli": "^2.2.0",
     "js-cookie": "^3.0.5",
     "react-google-recaptcha-v3": "^1.11.0",
-    "react-hook-form": "^7.46.1",
+    "react-hook-form": "^7.71.2",
     "react-use-draggable-scroll": "^0.4.7"
   },
   "peerDependencies": {
@@ -43,6 +43,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "prettier": "^3.2.2",
     "react": "^19.1.0",
+    "react-dom": "^19.0.4",
     "typescript": "^5.2.2",
     "typescript-eslint": "^8.56.1",
     "usehooks-ts": "^3.1.1",
