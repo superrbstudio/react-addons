@@ -73,3 +73,7 @@ export const googleTagManagerCspConfig: CSPPresetGenerator = () => ({
   ],
   'font-src': ['https://fonts.gstatic.com'],
 })
+
+export const facebookPixelCspConfig: CSPPresetGenerator = () => ({
+  'script-src': ['https://connect.facebook.net'],
+})
