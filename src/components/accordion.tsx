@@ -23,12 +23,14 @@ const AccordionContext = createContext<AccordionContextType>({
 
 export function AccordionItem({
   title,
+  id: externalID,
   expanded = false,
   children,
-}: PropsWithChildren<{ title: string; expanded?: boolean }>) {
+}: PropsWithChildren<{ title: string; id?: string; expanded?: boolean }>) {
   const { multiple, expandedItems, setExpandedItems } =
     useContext(AccordionContext)
-  const id = useId()
+  const randomID = useId()
+  const id = externalID || randomID
 
   useEffect(() => {
     if (expanded === true) {
@@ -64,7 +66,7 @@ export function AccordionItem({
         onClick={toggle}
         role="tab"
         aria-label={title}
-        id={`${id}-trigger`}
+        id={`${id}`}
       >
         <span className="screenreader-text">
           {expandedItems ? 'Close' : 'Expand'}
@@ -76,7 +78,7 @@ export function AccordionItem({
       <div
         className="accordion__content"
         role="tabpanel"
-        aria-labelledby={`${id}-trigger`}
+        aria-labelledby={`${id}`}
         id={`${id}-panel`}
       >
         {children}
