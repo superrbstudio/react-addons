@@ -38,6 +38,7 @@ export const googleTagManagerCspConfig: CSPPresetGenerator = () => ({
     'https://googleads.g.doubleclick.net',
     'https://www.google.com',
     'https://google.com',
+    'https://stats.g.doubleclick.net',
   ],
   'script-src': [
     'https://www.googletagmanager.com',
@@ -49,9 +50,7 @@ export const googleTagManagerCspConfig: CSPPresetGenerator = () => ({
     'https://pagead2.googlesyndication.com',
     'https://googleads.g.doubleclick.net',
   ],
-  'frame-src': [
-    'https://www.googletagmanager.com',
-  ],
+  'frame-src': ['https://www.googletagmanager.com'],
   'img-src': [
     'www.googletagmanager.com',
     'https://googletagmanager.com',
