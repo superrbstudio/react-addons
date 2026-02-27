@@ -76,6 +76,7 @@ export const googleTagManagerCspConfig: CSPPresetGenerator = () => ({
 
 export const facebookPixelCspConfig: CSPPresetGenerator = () => ({
   'script-src': ['https://connect.facebook.net'],
+  'img-src': ['https://www.facebook.com'],
 })
 
 export const typekitCspConfig: CSPPresetGenerator = () => ({
