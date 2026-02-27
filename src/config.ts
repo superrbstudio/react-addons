@@ -30,6 +30,8 @@ export const googleTagManagerCspConfig: CSPPresetGenerator = () => ({
   'connect-src': [
     'www.googletagmanager.com',
     'www.google.com',
+    'analytics.google.com',
+    'https://analytics.google.com',
     'https://*.google-analytics.com',
     'https://*.analytics.google.com',
     'https://*.googletagmanager.com',
