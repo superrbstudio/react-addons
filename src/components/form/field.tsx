@@ -121,7 +121,13 @@ function FormField(
         <input
           type="date"
           className="form__control form__control--date"
-          {...(fieldProps as InputProps)}
+          {...({
+            ...fieldProps,
+            value:
+              fieldProps.value && fieldProps.value instanceof Date
+                ? fieldProps.value.toISOString().split('T')[0]
+                : fieldProps.value,
+          } as InputProps)}
           ref={ref as MutableRefObject<HTMLInputElement>}
         />
       ) : schema?.spec?.meta?.hidden === true ? (
