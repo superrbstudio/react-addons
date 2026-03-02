@@ -65,6 +65,7 @@ export interface FormRef<
 > {
   form: HTMLFormElement
   setValue: (name: Path<DataStructure>, value: any) => void
+  setError: (name: Path<DataStructure>, error: FieldError) => void
   submit: () => void
   reset: () => void
   values: WithRecaptcha<DataStructure>
@@ -199,6 +200,7 @@ const FormInner = forwardRef(function FormInner<
     formState: { errors },
     getValues,
     setValue,
+    setError,
     reset,
   } = useForm<WithRecaptcha<DataStructure>>({
     resolver: yupResolver(schema),
@@ -229,6 +231,7 @@ const FormInner = forwardRef(function FormInner<
     ),
 
     setValue,
+    setError,
     errors,
     response,
   }))
