@@ -102,7 +102,14 @@ function FormField(
 
   return (
     <>
-      {schema?.spec?.meta?.textarea === true ? (
+      {schema?.spec?.meta?.hidden === true ? (
+        <input
+          type="hidden"
+          className="form__control form__control--hidden"
+          {...(fieldProps as InputProps)}
+          ref={ref as MutableRefObject<HTMLInputElement>}
+        />
+      ) : schema?.spec?.meta?.textarea === true ? (
         <textarea
           className="form__control"
           {...(fieldProps as TextareaProps)}
@@ -128,13 +135,6 @@ function FormField(
                 ? fieldProps.value.toISOString().split('T')[0]
                 : fieldProps.value,
           } as InputProps)}
-          ref={ref as MutableRefObject<HTMLInputElement>}
-        />
-      ) : schema?.spec?.meta?.hidden === true ? (
-        <input
-          type="hidden"
-          className="form__control form__control--hidden"
-          {...(fieldProps as InputProps)}
           ref={ref as MutableRefObject<HTMLInputElement>}
         />
       ) : schema?.type === 'mixed' ? (
