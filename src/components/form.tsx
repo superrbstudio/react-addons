@@ -10,9 +10,9 @@ import {
   ForwardedRef,
   useCallback,
   useImperativeHandle,
-  FormEvent,
   ButtonHTMLAttributes,
   RefObject,
+  InputEvent,
 } from 'react'
 import { ObjectSchema, InferType, AnySchema } from 'yup'
 import { kebabCase, sentenceCase } from 'change-case'
@@ -121,7 +121,7 @@ const FormInner = forwardRef(function FormInner<
   const typedRef = ref as RefObject<FormRef<T>>
 
   const handleInput = (
-    event: FormEvent<
+    event: InputEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => {
@@ -269,7 +269,7 @@ const FormInner = forwardRef(function FormInner<
             (fieldName: keyof DataStructure, key) => {
               const field: AnySchema = schema.fields[fieldName] as AnySchema
 
-              const onInput = (event: FormEvent<InputFieldType>) => {
+              const onInput = (event: InputEvent<InputFieldType>) => {
                 const field = fieldRefs.current.get(fieldName)
                 const group = field?.closest('.form__group')
 
@@ -277,7 +277,7 @@ const FormInner = forwardRef(function FormInner<
                 group?.classList[fn]('form__group--filled')
 
                 setValue(fieldName as Path<DataStructure>, field?.value as any)
-                handleInput(event as FormEvent<InputFieldType>)
+                handleInput(event as InputEvent<InputFieldType>)
               }
 
               return (

@@ -1,9 +1,9 @@
 import { AnySchema } from 'yup'
 import { InputProps } from './field'
 import {
-  FormEvent,
   ForwardedRef,
   forwardRef,
+  InputEvent,
   MutableRefObject,
   useState,
 } from 'react'
@@ -46,7 +46,7 @@ function FileField(
   const [files, setFiles] = useState<File[]>([])
 
   const originalOnInput = fieldProps.onInput
-  fieldProps.onInput = (event: FormEvent<HTMLInputElement>) => {
+  fieldProps.onInput = (event: InputEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement
     const newFiles = Array.from(target.files || []).map((file) => ({
       name: file.name,
