@@ -316,7 +316,7 @@ const FormInner = forwardRef(function FormInner<
                         htmlFor={`${name}__${kebabCase(fieldName as string)}`}
                       >
                         <span
-                          className="form__label-text"
+                          className={`form__label-text ${field?.spec?.meta?.hiddenLabel ? 'screenreader-text' : ''}`}
                           data-label={`${field?.spec?.meta?.buttonLabel ? field?.spec?.meta?.buttonLabel : field?.spec?.label}`}
                           dangerouslySetInnerHTML={{
                             __html: `${field?.spec?.label} ${
