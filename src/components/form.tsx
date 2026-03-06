@@ -16,7 +16,13 @@ import {
 } from 'react'
 import { ObjectSchema, InferType, AnySchema } from 'yup'
 import { kebabCase, sentenceCase } from 'change-case'
-import { DefaultValues, FieldError, Path, useForm } from 'react-hook-form'
+import {
+  DefaultValues,
+  FieldError,
+  FieldErrors,
+  Path,
+  useForm,
+} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import useAsync, { Status } from '../hooks/use-async'
 import { FieldRenderer } from './form/types'
@@ -68,6 +74,8 @@ export interface FormRef<
   setError: (name: Path<DataStructure>, error: FieldError) => void
   submit: () => void
   reset: () => void
+  clearErrors: () => void
+  errors: FieldErrors
   values: WithRecaptcha<DataStructure>
   fields: {
     [P in DataStructure as string]?: HTMLElement
@@ -201,6 +209,7 @@ const FormInner = forwardRef(function FormInner<
     getValues,
     setValue,
     setError,
+    clearErrors,
     reset,
   } = useForm<WithRecaptcha<DataStructure>>({
     resolver: yupResolver(schema),
@@ -220,6 +229,7 @@ const FormInner = forwardRef(function FormInner<
     get values(): DataStructure {
       return getValues()
     },
+    errors: errors as FieldErrors<DataStructure>,
     fields: [...fieldRefs.current.entries()].reduce(
       (refs, [key, value]) => ({
         ...refs,
@@ -230,9 +240,9 @@ const FormInner = forwardRef(function FormInner<
       },
     ),
 
+    clearErrors,
     setValue,
     setError,
-    errors,
     response,
   }))
 
@@ -264,6 +274,7 @@ const FormInner = forwardRef(function FormInner<
           {...props}
         >
           {error && renderErrorMessage({ message: error } as FieldError)}
+          {errors['*'] && renderErrorMessage(errors['*'] as FieldError)}
 
           {Object.keys(schema.fields).map(
             (fieldName: keyof DataStructure, key) => {
