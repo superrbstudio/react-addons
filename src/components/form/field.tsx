@@ -90,11 +90,24 @@ function FormField(
           </option>
         ) : null}
         {schema?.spec?.meta?.options?.map(
-          (optionValue: string, index: number) => (
-            <option value={optionValue} key={optionValue}>
-              {optionValue}
-            </option>
-          ),
+          (
+            optionValue: string | { value: string; label: string },
+            index: number,
+          ) => {
+            if (typeof optionValue === 'string') {
+              return (
+                <option value={optionValue} key={optionValue}>
+                  {optionValue}
+                </option>
+              )
+            }
+
+            return (
+              <option value={optionValue.value} key={optionValue.value}>
+                {optionValue.label}
+              </option>
+            )
+          },
         )}
       </select>
     )
