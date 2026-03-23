@@ -473,3 +473,9 @@ export const cloudflareCspConfig: CSPPresetGenerator = () => ({
   'connect-src': ['cloudflareinsights.com'],
   'frame-src': ['https://challenges.cloudflare.com'],
 })
+
+export const googleMapsCspConfig: CSPPresetGenerator = () => ({
+  'script-src': ['https://maps.googleapis.com'],
+  'connect-src': ['https://maps.googleapis.com'],
+  'img-src': ['https://maps.gstatic.com'],
+})
