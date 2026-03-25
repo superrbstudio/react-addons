@@ -281,7 +281,7 @@ const FormInner = forwardRef(function FormInner<
             (fieldName: keyof DataStructure, key) => {
               const field: AnySchema = schema.fields[fieldName] as AnySchema
 
-              if (field.type === 'object') {
+              if (field.type === 'object' && !(fieldName in renderers)) {
                 return (
                   <Fieldset<DataStructure>
                     key={key}
@@ -298,7 +298,6 @@ const FormInner = forwardRef(function FormInner<
                   />
                 )
               }
-              console.log(field)
 
               const onInput = (event: InputEvent<InputFieldType>) => {
                 const field = fieldRefs.current.get(fieldName)

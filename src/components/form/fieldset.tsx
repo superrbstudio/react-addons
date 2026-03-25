@@ -6,7 +6,6 @@ import FormField, { InputFieldType } from './field'
 import { Fragment, InputEvent, ReactNode, RefObject } from 'react'
 
 type Props<DataStructure> = {
-  className?: string
   schema: ObjectSchema<any>
   name: string
   renderers: Record<string, FieldRenderer>
@@ -24,7 +23,6 @@ type Props<DataStructure> = {
 }
 
 export default function Fieldset<DataStructure>({
-  className,
   schema,
   name,
   renderers,
