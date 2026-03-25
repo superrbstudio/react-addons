@@ -36,6 +36,7 @@ import {
   GoogleReCaptchaProvider,
   useGoogleReCaptcha,
 } from 'react-google-recaptcha-v3'
+import Fieldset from './form/fieldset'
 
 type WithRecaptcha<T> = T & { recaptchaToken?: string }
 
@@ -279,6 +280,25 @@ const FormInner = forwardRef(function FormInner<
           {Object.keys(schema.fields).map(
             (fieldName: keyof DataStructure, key) => {
               const field: AnySchema = schema.fields[fieldName] as AnySchema
+
+              if (field.type === 'object') {
+                return (
+                  <Fieldset<DataStructure>
+                    key={key}
+                    schema={field as ObjectSchema<any>}
+                    name={fieldName as string}
+                    renderers={renderers}
+                    errors={errors}
+                    disabled={disabled}
+                    register={register}
+                    fieldRefs={fieldRefs}
+                    handleInput={handleInput}
+                    setValue={setValue}
+                    renderErrorMessage={renderErrorMessage}
+                  />
+                )
+              }
+              console.log(field)
 
               const onInput = (event: InputEvent<InputFieldType>) => {
                 const field = fieldRefs.current.get(fieldName)
