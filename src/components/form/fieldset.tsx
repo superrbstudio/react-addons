@@ -40,7 +40,7 @@ export default function Fieldset<DataStructure>({
 
       {Object.keys(schema.fields).map((childName: string, key) => {
         const field: AnySchema = schema.fields[childName as string] as AnySchema
-        const fieldName = `${name}[${childName}]`
+        const fieldName = `${name}.${childName}`
 
         const onInput = (event: InputEvent<InputFieldType>) => {
           const field = fieldRefs.current.get(fieldName as keyof DataStructure)
@@ -92,8 +92,8 @@ export default function Fieldset<DataStructure>({
                     }}
                   />
 
-                  {fieldName in renderers ? (
-                    renderers[fieldName](
+                  {childName in renderers ? (
+                    renderers[childName](
                       register(fieldName as Path<DataStructure>),
                       errors[fieldName] as FieldError,
                       field,
