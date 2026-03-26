@@ -371,6 +371,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-input/core@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@react-input/core@npm:2.0.2"
+  peerDependencies:
+    "@types/react": ">=16.8"
+    react: ">=16.8 || ^19.0.0-rc"
+    react-dom: ">=16.8 || ^19.0.0-rc"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/a9f5334044ec7a0bf628af2d74fd8a0a94dd95261c57ec056025e69d830543781abfa50cd0c5e4887a3bc21bb589f274a54dcb3fc05d03993dccd720f3a505c2
+  languageName: node
+  linkType: hard
+
+"@react-input/mask@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "@react-input/mask@npm:2.0.4"
+  dependencies:
+    "@react-input/core": "npm:^2.0.2"
+  peerDependencies:
+    "@types/react": ">=16.8"
+    react: ">=16.8 || ^19.0.0-rc"
+    react-dom: ">=16.8 || ^19.0.0-rc"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/2d2a5453c3b54e0b42715dd44ac84e60ffdafa120ed890bdfa6d4fa9e853e2047d8ba173bed512b5bac23541c645dffd7860dbd1d6cb8b2e168c4e346570d59b
+  languageName: node
+  linkType: hard
+
 "@rtsao/scc@npm:^1.1.0":
   version: 1.1.0
   resolution: "@rtsao/scc@npm:1.1.0"
@@ -383,6 +413,7 @@ __metadata:
   resolution: "@superrb/react-addons@workspace:."
   dependencies:
     "@hookform/resolvers": "npm:^3.10.0"
+    "@react-input/mask": "npm:^2.0.4"
     "@types/js-cookie": "npm:^3.0.6"
     "@types/node": "npm:^24.11.0"
     "@types/react": "npm:^19.2.14"

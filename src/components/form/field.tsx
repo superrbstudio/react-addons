@@ -15,6 +15,7 @@ import {
 import { AnySchema } from 'yup'
 import { UseFormRegisterReturn } from 'react-hook-form'
 import FileField from './file-field'
+import { InputMask } from '@react-input/mask'
 
 interface Props {
   register: UseFormRegisterReturn<string>
@@ -158,6 +159,14 @@ function FormField(
             ref={ref as MutableRefObject<HTMLInputElement>}
           />
         </>
+      ) : schema?.spec?.meta?.mask ? (
+        <InputMask
+          mask={schema?.spec?.meta?.mask}
+          replacement={schema?.spec?.meta?.maskReplacement || '_'}
+          className="form__control"
+          {...(fieldProps as InputProps)}
+          ref={ref as MutableRefObject<HTMLInputElement>}
+        />
       ) : (
         <input
           className="form__control"
