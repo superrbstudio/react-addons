@@ -138,9 +138,14 @@ const FormInner = forwardRef(function FormInner<
       | HTMLInputElement
       | HTMLTextAreaElement
       | HTMLSelectElement
+
+    const value =
+      element.type === 'checkbox'
+        ? (element as HTMLInputElement).checked
+        : element.value
     onChange({
       ...typedRef?.current?.values,
-      [element.name]: element.value,
+      [element.name]: value,
     })
   }
 
@@ -300,13 +305,28 @@ const FormInner = forwardRef(function FormInner<
               }
 
               const onInput = (event: InputEvent<InputFieldType>) => {
-                const field = fieldRefs.current.get(fieldName)
-                const group = field?.closest('.form__group')
+                const field = fieldRefs.current.get(
+                  fieldName,
+                ) as HTMLInputElement
 
-                const fn = (field?.value?.length || 0) > 0 ? 'add' : 'remove'
+                if (!field) {
+                  return
+                }
+
+                const group = field.closest('.form__group')
+
+                const fn = (field.value?.length || 0) > 0 ? 'add' : 'remove'
                 group?.classList[fn]('form__group--filled')
 
-                setValue(fieldName as Path<DataStructure>, field?.value as any)
+                if (field.type === 'checkbox') {
+                  setValue(
+                    fieldName as Path<DataStructure>,
+                    field.checked as any,
+                  )
+                } else {
+                  setValue(fieldName as Path<DataStructure>, field.value as any)
+                }
+
                 handleInput(event as InputEvent<InputFieldType>)
               }
 
