@@ -43,13 +43,24 @@ export default function Fieldset<DataStructure>({
         const fieldName = `${name}.${childName}`
 
         const onInput = (event: InputEvent<InputFieldType>) => {
-          const field = fieldRefs.current.get(fieldName as keyof DataStructure)
-          const group = field?.closest('.form__group')
+          const field = fieldRefs.current.get(
+            fieldName as keyof DataStructure,
+          ) as HTMLInputElement
 
+          if (!field) {
+            return
+          }
+
+          const group = field?.closest('.form__group')
           const fn = (field?.value?.length || 0) > 0 ? 'add' : 'remove'
           group?.classList[fn]('form__group--filled')
 
-          setValue(fieldName as Path<DataStructure>, field?.value as any)
+          if (field.type === 'checkbox') {
+            setValue(fieldName as Path<DataStructure>, field.checked as any)
+          } else {
+            setValue(fieldName as Path<DataStructure>, field.value as any)
+          }
+
           handleInput(event as InputEvent<InputFieldType>)
         }
 
