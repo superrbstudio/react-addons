@@ -74,6 +74,7 @@ function FileField(
 
   return (
     <fieldset className="form__file-upload-wrapper">
+      <legend className="form__file-upload-legend">{schema.spec.label}</legend>
       {input}
       <Files files={files} />
     </fieldset>
