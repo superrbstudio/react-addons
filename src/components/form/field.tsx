@@ -9,7 +9,6 @@ import {
   MutableRefObject,
   SelectHTMLAttributes,
   TextareaHTMLAttributes,
-  useEffect,
   useState,
 } from 'react'
 import { AnySchema } from 'yup'
@@ -43,7 +42,6 @@ function FormField(
   ref: ForwardedRef<InputFieldType>,
 ) {
   const [touched, setTouched] = useState<boolean>(false)
-  const [rendered, setRendered] = useState<boolean>(false)
   const fieldProps: FieldProps = {
     ...register,
     ...(!touched && schema?.spec?.default
@@ -73,10 +71,6 @@ function FormField(
       }
     },
   }
-
-  useEffect(() => {
-    setRendered(true)
-  }, [])
 
   if (schema?.spec?.meta?.options?.length > 0) {
     return (
@@ -133,8 +127,7 @@ function FormField(
         <input
           type="checkbox"
           className="form__control form__control--checkbox"
-          checked={!rendered ? schema?.spec?.default : null}
-          value="true"
+          defaultChecked={schema?.spec?.default}
           {...(fieldProps as InputProps)}
           ref={ref as MutableRefObject<HTMLInputElement>}
         />
