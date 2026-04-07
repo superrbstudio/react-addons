@@ -54,5 +54,5 @@
     "zustand": "^5.0.11"
   },
   "packageManager": "yarn@4.12.0",
-  "stableVersion": "3.0.0"
+  "stableVersion": "4.1.7"
 }
