@@ -8,7 +8,7 @@ import {
   InputEvent,
   InputEventHandler,
   InputHTMLAttributes,
-  MutableRefObject,
+  RefObject,
   SelectHTMLAttributes,
   TextareaHTMLAttributes,
   useState,
@@ -79,7 +79,7 @@ function FormField(
       <select
         className="form__control form__control--select"
         {...(fieldProps as SelectProps)}
-        ref={ref as MutableRefObject<HTMLSelectElement>}
+        ref={ref as RefObject<HTMLSelectElement>}
       >
         {schema?.spec?.meta?.placeholder ? (
           <option value="" key={'placeholder'}>
@@ -117,13 +117,13 @@ function FormField(
           type="hidden"
           className="form__control form__control--hidden"
           {...(fieldProps as InputProps)}
-          ref={ref as MutableRefObject<HTMLInputElement>}
+          ref={ref as RefObject<HTMLInputElement>}
         />
       ) : schema?.spec?.meta?.textarea === true ? (
         <textarea
           className="form__control"
           {...(fieldProps as TextareaProps)}
-          ref={ref as MutableRefObject<HTMLTextAreaElement>}
+          ref={ref as RefObject<HTMLTextAreaElement>}
         />
       ) : schema?.type === 'boolean' ? (
         <input
@@ -131,7 +131,7 @@ function FormField(
           className="form__control form__control--checkbox"
           defaultChecked={schema?.spec?.default}
           {...(fieldProps as InputProps)}
-          ref={ref as MutableRefObject<HTMLInputElement>}
+          ref={ref as RefObject<HTMLInputElement>}
         />
       ) : schema?.type === 'date' ? (
         <input
@@ -144,14 +144,14 @@ function FormField(
                 ? fieldProps.value.toISOString().split('T')[0]
                 : fieldProps.value,
           } as InputProps)}
-          ref={ref as MutableRefObject<HTMLInputElement>}
+          ref={ref as RefObject<HTMLInputElement>}
         />
       ) : schema?.type === 'mixed' ? (
         <>
           <FileField
             schema={schema}
             {...(fieldProps as InputProps)}
-            ref={ref as MutableRefObject<HTMLInputElement>}
+            ref={ref as RefObject<HTMLInputElement>}
           />
         </>
       ) : schema?.spec?.meta?.mask ? (
@@ -160,13 +160,13 @@ function FormField(
           replacement={schema?.spec?.meta?.maskReplacement || '_'}
           className="form__control"
           {...(fieldProps as InputProps)}
-          ref={ref as MutableRefObject<HTMLInputElement>}
+          ref={ref as RefObject<HTMLInputElement>}
         />
       ) : (
         <input
           className="form__control"
           {...(fieldProps as InputProps)}
-          ref={ref as MutableRefObject<HTMLInputElement>}
+          ref={ref as RefObject<HTMLInputElement>}
         />
       )}
     </>
