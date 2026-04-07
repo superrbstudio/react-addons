@@ -46,9 +46,11 @@ function FormField(
   const [touched, setTouched] = useState<boolean>(false)
   const fieldProps: FieldProps = {
     ...register,
-    ...(!touched && schema?.spec?.default
-      ? { value: schema?.spec?.default }
-      : {}),
+    ...(value
+      ? { value }
+      : !touched && schema?.spec?.default
+        ? { value: schema?.spec?.default }
+        : {}),
     ...(id ? { id } : {}),
     ...(disabled || schema?.spec?.meta?.disabled ? { disabled: true } : {}),
     ...(schema?.spec?.meta?.multiple ? { multiple: true } : {}),
