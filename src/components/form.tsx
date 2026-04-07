@@ -13,6 +13,7 @@ import {
   ButtonHTMLAttributes,
   RefObject,
   InputEvent,
+  ChangeEvent,
 } from 'react'
 import { ObjectSchema, InferType, AnySchema } from 'yup'
 import { kebabCase, sentenceCase } from 'change-case'
@@ -304,7 +305,9 @@ const FormInner = forwardRef(function FormInner<
                 )
               }
 
-              const onInput = (event: InputEvent<InputFieldType>) => {
+              const onInput = (
+                event: InputEvent<InputFieldType> | ChangeEvent<InputFieldType>,
+              ) => {
                 const field = fieldRefs.current.get(
                   fieldName,
                 ) as HTMLInputElement

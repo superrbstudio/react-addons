@@ -3,7 +3,7 @@ import { AnySchema, ObjectSchema } from 'yup'
 import { FieldRenderer } from './types'
 import { FieldError, FieldErrors, Path, UseFormRegister } from 'react-hook-form'
 import FormField, { InputFieldType } from './field'
-import { Fragment, InputEvent, ReactNode, RefObject } from 'react'
+import { ChangeEvent, Fragment, InputEvent, ReactNode, RefObject } from 'react'
 
 type Props<DataStructure> = {
   schema: ObjectSchema<any>
@@ -42,7 +42,9 @@ export default function Fieldset<DataStructure>({
         const field: AnySchema = schema.fields[childName as string] as AnySchema
         const fieldName = `${name}.${childName}`
 
-        const onInput = (event: InputEvent<InputFieldType>) => {
+        const onInput = (
+          event: InputEvent<InputFieldType> | ChangeEvent<InputFieldType>,
+        ) => {
           const field = fieldRefs.current.get(
             fieldName as keyof DataStructure,
           ) as HTMLInputElement

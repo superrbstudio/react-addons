@@ -1,10 +1,12 @@
 'use client'
 
 import {
-  FormEvent,
-  FormEventHandler,
+  ChangeEvent,
+  ChangeEventHandler,
   ForwardedRef,
   forwardRef,
+  InputEvent,
+  InputEventHandler,
   InputHTMLAttributes,
   MutableRefObject,
   SelectHTMLAttributes,
@@ -16,20 +18,20 @@ import { UseFormRegisterReturn } from 'react-hook-form'
 import FileField from './file-field'
 import { InputMask } from '@react-input/mask'
 
-interface Props {
-  register: UseFormRegisterReturn<string>
-  schema: AnySchema<any>
-  id?: string
-  onInput?: FormEventHandler<HTMLElement>
-  onChange?: FormEventHandler<HTMLElement>
-  value?: any
-  disabled?: boolean
-}
-
 export type InputFieldType =
   | HTMLInputElement
   | HTMLTextAreaElement
   | HTMLSelectElement
+
+interface Props {
+  register: UseFormRegisterReturn<string>
+  schema: AnySchema<any>
+  id?: string
+  onInput?: InputEventHandler<InputFieldType>
+  onChange?: ChangeEventHandler<InputFieldType>
+  value?: any
+  disabled?: boolean
+}
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement>
 export type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>
@@ -56,14 +58,14 @@ function FormField(
     ...(schema?.spec?.meta?.autocomplete
       ? { autocomplete: schema?.spec?.meta?.autocomplete }
       : {}),
-    onInput: (event: FormEvent<InputFieldType>) => {
+    onInput: (event: InputEvent<InputFieldType>) => {
       setTouched(true)
 
       if (onInput) {
         onInput(event)
       }
     },
-    onChange: (event: FormEvent<InputFieldType>) => {
+    onChange: (event: ChangeEvent<InputFieldType>) => {
       setTouched(true)
 
       if (onChange) {
