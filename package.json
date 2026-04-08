@@ -28,6 +28,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "lint": "eslint ./src --config eslint.config.mjs",
     "prepublishOnly": "yarn build",
     "install-peers": "install-peers",
     "dev": "watch 'yarn build' ./src"
@@ -37,12 +38,13 @@
     "@types/node": "^24.11.0",
     "@types/react": "^19.2.14",
     "csp-header": "^6.3.0",
-    "eslint": "^10.0.2",
-    "eslint-config-next": "^16.1.6",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
+    "next": "^16.2.2",
     "prettier": "^3.8.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
