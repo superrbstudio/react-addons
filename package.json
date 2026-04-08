@@ -1,7 +1,7 @@
 {
   "name": "@superrb/react-addons",
   "type": "module",
-  "version": "4.1.7",
+  "version": "4.1.8",
   "main": "index.js",
   "module": "index.js",
   "repository": "https://github.com/superrbstudio/react-addons",
@@ -55,6 +55,5 @@
     "yup": "^1.7.1",
     "zustand": "^5.0.11"
   },
-  "packageManager": "yarn@4.12.0",
-  "stableVersion": "4.1.7"
+  "packageManager": "yarn@4.12.0"
 }
