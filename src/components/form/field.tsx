@@ -88,6 +88,33 @@ function FormField(
             {schema?.spec?.meta?.placeholder}
           </option>
         ) : null}
+
+        {schema.spec?.meta?.priorityOptions ? (
+          <>
+            {schema.spec?.meta?.priorityOptions?.map(
+              (
+                optionValue: string | { value: string; label: string },
+                index: number,
+              ) => {
+                if (typeof optionValue === 'string') {
+                  return (
+                    <option value={optionValue} key={optionValue}>
+                      {optionValue}
+                    </option>
+                  )
+                }
+                return (
+                  <option value={optionValue.value} key={optionValue.value}>
+                    {optionValue.label}
+                  </option>
+                )
+              },
+            )}
+
+            <option disabled>──────────────────────────────</option>
+          </>
+        ) : null}
+
         {schema?.spec?.meta?.options?.map(
           (
             optionValue: string | { value: string; label: string },
