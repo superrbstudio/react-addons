@@ -85,7 +85,7 @@ export default function Fieldset<DataStructure>({
               <div
                 className={`form__group form__group--${kebabCase(
                   fieldName as string,
-                )} ${fieldName in errors ? 'form__group--error' : ''} ${
+                )} ${childName in errors ? 'form__group--error' : ''} ${
                   field?.type === 'boolean' ? 'form__group--checkbox' : ''
                 } ${field?.type === 'date' ? 'form__group--date' : ''}`}
               >
@@ -108,7 +108,7 @@ export default function Fieldset<DataStructure>({
                   {childName in renderers ? (
                     renderers[childName](
                       register(fieldName as Path<DataStructure>),
-                      errors[fieldName] as FieldError,
+                      errors[childName] as FieldError,
                       field,
                     )
                   ) : (
@@ -127,9 +127,9 @@ export default function Fieldset<DataStructure>({
                           )
                         }}
                       />
-                      {fieldName in errors &&
+                      {childName in errors &&
                         renderErrorMessage(
-                          errors[fieldName] as FieldError,
+                          errors[childName] as FieldError,
                           field,
                         )}
 
