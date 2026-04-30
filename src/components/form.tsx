@@ -169,16 +169,21 @@ const FormInner = forwardRef(function FormInner<
           throw new Error('Something went wrong while submitting the form')
         }
 
-        const formData = new FormData(formRef.current)
-        formData.set('recaptchaToken', data.recaptchaToken)
-        const response = await action(formData)
+        try {
+          const formData = new FormData(formRef.current)
+          formData.set('recaptchaToken', data.recaptchaToken)
+          const response = await action(formData)
 
-        if (response.statusCode === 200) {
-          setResponse(response.body)
-          return response.body
+          if (response.statusCode === 200) {
+            setResponse(response.body)
+            return response.body
+          }
+
+          throw new Error(response.body?.message)
+        } catch (error) {
+          console.error(error)
+          throw new Error('Something went wrong while submitting the form')
         }
-
-        throw new Error(response.body?.message)
       }
 
       const response = await fetch(action as string, {
