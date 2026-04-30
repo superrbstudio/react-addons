@@ -82,6 +82,7 @@ export interface FormRef<
   fields: {
     [P in DataStructure as string]?: HTMLElement
   }
+  status: Status
 }
 
 const FormInner = forwardRef(function FormInner<
@@ -251,6 +252,7 @@ const FormInner = forwardRef(function FormInner<
     setValue,
     setError,
     response,
+    status,
   }))
 
   useEffect(() => {
