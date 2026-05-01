@@ -292,7 +292,7 @@ const FormInner = forwardRef(function FormInner<
   return (
     <>
       {status === 'success' && renderSuccessMessage !== false ? (
-        <>{renderSuccessMessage(typedRef.current?.values)}</>
+        <>{renderSuccessMessage(typedRef.current?.values, response)}</>
       ) : (
         <form
           className={`form ${className}`}
