@@ -55,7 +55,9 @@ export interface FormProps<
   onSubmit?: (data: InferType<T>) => void
   onChange?: (data: InferType<T>) => void
   onStatusChange?: (status: Status) => void
-  renderSuccessMessage?: ((data: InferType<T>) => ReactNode) | false
+  renderSuccessMessage?:
+    | ((data: InferType<T>, response?: ApiResponse) => ReactNode)
+    | false
   renderErrorMessage?: (
     error?: FieldError,
     fieldSchema?: AnySchema,
@@ -82,6 +84,7 @@ export interface FormRef<
   fields: {
     [P in DataStructure as string]?: HTMLElement
   }
+  response?: ApiResponse
   status: Status
 }
 
@@ -174,12 +177,25 @@ const FormInner = forwardRef(function FormInner<
           formData.set('recaptchaToken', data.recaptchaToken)
           const response = await action(formData)
 
-          if (response.statusCode === 200) {
-            setResponse(response.body)
-            return response.body
+          if (response.success) {
+            setResponse(response)
+            return response
           }
 
-          throw new Error(response.body?.message)
+          // Handle different error formats
+          if ('error' in response) {
+            setError('*' as Path<DataStructure>, response.error)
+          } else if ('errors' in response) {
+            for (const [key, message] of Object.entries(response.errors)) {
+              setError(key as Path<DataStructure>, {
+                message: message as string,
+              })
+            }
+          } else if ('message' in response) {
+            setError('*' as Path<DataStructure>, response.message)
+          }
+
+          throw new Error()
         } catch (error) {
           console.error(error)
           throw new Error('Something went wrong while submitting the form')
@@ -208,7 +224,7 @@ const FormInner = forwardRef(function FormInner<
 
       return responseData
     },
-    [action, onSubmit, useRecaptcha, executeRecaptcha],
+    [action, onSubmit, useRecaptcha, executeRecaptcha], // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const { execute, status, error } = useAsync(onSubmitHandler, false, [
