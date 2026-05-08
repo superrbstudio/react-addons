@@ -192,7 +192,9 @@ const FormInner = forwardRef(function FormInner<
               })
             }
           } else if ('message' in response) {
-            setError('*' as Path<DataStructure>, response.message)
+            setError('*' as Path<DataStructure>, {
+              message: response.message,
+            })
           }
 
           throw new Error()
@@ -303,7 +305,9 @@ const FormInner = forwardRef(function FormInner<
           ref={formRef}
           {...props}
         >
-          {error && renderErrorMessage({ message: error } as FieldError)}
+          {error &&
+            !errors['*'] &&
+            renderErrorMessage({ message: error } as FieldError)}
           {errors['*'] && renderErrorMessage(errors['*'] as FieldError)}
 
           {Object.keys(schema.fields).map(
