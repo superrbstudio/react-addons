@@ -147,7 +147,6 @@ export default function CookieBanner({
                     <p className="cookie-banner__form-text">{formText}</p>
                   )}
                   <Form
-                    useRecaptcha={false}
                     className="cookie-banner__form"
                     schema={schema}
                     onSubmit={submit}

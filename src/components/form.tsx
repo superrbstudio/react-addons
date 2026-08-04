@@ -32,13 +32,7 @@ import FormField, { InputFieldType } from './form/field'
 import SubmitButton from './form/submit-button'
 import messages from './form/messages.json'
 import ApiResponse from '@/types/api-response'
-import {
-  GoogleReCaptchaProvider,
-  useGoogleReCaptcha,
-} from 'react-google-recaptcha-v3'
 import Fieldset from './form/fieldset'
-
-type WithRecaptcha<T> = T & { recaptchaToken?: string }
 
 export interface FormProps<
   T extends ObjectSchema<any>,
@@ -65,7 +59,6 @@ export interface FormProps<
     props: { label?: string } & ButtonHTMLAttributes<HTMLButtonElement>,
   ) => ReactNode
   renderers?: { [P in DataStructure]: FieldRenderer }
-  useRecaptcha?: boolean
 }
 
 export interface FormRef<
@@ -79,7 +72,7 @@ export interface FormRef<
   reset: () => void
   clearErrors: () => void
   errors: FieldErrors
-  values: WithRecaptcha<DataStructure>
+  values: DataStructure
   fields: {
     [P in DataStructure as string]?: HTMLElement
   }
@@ -87,7 +80,7 @@ export interface FormRef<
   status: Status
 }
 
-const FormInner = forwardRef(function FormInner<
+const Form = function FormInner<
   T extends ObjectSchema<any>,
   DataStructure extends InferType<T> = InferType<T>,
 >(
@@ -112,7 +105,6 @@ const FormInner = forwardRef(function FormInner<
     renderers = {} as {
       [P in DataStructure]: FieldRenderer
     },
-    useRecaptcha = true,
     ...props
   }: FormProps<T>,
   ref?: ForwardedRef<FormRef<T>>,
@@ -122,8 +114,6 @@ const FormInner = forwardRef(function FormInner<
   const fieldRefs = useRef<Map<keyof DataStructure, InputFieldType>>(
     new Map<keyof DataStructure, InputFieldType>(),
   )
-  const { executeRecaptcha } = useGoogleReCaptcha()
-
   for (const name of Object.keys(schema.fields)) {
     const field: AnySchema = schema.fields[name] as AnySchema
     if (field.spec?.meta?.options?.length > 1) {
@@ -155,12 +145,6 @@ const FormInner = forwardRef(function FormInner<
     async (data: DataStructure) => {
       if (onSubmit) {
         return onSubmit(data)
-      }
-
-      // if recaptcha is enabled generate a token and add to the data
-      if (useRecaptcha && executeRecaptcha) {
-        const token = await executeRecaptcha()
-        data['recaptchaToken'] = token
       }
 
       // Intercept submissions for Next server actions
@@ -223,7 +207,7 @@ const FormInner = forwardRef(function FormInner<
 
       return responseData
     },
-    [action, onSubmit, useRecaptcha, executeRecaptcha], // eslint-disable-line react-hooks/exhaustive-deps
+    [action, onSubmit], // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const { execute, status, error } = useAsync(onSubmitHandler, false, [
@@ -239,7 +223,7 @@ const FormInner = forwardRef(function FormInner<
     setError,
     clearErrors,
     reset,
-  } = useForm<WithRecaptcha<DataStructure>>({
+  } = useForm<DataStructure>({
     resolver: yupResolver(schema),
     defaultValues: initialData as DefaultValues<DataStructure>,
     mode: 'onTouched',
@@ -442,33 +426,6 @@ const FormInner = forwardRef(function FormInner<
         </form>
       )}
     </>
-  )
-})
-
-function Form<T extends ObjectSchema<any>>(
-  props: FormProps<T>,
-  ref: ForwardedRef<FormRef<T>>,
-) {
-  const key = process.env.NEXT_PUBLIC_RECAPTCHA_KEY as string
-  let { useRecaptcha } = props
-
-  if (useRecaptcha === true && !key) {
-    console.error(
-      'Env var NEXT_PUBLIC_RECAPTCHA_KEY is not set. Recaptcha is disabled.',
-    )
-    useRecaptcha = false
-  }
-
-  if (useRecaptcha === false) {
-    return <FormInner {...props} ref={ref} useRecaptcha={false} />
-  }
-
-  return (
-    <GoogleReCaptchaProvider
-      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY as string}
-    >
-      <FormInner {...props} ref={ref} useRecaptcha={true} />
-    </GoogleReCaptchaProvider>
   )
 }
 
