@@ -11,7 +11,6 @@ import {
   useCallback,
   useImperativeHandle,
   ButtonHTMLAttributes,
-  RefObject,
   InputEvent,
   ChangeEvent,
 } from 'react'
@@ -116,7 +115,7 @@ const FormInner = forwardRef(function FormInner<
     useRecaptcha = true,
     ...props
   }: FormProps<T>,
-  ref: ForwardedRef<FormRef<T>>,
+  ref?: ForwardedRef<FormRef<T>>,
 ) {
   const [response, setResponse] = useState<ApiResponse>()
   const formRef = useRef<HTMLFormElement>(null)
@@ -131,8 +130,6 @@ const FormInner = forwardRef(function FormInner<
       field.oneOf(field?.spec?.meta?.options)
     }
   }
-
-  const typedRef = ref as RefObject<FormRef<T>>
 
   const handleInput = (
     event: InputEvent<
@@ -149,7 +146,7 @@ const FormInner = forwardRef(function FormInner<
         ? (element as HTMLInputElement).checked
         : element.value
     onChange({
-      ...typedRef?.current?.values,
+      ...getValues(),
       [element.name]: value,
     })
   }
@@ -294,7 +291,7 @@ const FormInner = forwardRef(function FormInner<
   return (
     <>
       {status === 'success' && renderSuccessMessage !== false ? (
-        <>{renderSuccessMessage(typedRef.current?.values, response)}</>
+        <>{renderSuccessMessage(getValues(), response)}</>
       ) : (
         <form
           className={`form ${className}`}
