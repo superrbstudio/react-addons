@@ -4,6 +4,7 @@
   "version": "5.0.0",
   "main": "index.js",
   "module": "index.js",
+  "sideEffects": false,
   "repository": "https://github.com/superrbstudio/react-addons",
   "author": "@molovo",
   "license": "MIT",
