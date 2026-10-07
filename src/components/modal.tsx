@@ -8,13 +8,11 @@ import {
   useCallback,
   RefObject,
 } from 'react'
-import { local } from '../storage'
-import {
-  useEscape,
-  useEventListener,
-  useLockBodyScroll,
-  useModal,
-} from '../hooks'
+import { local } from '../storage/web-storage'
+import useEscape from '../hooks/use-escape'
+import useEventListener from '../hooks/use-event-listener'
+import useLockBodyScroll from '../hooks/use-lock-body-scroll'
+import useModal from '../hooks/use-modal'
 
 interface Props {
   name: string

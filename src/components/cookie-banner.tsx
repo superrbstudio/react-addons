@@ -1,11 +1,12 @@
 'use client'
 
 import { ReactNode, useEffect, useState } from 'react'
-import { Button, Form } from '../components'
+import Button from './button'
+import Form from './form'
 import * as Yup from 'yup'
 import SubmitButton from './form/submit-button'
-import { session } from '../storage'
-import { useCookieStore } from '../store'
+import { session } from '../storage/web-storage'
+import useCookieStore from '../store/cookies'
 
 const content = {
   title: 'Cookie Notice',
