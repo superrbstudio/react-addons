@@ -1,6 +1,5 @@
 import idbStorage from './storage/idb'
-import { storageFactory } from './utils/storage-factory'
+import { local, session } from './storage/web-storage'
 
-export const local = storageFactory(() => localStorage)
-export const session = storageFactory(() => sessionStorage)
+export { local, session }
 export const idb = idbStorage

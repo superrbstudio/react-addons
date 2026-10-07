@@ -6,8 +6,8 @@ import {
   ReactNode,
   useCallback,
 } from 'react'
-import { Button } from '../components'
-import { extendClass } from '../utils'
+import Button from './button'
+import extendClass from '../utils/extend-class'
 import useNavStore from '../store/nav'
 
 interface Props

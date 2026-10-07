@@ -31,7 +31,7 @@ import ErrorMessage from './form/error-message'
 import FormField, { InputFieldType } from './form/field'
 import SubmitButton from './form/submit-button'
 import messages from './form/messages.json'
-import ApiResponse from '@/types/api-response'
+import ApiResponse from '../types/api-response'
 import Fieldset from './form/fieldset'
 
 export interface FormProps<

@@ -1,5 +1,5 @@
 import { ButtonHTMLAttributes } from 'react'
-import { Button } from '../../components'
+import Button from '../button'
 
 export default function SubmitButton({
   label = 'Submit',

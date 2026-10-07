@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import Button, { ButtonProps } from './button'
-import { Slideshow } from '@/hooks/use-slideshow'
+import { Slideshow } from '../hooks/use-slideshow'
 
 export default function SlideshowButtons({
   slideshow: { currentSlide, goTo, slideshowRef, atStart, atEnd },

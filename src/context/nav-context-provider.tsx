@@ -1,6 +1,6 @@
 'use client'
 
-import { useLockBodyScroll } from '../hooks'
+import useLockBodyScroll from '../hooks/use-lock-body-scroll'
 import { createContext, PropsWithChildren, useCallback, useState } from 'react'
 
 export const NavContext = createContext({

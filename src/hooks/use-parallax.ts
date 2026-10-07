@@ -1,4 +1,5 @@
-import { useEventListener, useMotionAllowed } from '../hooks'
+import useEventListener from './use-event-listener'
+import useMotionAllowed from './use-motion-allowed'
 import { useCallback } from 'react'
 
 export default function useParallax(

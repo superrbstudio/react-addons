@@ -7,7 +7,8 @@ import {
   useState,
 } from 'react'
 import { useDraggable } from 'react-use-draggable-scroll'
-import { useEventListener, useIsInViewport } from '../hooks'
+import useEventListener from './use-event-listener'
+import useIsInViewport from './use-is-in-viewport'
 
 interface Events {
   onMouseDown: MouseEventHandler<HTMLElement>

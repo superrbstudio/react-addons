@@ -1,4 +1,4 @@
-import { Slideshow } from '@/hooks/use-slideshow'
+import { Slideshow } from '../hooks/use-slideshow'
 
 export default function SlideshowPagination({
   slideshow: { currentSlide, slideCount, goTo },

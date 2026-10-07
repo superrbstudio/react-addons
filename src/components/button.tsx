@@ -9,7 +9,7 @@ import {
   forwardRef,
   memo,
 } from 'react'
-import { extendClass } from '../utils'
+import extendClass from '../utils/extend-class'
 
 type Props = (
   | PropsWithChildren<HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>>
