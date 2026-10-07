@@ -1,12 +1,14 @@
 'use client'
 
-import { ReactNode, useEffect, useState } from 'react'
+import { lazy, ReactNode, Suspense, useEffect, useState } from 'react'
 import Button from './button'
-import Form from './form'
-import * as Yup from 'yup'
-import SubmitButton from './form/submit-button'
 import { session } from '../storage/web-storage'
 import useCookieStore from '../store/cookies'
+
+// The customise form pulls in Form and yup, so only load it once the
+// customise panel is opened
+const loadCustomiseForm = () => import('./cookie-banner/customise-form')
+const CustomiseForm = lazy(loadCustomiseForm)
 
 const content = {
   title: 'Cookie Notice',
@@ -77,12 +79,15 @@ export default function CookieBanner({
   } = useCookieStore()
   const [animate, setAnimate] = useState<boolean>(false)
   const [formOpen, setFormOpen] = useState<boolean>(false)
+  const [formRequested, setFormRequested] = useState<boolean>(false)
   const [rejected, setRejected] = useState<boolean>(
     !!session.getItem('cookies-rejected'),
   )
   const [ready, setReady] = useState<boolean>(false)
 
   const openForm = () => {
+    loadCustomiseForm()
+    setFormRequested(true)
     setFormOpen(true)
   }
 
@@ -113,23 +118,6 @@ export default function CookieBanner({
   const trueAcceptLabel =
     !allowCustomisation || formOpen ? acceptLabel : acceptAllLabel
 
-  const schema = Yup.object().shape({
-    tracking: Yup.boolean().required().default(trackingCookiesAccepted).label(`
-      <strong>${tracking?.title}</strong>
-      <p>${tracking?.description}</p>
-    `),
-    necessary: Yup.boolean()
-      .required()
-      .default(true)
-      .label(
-        `
-        <strong>${necessary?.title}</strong>
-        <p>${necessary?.description}</p>
-      `,
-      )
-      .meta({ disabled: true }),
-  })
-
   useEffect(() => {
     setReady(true)
   }, [])
@@ -147,19 +135,18 @@ export default function CookieBanner({
                   {formText && (
                     <p className="cookie-banner__form-text">{formText}</p>
                   )}
-                  <Form
-                    className="cookie-banner__form"
-                    schema={schema}
-                    onSubmit={submit}
-                    renderSubmit={() =>
-                      renderSubmitButton ? (
-                        renderSubmitButton()
-                      ) : (
-                        <SubmitButton label={acceptLabel} />
-                      )
-                    }
-                    renderSuccessMessage={false}
-                  />
+                  {formRequested && (
+                    <Suspense fallback={null}>
+                      <CustomiseForm
+                        tracking={tracking}
+                        necessary={necessary}
+                        trackingCookiesAccepted={trackingCookiesAccepted}
+                        acceptLabel={acceptLabel}
+                        onSubmit={submit}
+                        renderSubmitButton={renderSubmitButton}
+                      />
+                    </Suspense>
+                  )}
                 </div>
               )}
               <div className="cookie-banner__main">
